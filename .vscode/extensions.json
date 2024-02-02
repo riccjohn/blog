@@ -1,6 +1,7 @@
 {
   "recommendations": [
     "zixuanchen.vitest-explorer",
-    "antfu.vite"
+    "antfu.vite",
+    "github.vscode-github-actions"
   ]
 }
