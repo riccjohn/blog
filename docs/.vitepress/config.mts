@@ -5,6 +5,7 @@ export default defineConfig({
 	title: 'Blog',
 	// description: "A VitePress Site",
 	base: '/blog',
+	cleanUrls: true,
 	themeConfig: {
 		// https://vitepress.dev/reference/default-theme-config
 		nav: [
@@ -14,11 +15,11 @@ export default defineConfig({
 
 		sidebar: [
 			{
-				text: 'Examples',
-				items: [
-					// { text: 'Markdown Examples', link: '/markdown-examples' },
-					// { text: 'Runtime API Examples', link: '/api-examples' },
-				],
+				// text: 'Examples',
+				// items: [
+				// 	{ text: 'Markdown Examples', link: '/markdown-examples' },
+				// 	{ text: 'Runtime API Examples', link: '/api-examples' },
+				// ],
 			},
 		],
 

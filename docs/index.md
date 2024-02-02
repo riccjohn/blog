@@ -13,6 +13,13 @@ hero:
   #   - theme: alt
   #     text: API Examples
   #     link: /api-examples
+  actions:
+    - theme: brand
+      text: Dev
+      link: /dev/
+    - theme: brand
+      text: RPG 
+      link: /rpg/
 
 # features:
 #   - title: Feature A
