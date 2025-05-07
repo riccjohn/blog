@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/9bbdb904-26ca-4ea9-b837-120553cd9f9c/deploy-status)](https://app.netlify.com/sites/arcanegrain/deploys)
+
 # Astro Starter Kit: Blog
 
 ```sh
