@@ -5,7 +5,7 @@
  */
 
 :root {
-    --accent: #2337ff;
+    --accent: #23fff8;
     --accent-dark: #000d8a;
     --black: 15, 18, 25;
     --gray: 96, 115, 159;
@@ -42,6 +42,10 @@ body {
     color: rgb(var(--gray-dark));
     font-size: 20px;
     line-height: 1.7;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 main {
     width: 720px;
