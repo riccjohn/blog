@@ -1,0 +1,53 @@
+---
+interface Props {
+    hoverable?: boolean
+}
+
+const { hoverable = false } = Astro.props
+---
+
+<a
+    href="https://bsky.app/profile/arcanegraindev.bsky.social"
+    target="_blank"
+    class:list={hoverable ? 'hoverable' : ''}
+>
+    <span class="sr-only">Follow John on BlueSky</span>
+    <svg
+        width="32"
+        height="32"
+        viewBox="0 0 4267 4267"
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        xml:space="preserve"
+        style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"
+    >
+        <g transform="matrix(2.08333,0,0,2.08333,0,0)">
+            <g transform="matrix(3.60563,0,0,3.60563,-822.085,-915.973)">
+                <path
+                    fill="currentColor"
+                    d="M351.121,315.106C416.241,363.994 486.281,463.123 512,516.315C537.719,463.123 607.759,363.994 672.879,315.106C719.866,279.83 796,252.536 796,339.388C796,356.734 786.055,485.101 780.222,505.943C759.947,578.396 686.067,596.876 620.347,585.691C735.222,605.242 764.444,670.002 701.333,734.762C581.473,857.754 529.061,703.903 515.631,664.481C513.169,657.254 512.017,653.873 512,656.748C511.983,653.873 510.831,657.254 508.369,664.481C494.939,703.903 442.527,857.754 322.667,734.762C259.556,670.002 288.778,605.242 403.653,585.691C337.933,596.876 264.053,578.396 243.778,505.943C237.945,485.101 228,356.734 228,339.388C228,252.536 304.134,279.83 351.121,315.106Z"
+                ></path>
+            </g>
+        </g>
+    </svg>
+</a>
+
+<style>
+    a {
+        text-decoration: none;
+        display: flex;
+        &:nth-of-type(1) {
+            margin-right: 1em;
+        }
+    }
+    a:not(.hoverable) {
+        color: rgb(var(--gray-dark));
+    }
+    a.hoverable {
+        color: rgb(var(--gray));
+    }
+    a.hoverable:hover {
+        color: rgb(var(--gray-dark));
+    }
+</style>
