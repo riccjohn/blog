@@ -22,6 +22,7 @@
     "devDependencies": {
         "prettier": "3.5.3",
         "prettier-plugin-astro": "0.14.1",
+        "prettier-plugin-tailwindcss": "^0.6.12",
         "pretty-quick": "^4.1.1",
         "simple-git-hooks": "^2.13.0"
     },
