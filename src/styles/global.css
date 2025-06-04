@@ -5,7 +5,8 @@
         @apply text-6xl leading-tight;
     }
     h2 {
-        @apply text-3xl leading-tight;
+        @apply text-5xl leading-tight;
+        @apply mx-0 mt-0 mb-2;
     }
     h3 {
         @apply text-2xl leading-tight;
