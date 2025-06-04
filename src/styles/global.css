@@ -16,6 +16,10 @@
     h5 {
         @apply text-lg leading-tight;
     }
+    body {
+        font-family: 'Atkinson', sans-serif;
+        @apply m-0 flex min-h-screen flex-col justify-between bg-gradient-to-b from-gray-50 to-white bg-[length:100%_600px] bg-no-repeat p-0 text-left text-xl leading-7 break-words text-gray-800;
+    }
 }
 
 :root {
@@ -43,23 +47,6 @@
     font-weight: 700;
     font-style: normal;
     font-display: swap;
-}
-body {
-    font-family: 'Atkinson', sans-serif;
-    margin: 0;
-    padding: 0;
-    text-align: left;
-    background: linear-gradient(var(--gray-gradient)) no-repeat;
-    background-size: 100% 600px;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    color: rgb(var(--gray-dark));
-    font-size: 20px;
-    line-height: 1.7;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
 }
 main {
     width: 720px;
