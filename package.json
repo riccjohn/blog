@@ -12,18 +12,18 @@
     "dependencies": {
         "@astrojs/check": "^0.9.4",
         "@astrojs/mdx": "^4.3.0",
-        "@astrojs/rss": "^4.0.11",
-        "@astrojs/sitemap": "^3.4.0",
-        "@tailwindcss/vite": "^4.1.8",
-        "astro": "^5.8.1",
-        "tailwindcss": "^4.1.8",
+        "@astrojs/rss": "^4.0.12",
+        "@astrojs/sitemap": "^3.4.1",
+        "@tailwindcss/vite": "^4.1.10",
+        "astro": "^5.9.3",
+        "tailwindcss": "^4.1.10",
         "typescript": "^5.8.3"
     },
     "devDependencies": {
         "prettier": "3.5.3",
         "prettier-plugin-astro": "0.14.1",
         "prettier-plugin-tailwindcss": "^0.6.12",
-        "pretty-quick": "^4.1.1",
+        "pretty-quick": "^4.2.2",
         "simple-git-hooks": "^2.13.0"
     },
     "packageManager": "pnpm@10.10.0+sha512.d615db246fe70f25dcfea6d8d73dee782ce23e2245e3c4f6f888249fb568149318637dca73c2c5c8ef2a4ca0d5657fb9567188bfab47f566d1ee6ce987815c39"
