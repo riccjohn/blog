@@ -1,12 +1,14 @@
 ---
 import Bluesky from '@/components/Social/Bluesky.astro'
 import GitHub from '@/components/Social/GitHub.astro'
+import LinkedIn from './Social/LinkedIn.astro'
 const today = new Date()
 ---
 
 <footer>
     &copy; {today.getFullYear()} John Riccardi. Made with ❤️ in Madison, WI.
     <div class="social-links">
+        <LinkedIn hoverable />
         <Bluesky hoverable />
         <GitHub hoverable />
     </div>
