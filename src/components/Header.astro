@@ -3,6 +3,7 @@ import HeaderLink from '@/components/HeaderLink.astro'
 import { SITE_TITLE } from '@/consts'
 import Bluesky from '@/components/Social/Bluesky.astro'
 import GitHub from '@/components/Social/GitHub.astro'
+import LinkedIn from '@/components/Social/LinkedIn.astro'
 ---
 
 <header>
@@ -13,6 +14,7 @@ import GitHub from '@/components/Social/GitHub.astro'
             <HeaderLink href="/blog">Blog</HeaderLink>
         </div>
         <div class="social-links">
+            <LinkedIn />
             <Bluesky />
             <GitHub />
         </div>
@@ -50,8 +52,9 @@ import GitHub from '@/components/Social/GitHub.astro'
         border-bottom-color: var(--accent);
     }
     .social-links {
-        display: flex;
-        align-items: center;
+        display: grid;
+        grid-auto-flow: column;
+        gap: 1em;
     }
     @media (max-width: 720px) {
         .social-links {
