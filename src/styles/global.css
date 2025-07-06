@@ -83,12 +83,6 @@ strong,
 b {
     font-weight: 700;
 }
-a {
-    color: var(--accent);
-}
-a:hover {
-    color: var(--accent);
-}
 p {
     margin-bottom: 1em;
 }

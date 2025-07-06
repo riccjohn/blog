@@ -1,0 +1,37 @@
+---
+import { SITE_TITLE, SITE_DESCRIPTION } from '@/consts'
+import Layout from '@/layouts/Layout.astro'
+---
+
+<!doctype html>
+<Layout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+    <h1 class="text-3xl font-bold">Downloads</h1>
+    <section class="flex flex-col gap-4">
+        <h2>OSE Index Card Character Sheet</h2>
+        <p>
+            A simple character sheet for <a
+                class="underline decoration-blue-500 visited:text-purple-600 hover:text-blue-600"
+                href="https://necroticgnome.com/products/old-school-essentials-basic-rules"
+                target="_blank">Old School Essentials</a
+            >, but compatible with any OSR system. Meant to be printed on index
+            cards. Includes slot-based encumberance.
+        </p>
+        <div class="flex gap-4">
+            <img
+                src="/images/download-previews/OSE_Index_Card_Character_Sheet/Front.jpg"
+                alt="OSE Index Card Character Sheet Front"
+                class="w-1/2 shadow-xl"
+            />
+            <img
+                src="/images/download-previews/OSE_Index_Card_Character_Sheet/Back.jpg"
+                alt="OSE Index Card Character Sheet Back"
+                class="w-1/2 shadow-xl"
+            />
+        </div>
+        <a
+            class="self-center rounded-md bg-blue-500 px-4 py-2 text-lg font-bold text-white shadow-md transition-all duration-300 hover:bg-blue-400 hover:shadow-lg"
+            href="/downloads/OSE_Index_Card_Character_Sheet.pdf"
+            download="OSE_Index_Card_Character_Sheet.pdf">Download</a
+        >
+    </section>
+</Layout>
