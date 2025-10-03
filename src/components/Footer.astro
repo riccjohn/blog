@@ -2,6 +2,7 @@
 import Bluesky from '@/components/Social/Bluesky.astro'
 import GitHub from '@/components/Social/GitHub.astro'
 import LinkedIn from './Social/LinkedIn.astro'
+import Email from './Social/Email.astro'
 const today = new Date()
 ---
 
@@ -11,6 +12,7 @@ const today = new Date()
         <LinkedIn hoverable />
         <Bluesky hoverable />
         <GitHub hoverable />
+        <Email hoverable />
     </div>
 </footer>
 <style>
@@ -24,6 +26,7 @@ const today = new Date()
     .social-links {
         display: flex;
         justify-content: center;
+        align-items: center;
         gap: 1em;
         margin-top: 1em;
     }
