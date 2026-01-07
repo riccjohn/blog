@@ -9,7 +9,12 @@ const { hoverable = false } = Astro.props
 <a
     href="https://bsky.app/profile/arcanegraindev.bsky.social"
     target="_blank"
-    class:list={hoverable ? 'hoverable' : ''}
+    class:list={[
+        'flex no-underline',
+        hoverable
+            ? 'text-text-tertiary hover:text-accent-primary'
+            : 'text-text-secondary',
+    ]}
 >
     <span class="sr-only">Follow John on BlueSky</span>
     <svg
@@ -32,19 +37,3 @@ const { hoverable = false } = Astro.props
         </g>
     </svg>
 </a>
-
-<style>
-    a {
-        text-decoration: none;
-        display: flex;
-    }
-    a:not(.hoverable) {
-        color: rgb(var(--gray-dark));
-    }
-    a.hoverable {
-        color: rgb(var(--gray));
-    }
-    a.hoverable:hover {
-        color: rgb(var(--gray-dark));
-    }
-</style>

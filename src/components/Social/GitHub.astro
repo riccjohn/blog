@@ -9,7 +9,12 @@ const { hoverable = false } = Astro.props
 <a
     href="https://github.com/riccjohn"
     target="_blank"
-    class:list={hoverable ? 'hoverable' : ''}
+    class:list={[
+        'flex no-underline',
+        hoverable
+            ? 'text-text-tertiary hover:text-accent-primary'
+            : 'text-text-secondary',
+    ]}
 >
     <span class="sr-only">Go to John's GitHub repo</span>
     <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32"
@@ -19,19 +24,3 @@ const { hoverable = false } = Astro.props
         ></path></svg
     >
 </a>
-
-<style>
-    a {
-        text-decoration: none;
-        display: flex;
-    }
-    a:not(.hoverable) {
-        color: rgb(var(--gray-dark));
-    }
-    a.hoverable {
-        color: rgb(var(--gray));
-    }
-    a.hoverable:hover {
-        color: rgb(var(--gray-dark));
-    }
-</style>

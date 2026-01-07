@@ -5,79 +5,86 @@
   License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
  */
 
-:root {
+@variant dark (.dark &);
+
+@theme {
+    /* Font Family */
     --font-mono:
         ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Monaco,
         'Courier New', monospace;
+
+    /* Custom Spacing */
+    --spacing-prose: 720px;
+    --spacing-blog-grid: 960px;
+
+    /* Light Mode Colors (default) */
+    --color-bg-primary: #ffffff;
+    --color-bg-secondary: #f6f8fa;
+    --color-bg-tertiary: #eaeef2;
+    --color-bg-elevated: #ffffff;
+
+    --color-text-primary: #1f2328;
+    --color-text-secondary: #656d76;
+    --color-text-tertiary: #8c959f;
+    --color-text-heading: #0d1117;
+
+    --color-accent-primary: #00b894;
+    --color-accent-hover: #00916e;
+    --color-accent-muted: rgba(0, 184, 148, 0.1);
+
+    --color-border-default: #d0d7de;
+    --color-border-muted: #eaeef2;
+    --color-shadow-default: rgba(31, 35, 40, 0.12);
+
+    --color-code-bg: #f6f8fa;
+    --color-code-inline-bg: rgba(175, 184, 193, 0.2);
 }
 
-[data-theme='dark'] {
-    --bg-primary: #0d1117;
-    --bg-secondary: #161b22;
-    --bg-tertiary: #1c2128;
-    --bg-elevated: #21262d;
+html.dark {
+    /* Dark Mode Colors */
+    --color-bg-primary: #0d1117;
+    --color-bg-secondary: #161b22;
+    --color-bg-tertiary: #1c2128;
+    --color-bg-elevated: #21262d;
 
-    --text-primary: #e6edf3;
-    --text-secondary: #8b949e;
-    --text-tertiary: #6e7681;
-    --text-heading: #ffffff;
+    --color-text-primary: #e6edf3;
+    --color-text-secondary: #8b949e;
+    --color-text-tertiary: #6e7681;
+    --color-text-heading: #ffffff;
 
-    --accent-primary: #07f5bd;
-    --accent-hover: #00dca8;
-    --accent-muted: rgba(7, 245, 189, 0.15);
+    --color-accent-primary: #07f5bd;
+    --color-accent-hover: #00dca8;
+    --color-accent-muted: rgba(7, 245, 189, 0.15);
 
-    --border-default: #30363d;
-    --border-muted: #21262d;
-    --shadow-default: rgba(1, 4, 9, 0.8);
+    --color-border-default: #30363d;
+    --color-border-muted: #21262d;
+    --color-shadow-default: rgba(1, 4, 9, 0.8);
 
-    --code-bg: #161b22;
-    --code-inline-bg: rgba(110, 118, 129, 0.2);
+    --color-code-bg: #161b22;
+    --color-code-inline-bg: rgba(110, 118, 129, 0.2);
 }
 
-[data-theme='light'] {
-    --bg-primary: #ffffff;
-    --bg-secondary: #f6f8fa;
-    --bg-tertiary: #eaeef2;
-    --bg-elevated: #ffffff;
+/* Custom Utilities */
+@utility prose-width {
+    width: var(--spacing-prose);
+    max-width: calc(100% - 2em);
+    margin-left: auto;
+    margin-right: auto;
+}
 
-    --text-primary: #1f2328;
-    --text-secondary: #656d76;
-    --text-tertiary: #8c959f;
-    --text-heading: #0d1117;
-
-    --accent-primary: #00b894;
-    --accent-hover: #00916e;
-    --accent-muted: rgba(0, 184, 148, 0.1);
-
-    --border-default: #d0d7de;
-    --border-muted: #eaeef2;
-    --shadow-default: rgba(31, 35, 40, 0.12);
-
-    --code-bg: #f6f8fa;
-    --code-inline-bg: rgba(175, 184, 193, 0.2);
+@utility blog-grid-width {
+    width: var(--spacing-blog-grid);
+    max-width: calc(100% - 2em);
+    margin-left: auto;
+    margin-right: auto;
 }
 body {
     font-family: var(--font-mono);
-    margin: 0;
-    padding: 0;
-    text-align: left;
-    background: var(--bg-primary);
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    color: var(--text-primary);
-    font-size: 16px;
-    line-height: 1.6;
+    @apply bg-bg-primary text-text-primary m-0 flex min-h-screen flex-col justify-between p-0 text-left text-base leading-relaxed break-words;
     letter-spacing: -0.01em;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
 }
 main {
-    width: 720px;
-    max-width: calc(100% - 2em);
-    margin: auto;
-    padding: 3em 1em;
+    @apply prose-width px-4 py-12;
 }
 h1,
 h2,
@@ -86,7 +93,7 @@ h4,
 h5,
 h6 {
     margin: 0 0 0.5rem 0;
-    color: var(--text-heading);
+    @apply text-text-heading;
     line-height: 1.2;
     letter-spacing: -0.02em;
 }
@@ -132,16 +139,14 @@ img {
 }
 code {
     padding: 2px 6px;
-    background: var(--code-inline-bg);
-    color: var(--text-primary);
+    @apply bg-code-inline-bg text-text-primary;
     border-radius: 4px;
     font-size: 0.9em;
     font-family: var(--font-mono);
 }
 pre {
     padding: 1rem;
-    background: var(--code-bg);
-    border: 1px solid var(--border-default);
+    @apply bg-code-bg border-border-default border;
     border-radius: 6px;
     overflow-x: auto;
 }
@@ -150,8 +155,7 @@ pre > code {
     padding: 0;
 }
 blockquote {
-    border-left: 3px solid var(--accent-primary);
-    background: var(--bg-secondary);
+    @apply border-accent-primary bg-bg-secondary border-l-4;
     padding: 1rem 1.5rem;
     margin: 1.5rem 0;
     border-radius: 0 6px 6px 0;
@@ -159,7 +163,7 @@ blockquote {
 }
 hr {
     border: none;
-    border-top: 1px solid var(--border-muted);
+    @apply border-border-muted border-t;
 }
 @media (max-width: 720px) {
     body {
@@ -172,27 +176,21 @@ hr {
 
 /* Link styling */
 a {
-    color: var(--accent-primary);
-    text-decoration: underline;
-    text-decoration-color: var(--accent-muted);
-    transition: all 0.2s ease;
+    @apply text-accent-primary decoration-accent-muted underline transition-all duration-200;
 }
 
 a:hover {
-    color: var(--accent-hover);
-    text-decoration-color: var(--accent-primary);
+    @apply text-accent-hover decoration-accent-primary;
 }
 
 /* Selection color */
 ::selection {
-    background: var(--accent-muted);
-    color: var(--text-primary);
+    @apply bg-accent-muted text-text-primary;
 }
 
 /* Focus indicators */
 :focus-visible {
-    outline: 2px solid var(--accent-primary);
-    outline-offset: 2px;
+    @apply outline-accent-primary outline-2 outline-offset-2;
 }
 
 .sr-only {

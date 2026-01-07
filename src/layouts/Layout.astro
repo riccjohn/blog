@@ -13,22 +13,28 @@ const { title, description } = Astro.props
 
 <html lang="en">
     <head>
+        <script is:inline>
+            // Initialize theme before any rendering to prevent FOUC
+            const storedTheme = localStorage.getItem('theme-preference')
+            const systemPrefersDark = window.matchMedia(
+                '(prefers-color-scheme: dark)'
+            ).matches
+            const theme = storedTheme || (systemPrefersDark ? 'dark' : 'light')
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark')
+            } else {
+                document.documentElement.classList.remove('dark')
+            }
+        </script>
         <BaseHead title={title} description={description} />
     </head>
     <body>
         <Header />
-        <main>
+        <main
+            class="prose-width flex h-full flex-grow flex-col px-4 py-12 max-md:p-4"
+        >
             <slot />
         </main>
         <Footer />
     </body>
 </html>
-
-<style>
-    main {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        height: 100%;
-    }
-</style>

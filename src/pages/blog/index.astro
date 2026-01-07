@@ -14,94 +14,59 @@ const posts = (await getCollection('blog')).sort(
 <!doctype html>
 <html lang="en">
     <head>
+        <script is:inline>
+            // Initialize theme before any rendering to prevent FOUC
+            const storedTheme = localStorage.getItem('theme-preference')
+            const systemPrefersDark = window.matchMedia(
+                '(prefers-color-scheme: dark)'
+            ).matches
+            const theme = storedTheme || (systemPrefersDark ? 'dark' : 'light')
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark')
+            } else {
+                document.documentElement.classList.remove('dark')
+            }
+        </script>
         <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-        <style>
-            main {
-                width: 960px;
-            }
-            ul {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 2rem;
-                list-style-type: none;
-                margin: 0;
-                padding: 0;
-            }
-            ul li {
-                width: calc(50% - 1rem);
-            }
-            ul li * {
-                text-decoration: none;
-                transition: 0.2s ease;
-            }
-            ul li:first-child {
-                width: 100%;
-                margin-bottom: 1rem;
-                text-align: center;
-            }
-            ul li:first-child img {
-                width: 100%;
-            }
-            ul li:first-child .title {
-                font-size: 2.369rem;
-            }
-            ul li img {
-                margin-bottom: 0.5rem;
-                border-radius: 12px;
-            }
-            ul li a {
-                display: block;
-            }
-            .title {
-                margin: 0;
-                color: rgb(var(--black));
-                line-height: 1;
-            }
-            .date {
-                margin: 0;
-                color: rgb(var(--gray));
-            }
-            ul li a:hover h4,
-            ul li a:hover .date {
-                color: rgb(var(--accent));
-            }
-            ul a:hover img {
-                box-shadow: var(--box-shadow);
-            }
-            @media (max-width: 720px) {
-                ul {
-                    gap: 0.5em;
-                }
-                ul li {
-                    width: 100%;
-                    text-align: center;
-                }
-                ul li:first-child {
-                    margin-bottom: 0;
-                }
-                ul li:first-child .title {
-                    font-size: 1.563em;
-                }
-            }
-        </style>
     </head>
     <body>
         <Header />
-        <main>
+        <main class="blog-grid-width">
             <section>
-                <ul>
+                <ul class="m-0 flex list-none flex-wrap gap-8 p-0 max-md:gap-2">
                     {
-                        posts.map((post) => (
-                            <li>
-                                <a href={`/blog/${post.id}/`}>
+                        posts.map((post, index) => (
+                            <li
+                                class:list={[
+                                    'w-[calc(50%-1rem)] max-md:w-full max-md:text-center',
+                                    index === 0 &&
+                                        'mb-4 w-full text-center max-md:mb-0',
+                                ]}
+                            >
+                                <a
+                                    href={`/blog/${post.id}/`}
+                                    class="group block [&>*]:no-underline [&>*]:transition-all [&>*]:duration-200"
+                                >
                                     <img
+                                        class:list={[
+                                            'border-border-default group-hover:border-accent-primary mb-2 rounded-xl border group-hover:shadow-[0_0_0_2px_var(--color-accent-muted)]',
+                                            index === 0 && 'w-full',
+                                        ]}
                                         width={720}
                                         height={360}
                                         src={post.data.heroImage}
                                         alt=""
                                     />
-                                    <h4 class="title">{post.data.title}</h4>
-                                    <p class="date">
+                                    <h4
+                                        class:list={[
+                                            'title text-text-heading group-hover:text-accent-primary m-0 leading-none',
+                                            index === 0 &&
+                                                'text-[2.369rem] max-md:text-[1.563rem]',
+                                        ]}
+                                    >
+                                        {post.data.title}
+                                    </h4>
+                                    <p class="date text-text-secondary group-hover:text-accent-primary m-0">
                                         <FormattedDate
                                             date={post.data.pubDate}
                                         />
