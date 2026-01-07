@@ -1,74 +1,83 @@
 [![Netlify Status](https://api.netlify.com/api/v1/badges/9bbdb904-26ca-4ea9-b837-120553cd9f9c/deploy-status)](https://app.netlify.com/sites/arcanegrain/deploys)
 
-# Astro Starter Kit: Blog
+# Arcane Grain
 
-```sh
-pnpm create astro@latest -- --template blog
+Personal blog and portfolio for John Riccardi, a web developer and consultant with a background in design and animation.
+
+🌐 **Live Site**: [arcanegrain.dev](https://arcanegrain.dev)
+
+## Tech Stack
+
+- **Framework**: [Astro 5](https://astro.build) - Fast, content-focused static site generator
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com) + custom CSS
+- **Content**: Markdown/MDX with type-safe content collections
+- **Deployment**: [Netlify](https://netlify.com) with continuous deployment
+- **Package Manager**: pnpm
+
+## Features
+
+- 100/100 Lighthouse performance score
+- SEO-friendly with canonical URLs and OpenGraph metadata
+- RSS feed support
+- Automatic sitemap generation
+- Type-safe content with Zod schema validation
+- Responsive design optimized for mobile and desktop
+- Git hooks for automatic code formatting
+
+## Local Development
+
+```bash
+# Install dependencies
+pnpm install
+
+# Start dev server at localhost:4321
+pnpm dev
+
+# Build for production
+pnpm build
+
+# Preview production build
+pnpm preview
+
+# Type checking
+pnpm astro check
+
+# Format code
+pnpm run prettier:write
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/blog)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/blog)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/blog/devcontainer.json)
+## Project Structure
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-![blog](https://github.com/withastro/astro/assets/2244813/ff10799f-a816-4703-b967-c78997e8323d)
-
-Features:
-
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and OpenGraph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-├── public/
+```
 ├── src/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+│   ├── components/      # Reusable UI components
+│   ├── content/         # Blog posts and content collections
+│   ├── layouts/         # Page templates
+│   ├── pages/           # File-based routing
+│   └── styles/          # Global CSS
+├── public/              # Static assets (images, fonts, downloads)
+└── .claude.json         # Claude Code MCP server configuration
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Adding New Blog Posts
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+Create a new `.md` or `.mdx` file in `src/content/blog/` with the following frontmatter:
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+```yaml
+---
+title: 'Your Post Title'
+description: 'SEO description for the post'
+pubDate: '2024-01-01'
+heroImage: '/images/hero.jpg' # Optional
+---
+```
 
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                | Action                                           |
-| :--------------------- | :----------------------------------------------- |
-| `pnpm install`         | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Files prefixed with `.` (e.g., `.draft-post.md`) are excluded from builds.
 
 ## Claude Code Configuration
 
-This project includes a `.claude.json` file that configures the Playwright MCP server for automated browser testing when using [Claude Code](https://claude.ai/code). If you're using Claude Code, visual testing capabilities are automatically available.
+This project includes a `.claude.json` file that configures the Playwright MCP server for automated browser testing when using [Claude Code](https://claude.ai/code). See `CLAUDE.md` for detailed guidance on working with this codebase.
 
-## Credit
+## Credits
 
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+Theme based on [Bear Blog](https://github.com/HermanMartinus/bearblog/) by Herman Martinus.
