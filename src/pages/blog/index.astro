@@ -5,6 +5,7 @@ import Footer from '@/components/Footer.astro'
 import { SITE_TITLE, SITE_DESCRIPTION } from '@/consts'
 import { getCollection } from 'astro:content'
 import FormattedDate from '@/components/FormattedDate.astro'
+import { THEME_INIT_SCRIPT } from '@/utils/theme'
 
 const posts = (await getCollection('blog')).sort(
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
@@ -14,19 +15,7 @@ const posts = (await getCollection('blog')).sort(
 <!doctype html>
 <html lang="en">
     <head>
-        <script is:inline>
-            // Initialize theme before any rendering to prevent FOUC
-            const storedTheme = localStorage.getItem('theme-preference')
-            const systemPrefersDark = window.matchMedia(
-                '(prefers-color-scheme: dark)'
-            ).matches
-            const theme = storedTheme || (systemPrefersDark ? 'dark' : 'light')
-            if (theme === 'dark') {
-                document.documentElement.classList.add('dark')
-            } else {
-                document.documentElement.classList.remove('dark')
-            }
-        </script>
+        <script is:inline set:html={THEME_INIT_SCRIPT} />
         <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
     </head>
     <body>

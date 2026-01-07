@@ -96,61 +96,18 @@
     </svg>
 </button>
 
-<script is:inline>
-    // Initialize theme on page load
-    const initTheme = () => {
-        const storedTheme = localStorage.getItem('theme-preference')
-        const systemPrefersDark = window.matchMedia(
-            '(prefers-color-scheme: dark)'
-        ).matches
-        const theme = storedTheme || (systemPrefersDark ? 'dark' : 'light')
-        if (theme === 'dark') {
-            document.documentElement.classList.add('dark')
-        } else {
-            document.documentElement.classList.remove('dark')
-        }
-    }
+<script>
+    import {
+        initTheme,
+        toggleTheme,
+        observeSystemThemeChanges,
+    } from '@/utils/theme'
 
-    // Set theme and save preference
-    const setTheme = (theme) => {
-        if (theme === 'dark') {
-            document.documentElement.classList.add('dark')
-        } else {
-            document.documentElement.classList.remove('dark')
-        }
-        localStorage.setItem('theme-preference', theme)
-    }
-
-    // Get current theme
-    const getTheme = () => {
-        return document.documentElement.classList.contains('dark')
-            ? 'dark'
-            : 'light'
-    }
-
-    // Toggle theme
-    const toggleTheme = () => {
-        const currentTheme = getTheme()
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark'
-        setTheme(newTheme)
-    }
-
-    // Initialize on load
     initTheme()
+    observeSystemThemeChanges()
 
-    // Add event listener to toggle button
     const toggle = document.getElementById('theme-toggle')
     if (toggle) {
         toggle.addEventListener('click', toggleTheme)
     }
-
-    // Listen for system preference changes (optional enhancement)
-    window
-        .matchMedia('(prefers-color-scheme: dark)')
-        .addEventListener('change', (e) => {
-            // Only auto-switch if user hasn't set a preference
-            if (!localStorage.getItem('theme-preference')) {
-                setTheme(e.matches ? 'dark' : 'light')
-            }
-        })
 </script>

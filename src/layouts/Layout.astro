@@ -3,6 +3,7 @@ import BaseHead from '@/components/BaseHead.astro'
 import Footer from '@/components/Footer.astro'
 import Header from '@/components/Header.astro'
 import '@/styles/global.css'
+import { THEME_INIT_SCRIPT } from '@/utils/theme'
 
 interface Props {
     title: string
@@ -13,19 +14,7 @@ const { title, description } = Astro.props
 
 <html lang="en">
     <head>
-        <script is:inline>
-            // Initialize theme before any rendering to prevent FOUC
-            const storedTheme = localStorage.getItem('theme-preference')
-            const systemPrefersDark = window.matchMedia(
-                '(prefers-color-scheme: dark)'
-            ).matches
-            const theme = storedTheme || (systemPrefersDark ? 'dark' : 'light')
-            if (theme === 'dark') {
-                document.documentElement.classList.add('dark')
-            } else {
-                document.documentElement.classList.remove('dark')
-            }
-        </script>
+        <script is:inline set:html={THEME_INIT_SCRIPT} />
         <BaseHead title={title} description={description} />
     </head>
     <body>
