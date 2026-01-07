@@ -22,14 +22,16 @@ const posts = (await getCollection('blog')).sort(
         <Header />
         <main class="blog-grid-width">
             <section>
-                <ul class="m-0 flex list-none flex-wrap gap-8 p-0 max-md:gap-2">
+                <ul
+                    class="m-0 grid list-none grid-cols-2 gap-8 p-0 max-md:grid-cols-1 max-md:gap-2"
+                >
                     {
                         posts.map((post, index) => (
                             <li
                                 class:list={[
-                                    'w-[calc(50%-1rem)] max-md:w-full max-md:text-center',
+                                    'max-md:text-center',
                                     index === 0 &&
-                                        'mb-4 w-full text-center max-md:mb-0',
+                                        'col-span-2 mb-4 text-center max-md:col-span-1 max-md:mb-0',
                                 ]}
                             >
                                 <a

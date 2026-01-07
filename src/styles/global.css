@@ -150,6 +150,9 @@ pre {
     border-radius: 6px;
     overflow-x: auto;
 }
+.prose pre {
+    margin-bottom: 2em;
+}
 pre > code {
     background: transparent;
     padding: 0;

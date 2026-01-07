@@ -19,7 +19,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props
 
     <body>
         <Header />
-        <main class="m-0 w-[calc(100%-2em)] max-w-full">
+        <main class="m-0 max-w-full">
             <article>
                 <div class="hero-image w-full">
                     {
@@ -34,7 +34,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props
                         )
                     }
                 </div>
-                <div class="prose prose-width text-text-primary p-4">
+                <div class="prose prose-width text-text-primary">
                     <div class="title mb-4 py-4 text-center leading-none">
                         <div class="date text-text-secondary mb-2">
                             <FormattedDate date={pubDate} />
