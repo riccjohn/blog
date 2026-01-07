@@ -58,6 +58,32 @@ Optional fields:
 - **Social Components**: Follow existing pattern in `src/components/Social/*.astro` with `hoverable` prop and SVG icons
 - **Global Constants**: Site metadata in `src/consts.ts` (SITE_TITLE, SITE_DESCRIPTION)
 
+## Testing & Visual Verification
+
+This project has the **Playwright MCP server** configured in `.claude.json`, which provides browser automation capabilities for testing and visual verification.
+
+**Note for Claude Code users**: The MCP server is automatically available when working in this repository. No additional setup needed.
+
+### When to Use Playwright
+
+Use Playwright proactively for:
+
+- **Visual/Design Changes**: After modifying layouts, components, or styles, use Playwright to capture screenshots and verify rendering across viewports
+- **New Features**: When adding new UI components or pages, test functionality and appearance automatically
+- **Responsive Design**: Verify pages render correctly on mobile (375px), tablet (768px), and desktop (1280px) viewports
+- **Cross-Browser Testing**: Test in Chromium, Firefox, and WebKit when making significant changes
+- **Regression Prevention**: Before completing a task, capture screenshots to ensure no unintended visual changes occurred
+
+### Playwright Workflow
+
+1. Start dev server: `pnpm dev`
+2. Use Playwright MCP to navigate to `localhost:4321`
+3. Take screenshots at different viewport sizes
+4. Verify interactive elements (links, buttons, navigation)
+5. Check console for errors or warnings
+
+This ensures design quality without manual browser testing for every change.
+
 ## PR and Quality Requirements
 
 ### PR Rules
@@ -82,6 +108,10 @@ DO NOT consider a task complete if there are TypeScript errors, lint warnings, o
 
 Design is critical. Before merging:
 
+- **Use Playwright MCP** to automate visual verification (preferred method)
+    - Capture screenshots at mobile (375px), tablet (768px), and desktop (1280px) viewports
+    - Test interactive elements programmatically
+    - Check browser console for errors
 - Visually inspect all affected pages on desktop and mobile
 - Check typography, spacing, colors, alignment
 - Verify links, buttons, images, and interactive elements

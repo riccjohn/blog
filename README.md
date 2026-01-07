@@ -65,6 +65,10 @@ All commands are run from the root of the project, from a terminal:
 
 Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
 
+## Claude Code Configuration
+
+This project includes a `.claude.json` file that configures the Playwright MCP server for automated browser testing when using [Claude Code](https://claude.ai/code). If you're using Claude Code, visual testing capabilities are automatically available.
+
 ## Credit
 
 This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
