@@ -36,7 +36,7 @@ const posts = (await getCollection('blog')).sort(
                             >
                                 <a
                                     href={`/blog/${post.id}/`}
-                                    class="group block [&>*]:no-underline [&>*]:transition-all [&>*]:duration-200"
+                                    class="group block no-underline [&>*]:no-underline [&>*]:transition-all [&>*]:duration-200"
                                 >
                                     <img
                                         class:list={[
