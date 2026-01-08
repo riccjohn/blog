@@ -60,6 +60,61 @@ Optional fields:
 - Returns an `ImageMetadata` object with `src`, `width`, `height`, and `format` properties
 - Images in `public/` bypass this optimization and are served as-is
 
+## Design Philosophy
+
+**Critical**: This project has a distinctive terminal/developer-focused aesthetic. All design work must maintain this identity and avoid generic, AI-generated looks.
+
+### Design Direction
+
+- **Style**: Terminal-inspired with monospace typography
+- **Accent Color**: Bright cyan (#07f5bd) for dark mode, teal (#00b894) for light mode
+- **Aesthetic**: Clean, professional, developer-friendly
+- **Theme Support**: Full dark/light mode with smooth transitions
+
+**Reference**: `.claude/context/design-system.md` contains comprehensive design specifications
+
+### Design Quality Standards
+
+**NEVER create generic-looking components that could have been AI-generated. Every component must feel custom and intentional.**
+
+#### What to AVOID:
+
+- Generic rounded corners everywhere (rounded-lg on everything)
+- Default Tailwind button styles (blue bg, white text)
+- Cookie-cutter card shadows (shadow-md/lg)
+- Predictable hover effects (simple color changes)
+- Template-like layouts that lack personality
+
+#### What to CREATE:
+
+- **Distinctive visual identity**: Follow the established terminal aesthetic
+- **Consistent design language**: Match existing component patterns exactly
+- **Thoughtful details**: Custom animations, intentional transitions
+- **Original interaction patterns**: Hovers and states that feel polished
+- **Design consistency**: If one component uses `border border-border-default`, all borders should follow this pattern
+
+### Design Consistency Protocol
+
+**For ANY new component:**
+
+1. **First, examine existing components** in the codebase
+2. **Extract established patterns**: border radius, shadows, spacing, colors, typography
+3. **Match those patterns exactly**: Use the same Tailwind classes and values
+4. **Reference design-system.md**: Check color palette, spacing scale, and component patterns
+5. **Maintain accessibility**: WCAG 2.1 AA minimum (4.5:1 contrast for text)
+
+### Self-Review Checklist for Design Work
+
+Before considering design work complete, verify:
+
+- [ ] Does this look like a generic template? (If yes, redesign immediately)
+- [ ] Is it perfectly consistent with other components in the project?
+- [ ] Does it match the terminal/developer aesthetic defined in design-system.md?
+- [ ] Are all interactions smooth, intentional, and polished?
+- [ ] Would a user recognize this as custom-designed (not AI-generated)?
+- [ ] Is the component responsive and accessible (WCAG 2.1 AA)?
+- [ ] Have I used the exact same design patterns as existing components?
+
 ## Important Patterns
 
 - **Layout Props**: `Layout.astro` expects `{ title: string, description: string }`, `BlogPost.astro` expects `CollectionEntry<'blog'>`
@@ -67,6 +122,7 @@ Optional fields:
 - **Hero Images**: Size at 1020×510px in blog post layout
 - **Social Components**: Follow existing pattern in `src/components/Social/*.astro` with `hoverable` prop and SVG icons
 - **Global Constants**: Site metadata in `src/consts.ts` (SITE_TITLE, SITE_DESCRIPTION)
+- **Design System**: Always reference `.claude/context/design-system.md` before implementing any UI changes
 
 ## Code Style & Quality
 
@@ -82,21 +138,45 @@ This project has the **Playwright MCP server** configured in `.claude.json`, whi
 
 ### When to Use Playwright
 
-Use Playwright proactively for:
+**Use Playwright proactively for ALL visual/design changes:**
 
-- **Visual/Design Changes**: After modifying layouts, components, or styles, use Playwright to capture screenshots and verify rendering across viewports
-- **New Features**: When adding new UI components or pages, test functionality and appearance automatically
-- **Responsive Design**: Verify pages render correctly on mobile (375px), tablet (768px), and desktop (1280px) viewports
-- **Cross-Browser Testing**: Test in Chromium, Firefox, and WebKit when making significant changes
-- **Regression Prevention**: Before completing a task, capture screenshots to ensure no unintended visual changes occurred
+- After modifying layouts, components, or styles
+- When adding new UI components or pages
+- When updating colors, spacing, typography, or borders
+- Before completing any design-related task
+- To verify responsive behavior across devices
 
 ### Playwright Workflow
 
-1. Start dev server: `pnpm dev`
-2. Use Playwright MCP to navigate to `localhost:4321`
-3. Take screenshots at different viewport sizes
-4. Verify interactive elements (links, buttons, navigation)
-5. Check console for errors or warnings
+1. **Start dev server**: `pnpm dev`
+2. **Navigate to page**: Use `browser_navigate` to open `localhost:4321` or specific routes
+3. **Capture screenshots at multiple viewports**:
+    - Mobile: 375px width
+    - Tablet: 768px width
+    - Desktop: 1280px width
+4. **Store screenshots**: Save all screenshots to `.playwright-mcp/` directory (gitignored)
+5. **Verify accessibility**: Use `browser_snapshot` to check accessibility tree structure
+6. **Wait for content**: Use `browser_wait` if pages need time to load or render
+7. **Check console**: Verify no errors or warnings in browser console
+
+### Playwright Tools Available
+
+- `browser_navigate` - Navigate to specific URLs
+- `browser_screenshot` - Capture page screenshots
+- `browser_snapshot` - Get accessibility tree data
+- `browser_wait` - Wait for page loads or specific timeouts
+
+**Important**: Always store screenshots in `.playwright-mcp/` to keep them out of version control.
+
+### Visual Verification is Required
+
+Before marking any design work as complete:
+
+1. **Take screenshots** at mobile, tablet, and desktop sizes
+2. **Compare** against existing components for consistency
+3. **Verify** the design matches the terminal aesthetic
+4. **Check** that nothing looks generic or AI-generated
+5. **Test** all interactive states (hover, focus, active)
 
 This ensures design quality without manual browser testing for every change.
 
@@ -116,22 +196,39 @@ Before opening a PR, verify:
 1. `pnpm run prettier:write` - Code is formatted
 2. `pnpm astro check` - No TypeScript errors
 3. `pnpm build` - Build succeeds
-4. `pnpm dev` - Visual inspection of affected pages (desktop + mobile)
+4. **Visual verification** (for any UI changes):
+    - Use Playwright MCP to capture screenshots at mobile, tablet, desktop sizes
+    - Verify design consistency with existing components
+    - Confirm nothing looks generic or AI-generated
+    - Check all interactive states (hover, focus, active)
+    - Verify WCAG 2.1 AA accessibility standards
+5. **Design consistency** (for any UI changes):
+    - Components match established terminal aesthetic
+    - Uses exact same design patterns as existing components
+    - References design-system.md for colors, spacing, typography
+    - Self-review checklist completed
 
-DO NOT consider a task complete if there are TypeScript errors, lint warnings, or formatting issues.
+DO NOT consider a task complete if:
+
+- There are TypeScript errors, lint warnings, or formatting issues
+- Design work hasn't been visually verified with Playwright
+- Components look generic or could have been AI-generated
+- Design patterns don't match existing components
 
 ### Design Verification
 
-Design is critical. Before merging:
+Design quality is critical. Before merging:
 
-- **Use Playwright MCP** to automate visual verification (preferred method)
+- **Use Playwright MCP** to automate visual verification (required for all design changes)
     - Capture screenshots at mobile (375px), tablet (768px), and desktop (1280px) viewports
+    - Store screenshots in `.playwright-mcp/` directory
     - Test interactive elements programmatically
     - Check browser console for errors
-- Visually inspect all affected pages on desktop and mobile
-- Check typography, spacing, colors, alignment
-- Verify links, buttons, images, and interactive elements
-- Test layout changes on multiple pages that use modified layouts/components
+- **Verify design consistency**:
+    - Components match the terminal/developer aesthetic
+    - Nothing looks generic or AI-generated
+    - Uses exact same patterns as existing components (borders, spacing, colors, typography)
+    - All design decisions are intentional and polished
 - Include screenshots in PR description for visual changes
 
 ## Common Tasks
