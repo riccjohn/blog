@@ -68,6 +68,12 @@ Optional fields:
 - **Social Components**: Follow existing pattern in `src/components/Social/*.astro` with `hoverable` prop and SVG icons
 - **Global Constants**: Site metadata in `src/consts.ts` (SITE_TITLE, SITE_DESCRIPTION)
 
+## Code Style & Quality
+
+- Prefer using arrow functions over the 'function' keyword
+- Never use the 'any' type unless absolutely necessary (extremely rare)
+- Never use '!' in CSS/Tailwind
+
 ## Testing & Visual Verification
 
 This project has the **Playwright MCP server** configured in `.claude.json`, which provides browser automation capabilities for testing and visual verification.
