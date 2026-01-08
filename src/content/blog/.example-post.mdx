@@ -3,7 +3,7 @@ title: 'Example Blog Post'
 description: 'This is an example post showing required and optional frontmatter fields. See src/content.config.ts for the schema.'
 pubDate: '2025-01-15'
 updatedDate: '2025-01-16'
-heroImage: '/blog-placeholder-1.jpg'
+# heroImage: '../../assets/images/your-image.jpg'
 ---
 
 # Writing Blog Posts
@@ -21,7 +21,7 @@ All posts **must** include:
 Optional fields:
 
 - `updatedDate` (string, coerced to Date): Last update date if different from `pubDate`
-- `heroImage` (string): Path to a cover image (sized 1020×510 in `BlogPost.astro`)
+- `heroImage` (image): Relative path to a cover image in `src/assets/images/` (sized 1020×510 in `BlogPost.astro`). Use relative path like `../../assets/images/your-image.jpg`
 
 ## File Naming
 

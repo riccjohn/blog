@@ -5,6 +5,7 @@ import Footer from '@/components/Footer.astro'
 import { SITE_TITLE, SITE_DESCRIPTION } from '@/consts'
 import { getCollection } from 'astro:content'
 import FormattedDate from '@/components/FormattedDate.astro'
+import { Image } from 'astro:assets'
 import { THEME_INIT_SCRIPT } from '@/utils/theme'
 
 const posts = (await getCollection('blog')).sort(
@@ -38,16 +39,18 @@ const posts = (await getCollection('blog')).sort(
                                     href={`/blog/${post.id}/`}
                                     class="group block no-underline [&>*]:no-underline [&>*]:transition-all [&>*]:duration-200"
                                 >
-                                    <img
-                                        class:list={[
-                                            'border-border-default group-hover:border-accent-primary mb-2 rounded-xl border group-hover:shadow-[0_0_0_2px_var(--color-accent-muted)]',
-                                            index === 0 && 'w-full',
-                                        ]}
-                                        width={720}
-                                        height={360}
-                                        src={post.data.heroImage}
-                                        alt=""
-                                    />
+                                    {post.data.heroImage && (
+                                        <Image
+                                            class:list={[
+                                                'border-border-default group-hover:border-accent-primary mb-2 rounded-xl border group-hover:shadow-[0_0_0_2px_var(--color-accent-muted)]',
+                                                index === 0 && 'w-full',
+                                            ]}
+                                            width={720}
+                                            height={360}
+                                            src={post.data.heroImage}
+                                            alt=""
+                                        />
+                                    )}
                                     <h4
                                         class:list={[
                                             'title text-text-heading group-hover:text-accent-primary m-0 leading-none',
