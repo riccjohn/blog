@@ -3,6 +3,7 @@ import BaseHead from '@/components/BaseHead.astro'
 import Footer from '@/components/Footer.astro'
 import Header from '@/components/Header.astro'
 import '@/styles/global.css'
+import { THEME_INIT_SCRIPT } from '@/utils/theme'
 
 interface Props {
     title: string
@@ -13,22 +14,16 @@ const { title, description } = Astro.props
 
 <html lang="en">
     <head>
+        <script is:inline set:html={THEME_INIT_SCRIPT} />
         <BaseHead title={title} description={description} />
     </head>
     <body>
         <Header />
-        <main>
+        <main
+            class="prose-width flex h-full flex-grow flex-col px-4 py-12 max-md:p-4"
+        >
             <slot />
         </main>
         <Footer />
     </body>
 </html>
-
-<style>
-    main {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        height: 100%;
-    }
-</style>

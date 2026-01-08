@@ -6,5 +6,9 @@
             "args": ["dlx", "@playwright/mcp@latest"],
             "env": {}
         }
+    },
+    "hooks": {
+        "Edit": "pnpm run prettier:write",
+        "Write": "pnpm run prettier:write"
     }
 }

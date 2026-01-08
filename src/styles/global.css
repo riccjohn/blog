@@ -5,54 +5,86 @@
   License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
  */
 
-:root {
-    --accent: #0859a6;
-    --accent-dark: #000d8a;
-    --black: 15, 18, 25;
-    --gray: 96, 115, 159;
-    --gray-light: 229, 233, 240;
-    --gray-dark: 34, 41, 57;
-    --gray-gradient: rgba(var(--gray-light), 50%), #fff;
-    --box-shadow:
-        0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%),
-        0 16px 32px rgba(var(--gray), 33%);
+@variant dark (.dark &);
+
+@theme {
+    /* Font Family */
+    --font-mono:
+        ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Monaco,
+        'Courier New', monospace;
+
+    /* Custom Spacing */
+    --spacing-prose: 720px;
+    --spacing-blog-grid: 960px;
+
+    /* Light Mode Colors (default) */
+    --color-bg-primary: #ffffff;
+    --color-bg-secondary: #f6f8fa;
+    --color-bg-tertiary: #eaeef2;
+    --color-bg-elevated: #ffffff;
+
+    --color-text-primary: #1f2328;
+    --color-text-secondary: #656d76;
+    --color-text-tertiary: #8c959f;
+    --color-text-heading: #0d1117;
+
+    --color-accent-primary: #00b894;
+    --color-accent-hover: #00916e;
+    --color-accent-muted: rgba(0, 184, 148, 0.1);
+
+    --color-border-default: #d0d7de;
+    --color-border-muted: #eaeef2;
+    --color-shadow-default: rgba(31, 35, 40, 0.12);
+
+    --color-code-bg: #f6f8fa;
+    --color-code-inline-bg: rgba(175, 184, 193, 0.2);
 }
-@font-face {
-    font-family: 'Atkinson';
-    src: url('/fonts/atkinson-regular.woff') format('woff');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
+
+html.dark {
+    /* Dark Mode Colors */
+    --color-bg-primary: #0d1117;
+    --color-bg-secondary: #161b22;
+    --color-bg-tertiary: #1c2128;
+    --color-bg-elevated: #21262d;
+
+    --color-text-primary: #e6edf3;
+    --color-text-secondary: #8b949e;
+    --color-text-tertiary: #6e7681;
+    --color-text-heading: #ffffff;
+
+    --color-accent-primary: #07f5bd;
+    --color-accent-hover: #00dca8;
+    --color-accent-muted: rgba(7, 245, 189, 0.15);
+
+    --color-border-default: #30363d;
+    --color-border-muted: #21262d;
+    --color-shadow-default: rgba(1, 4, 9, 0.8);
+
+    --color-code-bg: #161b22;
+    --color-code-inline-bg: rgba(110, 118, 129, 0.2);
 }
-@font-face {
-    font-family: 'Atkinson';
-    src: url('/fonts/atkinson-bold.woff') format('woff');
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
+
+/* Custom Utilities */
+@utility prose-width {
+    width: var(--spacing-prose);
+    max-width: calc(100% - 2em);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@utility blog-grid-width {
+    width: var(--spacing-blog-grid);
+    max-width: calc(100% - 2em);
+    margin-left: auto;
+    margin-right: auto;
 }
 body {
-    font-family: 'Atkinson', sans-serif;
-    margin: 0;
-    padding: 0;
-    text-align: left;
-    background: linear-gradient(var(--gray-gradient)) no-repeat;
-    background-size: 100% 600px;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    color: rgb(var(--gray-dark));
-    font-size: 20px;
-    line-height: 1.7;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    font-family: var(--font-mono);
+    @apply bg-bg-primary text-text-primary m-0 flex min-h-screen flex-col justify-between p-0 text-left text-base leading-relaxed break-words;
+    letter-spacing: -0.01em;
 }
 main {
-    width: 720px;
-    max-width: calc(100% - 2em);
-    margin: auto;
-    padding: 3em 1em;
+    @apply prose-width px-4 py-12;
 }
 h1,
 h2,
@@ -61,23 +93,24 @@ h4,
 h5,
 h6 {
     margin: 0 0 0.5rem 0;
-    color: rgb(var(--black));
+    @apply text-text-heading;
     line-height: 1.2;
+    letter-spacing: -0.02em;
 }
 h1 {
-    font-size: 3.052em;
+    font-size: 2.5em;
 }
 h2 {
-    font-size: 2.441em;
+    font-size: 2em;
 }
 h3 {
-    font-size: 1.953em;
+    font-size: 1.625em;
 }
 h4 {
-    font-size: 1.563em;
+    font-size: 1.375em;
 }
 h5 {
-    font-size: 1.25em;
+    font-size: 1.125em;
 }
 strong,
 b {
@@ -105,34 +138,62 @@ img {
     border-radius: 8px;
 }
 code {
-    padding: 2px 5px;
-    background-color: rgb(var(--gray-light));
-    border-radius: 2px;
+    padding: 2px 6px;
+    @apply bg-code-inline-bg text-text-primary;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-family: var(--font-mono);
 }
 pre {
-    padding: 1.5em;
-    border-radius: 8px;
+    padding: 1rem;
+    @apply bg-code-bg border-border-default border;
+    border-radius: 6px;
+    overflow-x: auto;
+}
+.prose pre {
+    margin-bottom: 2em;
 }
 pre > code {
-    all: unset;
+    background: transparent;
+    padding: 0;
 }
 blockquote {
-    border-left: 4px solid var(--accent);
-    padding: 0 0 0 20px;
-    margin: 0px;
+    @apply border-accent-primary bg-bg-secondary border-l-4;
+    padding: 1rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0 6px 6px 0;
     font-size: 1.333em;
 }
 hr {
     border: none;
-    border-top: 1px solid rgb(var(--gray-light));
+    @apply border-border-muted border-t;
 }
 @media (max-width: 720px) {
     body {
-        font-size: 18px;
+        font-size: 14px;
     }
     main {
         padding: 1em;
     }
+}
+
+/* Link styling */
+a {
+    @apply text-accent-primary decoration-accent-muted underline transition-all duration-200;
+}
+
+a:hover {
+    @apply text-accent-hover decoration-accent-primary;
+}
+
+/* Selection color */
+::selection {
+    @apply bg-accent-muted text-text-primary;
+}
+
+/* Focus indicators */
+:focus-visible {
+    @apply outline-accent-primary outline-2 outline-offset-2;
 }
 
 .sr-only {
