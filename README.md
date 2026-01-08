@@ -50,12 +50,13 @@ pnpm run prettier:write
 
 ```
 ├── src/
+│   ├── assets/          # Images and media for optimization (hero images, etc.)
 │   ├── components/      # Reusable UI components
 │   ├── content/         # Blog posts and content collections
 │   ├── layouts/         # Page templates
 │   ├── pages/           # File-based routing
 │   └── styles/          # Global CSS
-├── public/              # Static assets (images, fonts, downloads)
+├── public/              # Static assets served as-is (fonts, downloads, favicons)
 └── .claude.json         # Claude Code MCP server configuration
 ```
 
@@ -68,9 +69,11 @@ Create a new `.md` or `.mdx` file in `src/content/blog/` with the following fron
 title: 'Your Post Title'
 description: 'SEO description for the post'
 pubDate: '2024-01-01'
-heroImage: '/images/hero.jpg' # Optional
+heroImage: '../../assets/images/hero.jpg' # Optional - relative path from content file
 ---
 ```
+
+**Important**: Store images in `src/assets/images/` (not `public/`) so Astro can optimize them during build. Reference them using relative paths from your content file.
 
 Files prefixed with `.` (e.g., `.draft-post.md`) are excluded from builds.
 

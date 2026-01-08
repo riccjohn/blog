@@ -24,6 +24,7 @@ This is an Astro 5.13.5 static site blog with:
 - **File-based Routing**: Pages in `src/pages/` map to routes (e.g., `src/pages/blog/[...slug].astro` generates `/blog/{post-id}/`)
 - **Layouts**: `src/layouts/Layout.astro` (default page wrapper), `src/layouts/BlogPost.astro` (blog-specific with hero image support)
 - **Components**: Reusable UI in `src/components/`, including social icons in `src/components/Social/`
+- **Assets**: Images stored in `src/assets/` are automatically optimized during build (WebP conversion, responsive sizing)
 - **Styling**: Tailwind CSS 4 via `@tailwindcss/vite` plugin + custom global CSS in `src/styles/global.css`
 - **Path Aliases**: `@/*` maps to `src/*` (use `import X from '@/components/X.astro'`)
 - **Integrations**: MDX (`@astrojs/mdx`), Sitemap (`@astrojs/sitemap`), RSS feed (`@astrojs/rss`)
@@ -41,14 +42,23 @@ Required frontmatter fields in `src/content/blog/*.md` or `*.mdx`:
 Optional fields:
 
 - `updatedDate: Date` - Last update date
-- `heroImage: string` - Featured image URL (rendered at 1020×510px)
+- `heroImage: ImageMetadata` - Featured image (rendered at 1020×510px, automatically optimized)
 
 ### Adding New Posts
 
 1. Create `src/content/blog/your-post-slug.md` with valid frontmatter
-2. Posts prefixed with `.` (e.g., `.example-post.md`) are excluded from builds
-3. Post ID becomes the URL slug: `/blog/your-post-slug/`
-4. Use `getCollection('blog')` to query posts programmatically
+2. Store images in `src/assets/images/` (NOT `public/`) to enable automatic optimization
+3. Reference images using relative paths: `heroImage: '../../assets/images/hero.jpg'`
+4. Posts prefixed with `.` (e.g., `.example-post.md`) are excluded from builds
+5. Post ID becomes the URL slug: `/blog/your-post-slug/`
+6. Use `getCollection('blog')` to query posts programmatically
+
+**Image Handling**: Images in `src/assets/` are processed by Astro's image pipeline, which:
+
+- Converts to WebP format for smaller file sizes
+- Generates responsive image variants
+- Returns an `ImageMetadata` object with `src`, `width`, `height`, and `format` properties
+- Images in `public/` bypass this optimization and are served as-is
 
 ## Important Patterns
 
@@ -120,14 +130,15 @@ Design is critical. Before merging:
 
 ## Common Tasks
 
-| Task                          | Location                                                                    |
-| ----------------------------- | --------------------------------------------------------------------------- |
-| Update site title/description | `src/consts.ts`                                                             |
-| Modify header/footer          | `src/components/Header.astro`, `src/components/Footer.astro`                |
-| Add social icon               | Create `src/components/Social/NewPlatform.astro` following existing pattern |
-| Add new blog post             | Create `src/content/blog/post-slug.md` with schema-compliant frontmatter    |
-| Update RSS feed               | Modify `src/pages/rss.xml.js`                                               |
-| Change global styles          | Edit `src/styles/global.css`                                                |
+| Task                          | Location                                                                     |
+| ----------------------------- | ---------------------------------------------------------------------------- |
+| Update site title/description | `src/consts.ts`                                                              |
+| Modify header/footer          | `src/components/Header.astro`, `src/components/Footer.astro`                 |
+| Add social icon               | Create `src/components/Social/NewPlatform.astro` following existing pattern  |
+| Add new blog post             | Create `src/content/blog/post-slug.md` with schema-compliant frontmatter     |
+| Add blog post images          | Store in `src/assets/images/`, reference with `../../assets/images/file.jpg` |
+| Update RSS feed               | Modify `src/pages/rss.xml.js`                                                |
+| Change global styles          | Edit `src/styles/global.css`                                                 |
 
 ## Key Files Reference
 
