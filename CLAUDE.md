@@ -16,6 +16,38 @@ All commands run from the project root using pnpm:
 | `pnpm run prettier:write` | Auto-format code with Prettier       |
 | `pnpm astro ...`          | Run Astro CLI commands               |
 
+## Claude Code Setup
+
+This project is configured for use with [Claude Code](https://claude.ai/code). Configuration is stored in `.claude.json` at the project root.
+
+### MCP Servers
+
+MCP (Model Context Protocol) servers extend Claude Code's capabilities. This project uses:
+
+| Server       | Purpose                               |
+| ------------ | ------------------------------------- |
+| `playwright` | Browser automation for visual testing |
+
+MCP servers defined in `.claude.json` load automatically when Claude Code starts in this directory.
+
+### First-Time Setup
+
+After cloning the repository:
+
+1. Install project dependencies: `pnpm install`
+2. Install Playwright browsers: `npx playwright install`
+
+### Configuration Files
+
+- **`.claude.json`** - Project-level Claude Code config (MCP servers, hooks). Committed to repo.
+- **`~/.claude.json`** - User-level config for personal settings across all projects. Not committed.
+
+### Hooks
+
+This project uses Claude Code hooks to auto-format code:
+
+- **Edit/Write hooks**: Run `pnpm run prettier:write` after file modifications
+
 ## Architecture Overview
 
 This is an Astro 5.13.5 static site blog with:
