@@ -31,21 +31,26 @@ This skill automates visual quality assurance for the blog using Playwright MCP.
 
 ## Visual Inspection Workflow
 
-### Step 1: Ensure Dev Server is Running
+### Step 1: Check Dev Server Status and Start if Needed
+
+**IMPORTANT:** Track whether the server was already running before starting it. You will need this information at the end to know whether to stop the server.
 
 Check if the dev server is already running on `localhost:4321`:
 
 ```bash
-curl -s http://localhost:4321 > /dev/null && echo "Running" || echo "Not running"
+node .claude/skills/visual-inspection/scripts/visual-inspection.js check-server
 ```
 
-If not running, start it in the background:
+**Note the result:**
+
+- If the server IS running: Remember that `SERVER_WAS_ALREADY_RUNNING = true`
+- If the server is NOT running: Remember that `SERVER_WAS_ALREADY_RUNNING = false`, then start it:
 
 ```bash
-pnpm dev
+node .claude/skills/visual-inspection/scripts/visual-inspection.js start-server
 ```
 
-Wait 3-5 seconds for the server to start.
+The start-server command will wait for the server to be ready before returning.
 
 ### Step 2: Capture Screenshots at All Viewports
 
@@ -229,6 +234,21 @@ Provide a structured report:
 - [Comment on contrast, focus states, touch targets]
 ```
 
+### Step 6: Clean Up - Stop Dev Server if Started
+
+**IMPORTANT:** Only stop the dev server if YOU started it in Step 1.
+
+Check your notes from Step 1:
+
+- If `SERVER_WAS_ALREADY_RUNNING = true`: Do NOT stop the server. Leave it running for the user.
+- If `SERVER_WAS_ALREADY_RUNNING = false`: Stop the server:
+
+```bash
+node .claude/skills/visual-inspection/scripts/visual-inspection.js stop-server
+```
+
+This ensures you don't leave background processes running that the user didn't ask for, while also not disrupting a server the user was already using.
+
 ## Design System Reference
 
 Always cross-reference findings with `.claude/context/design-system.md` for:
@@ -261,6 +281,9 @@ node .claude/skills/visual-inspection/scripts/visual-inspection.js check-server
 
 # Start the dev server
 node .claude/skills/visual-inspection/scripts/visual-inspection.js start-server
+
+# Stop the dev server (kills processes on port 4321)
+node .claude/skills/visual-inspection/scripts/visual-inspection.js stop-server
 
 # List all screenshots with metadata
 node .claude/skills/visual-inspection/scripts/visual-inspection.js list

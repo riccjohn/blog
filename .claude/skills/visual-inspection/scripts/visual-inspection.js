@@ -69,6 +69,66 @@ const startDevServer = async () => {
 }
 
 /**
+ * Stop the dev server by killing processes on port 4321
+ * @returns {Promise<boolean>}
+ */
+const stopDevServer = async () => {
+    try {
+        // First check if server is even running
+        const isRunning = await checkDevServer()
+        if (!isRunning) {
+            console.log('✓ Dev server is not running, nothing to stop')
+            return true
+        }
+
+        console.log('Stopping dev server on port 4321...')
+
+        // Use lsof to find processes on port 4321 and kill them
+        const { execSync } = await import('node:child_process')
+
+        try {
+            // Get PIDs of processes listening on port 4321
+            const output = execSync('lsof -ti :4321', { encoding: 'utf-8' })
+            const pids = output.trim().split('\n').filter(Boolean)
+
+            if (pids.length === 0) {
+                console.log('✓ No processes found on port 4321')
+                return true
+            }
+
+            // Kill each process
+            for (const pid of pids) {
+                try {
+                    execSync(`kill ${pid}`)
+                    console.log(`✓ Killed process ${pid}`)
+                } catch {
+                    // Process may have already exited
+                }
+            }
+
+            // Verify server is stopped
+            await new Promise((resolve) => setTimeout(resolve, 1000))
+            const stillRunning = await checkDevServer()
+
+            if (stillRunning) {
+                console.log('✗ Server is still running after kill attempt')
+                return false
+            }
+
+            console.log('✓ Dev server stopped successfully')
+            return true
+        } catch {
+            // lsof returns non-zero if no processes found
+            console.log('✓ No processes found on port 4321')
+            return true
+        }
+    } catch (error) {
+        console.log(`✗ Error stopping dev server: ${error.message}`)
+        return false
+    }
+}
+
+/**
  * Validate screenshot filename follows conventions
  * Expected format: {viewport}-{pagename}-YYYY-MM-DD.png
  * Example: desktop-homepage-2026-01-09.png
@@ -217,12 +277,14 @@ Usage:
 Commands:
   check-server              Check if dev server is running
   start-server              Start the dev server
+  stop-server               Stop the dev server (kills processes on port 4321)
   clean [--days N]          Remove screenshots older than N days (default: 7)
   list                      List all screenshots with metadata
   validate <filename>       Validate screenshot filename
 
 Examples:
   node visual-inspection.js check-server
+  node visual-inspection.js stop-server
   node visual-inspection.js clean --days 14
   node visual-inspection.js validate desktop-homepage-2026-01-09.png
 		`)
@@ -238,6 +300,11 @@ Examples:
         case 'start-server': {
             const started = await startDevServer()
             process.exit(started ? 0 : 1)
+        }
+
+        case 'stop-server': {
+            const stopped = await stopDevServer()
+            process.exit(stopped ? 0 : 1)
         }
 
         case 'clean': {
