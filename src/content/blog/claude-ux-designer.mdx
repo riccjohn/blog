@@ -1,0 +1,85 @@
+---
+title: 'Using Claude Code to Generate Design Mockups - Part 1: Goals & Setup'
+description: 'An ongoing experiment where I use Claude Code to generate design mockups based on text prompts.'
+pubDate: '2026-01-14'
+updatedDate: '2026-01-14'
+heroImage: '../../assets/images/clawd.png'
+---
+
+_This will be an ongoing experiment where I use [Claude Code](https://claude.ai/code) to generate design mockups based on text prompts. This is not a tutorial (yet), just documentation as I experiment and tinker with my setup!_
+
+# Background
+
+I'm in-between projects right now, so I thought it'd be a good time to experiment with Claude. I've mainly used GitHub Copilot and Cursor, but mostly in a somewhat naive way. With those tools, I found that providing patterns for it to build off of often worked best. With Claude, I started hearing about sub-agents, skills, the CLAUDE.md file, commands, etc., and wanted to figure out how to tie them all together. To start, I'm only using skills and commands, but I'm already starting to see a need for sub-agents.
+
+### The Goal
+
+The goal of this experiment is mainly to learn, but I learn best by creating something useful. So my goal is to create a project where I can consistently generate design mockups from text prompts. The system should have my own design preferences baked in, and then be able to take on prompts to generate designs from. I'm treating Claude as if it were myself. I have my own design preferences and style, but any good designer should be able to adapt to different styles and requirements while still feeling like something they created.
+
+Part of this is also setting up something like a `reset.css` for Claude - a way to reset and override its default design preferences that it picked up from its training data. AI models have a predisposition to mimic common design patterns, use predictable color schemes, layouts, fonts, and use the dreaded [purple AI gradient](https://www.youtube.com/watch?v=AG_791Y-vs4&t=1s) that you'll now start to see everywhere. (Sorry!)
+
+Ultimately, the goal was to have a project ready to go where I could provide a design brief (prompt), have Claude generate a design mockup, then I'd either give feedback or approve it, and then it would take screenshots for me, create some Tailwind configs, and create a prompt that I could then use to begin working on the 'real' project. Code quality is not a concern here - this is all about generating design mockups quickly and easily.
+
+# The Setup
+
+For my current setup, I'm using a combination of a simple CLAUDE.md file, a custom SKILL.md, the Playwright MCP, and then final prompts to generate unique designs. Everything but the final prompt is what creates the "AI Designer", and the final prompt is essentially the design brief for it to create.
+
+## Initial Setup
+
+First, I had Claude set up a simple project using Vite + React + TailwindCSS + RadixUI + Storybook. At first, I was considering doing this with vanilla HTML/CSS/JS, but read somewhere that AI tooling will actually generate better code when using frameworks. Part of that (I assume) is that a lot of the data it was trained on is using frameworks like React. I also assume that when given the structure of a React project, it will be able to better separate components, see when pieces are reusable, and be able to structure the project better.
+
+## CLAUDE.md
+
+After generating the initial project setup, I ran `/init` in Claude Code to have it generate the CLAUDE.md file. This file will be included in all future prompts, and tells Claude about the project as a whole.
+
+Part of this will look like a typical README.md file.
+
+````md
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Purpose
+
+Design mock tool for creating proof-of-concept client website designs using React components.
+
+## Commands
+
+- `npm run dev` - Start Vite dev server
+- `npm run storybook` - Start Storybook on port 6006
+- `npm run build` - Type-check and production build
+- `npm run lint` - Run ESLint
+
+## Stack
+
+- **React 19** with TypeScript
+- **Vite 7** for bundling
+- **Tailwind CSS v4** via `@tailwindcss/vite` plugin
+- **Radix UI Themes** for pre-styled components
+- **Storybook 10** for component development
+
+## Architecture
+
+Components combine Radix Themes props with Tailwind utility classes. Radix handles component structure and accessibility; Tailwind handles custom styling.
+
+```tsx
+// Pattern: Radix props + Tailwind className
+<Button size="3" className="mt-4">Click</Button>
+<Box className="bg-linear-to-br from-indigo-50 to-white">...</Box>
+
+The app is wrapped in `<Theme>` provider (see `src/main.tsx`) which sets accent color and radius. Storybook's preview also wraps stories in the same Theme provider.
+```
+````
+
+I edited this file a bit more to add details about _how_ I wanted Claude to work and the goals of the application.
+
+```md
+## How to Work in This Project
+
+- Treat every request as a design mock task
+- Ask questions if you are unsure about anything. Use storybook to provide options for me to check if you want to show a few possible routes before we commit to a mockup.
+- Prioritize visual quality over code perfection - I am only using this to mock up designs that will be implemented later on
+- Always verify changes visually using Playwright before finishing
+```
+
+You might see some hints at where I'm going next with this, but I'll pick back up in my next post, where I'll talk about the Plugin, Skills, and MCP server setup that I'm using. Nothing is ideal yet and evolving as I learn more, so I'll update with a final post once I have a stable setup too!
