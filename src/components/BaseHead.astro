@@ -49,3 +49,10 @@ const { title, description, image = '/images/profile.jpg' } = Astro.props
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={new URL(image, Astro.url)} />
+
+<!-- Analytics -->
+<script
+    is:inline
+    data-goatcounter="https://arcanegrain.goatcounter.com/count"
+    async
+    src="//gc.zgo.at/count.js"></script>
