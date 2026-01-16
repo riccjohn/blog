@@ -40,16 +40,20 @@ const posts = (await getCollection('blog')).sort(
                                     class="group block no-underline [&>*]:no-underline [&>*]:transition-all [&>*]:duration-200"
                                 >
                                     {post.data.heroImage && (
-                                        <Image
+                                        <div
                                             class:list={[
-                                                'border-border-default group-hover:border-accent-primary mb-2 rounded-xl border group-hover:shadow-[0_0_0_2px_var(--color-accent-muted)]',
+                                                'border-border-default group-hover:border-accent-primary mb-2 aspect-video overflow-hidden rounded-xl border group-hover:shadow-[0_0_0_2px_var(--color-accent-muted)]',
                                                 index === 0 && 'w-full',
                                             ]}
-                                            width={720}
-                                            height={360}
-                                            src={post.data.heroImage}
-                                            alt=""
-                                        />
+                                        >
+                                            <Image
+                                                class="h-full w-full object-cover"
+                                                width={720}
+                                                height={405}
+                                                src={post.data.heroImage}
+                                                alt=""
+                                            />
+                                        </div>
                                     )}
                                     <h4
                                         class:list={[
