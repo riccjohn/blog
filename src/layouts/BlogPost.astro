@@ -6,10 +6,14 @@ import Header from '@/components/Header.astro'
 import Footer from '@/components/Footer.astro'
 import FormattedDate from '@/components/FormattedDate.astro'
 import { THEME_INIT_SCRIPT } from '@/utils/theme'
+import { formatReadingTime } from '@/utils/readingTime'
 
-type Props = CollectionEntry<'blog'>['data']
+type Props = CollectionEntry<'blog'>['data'] & {
+    readingTime?: number
+}
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props
+const { title, description, pubDate, updatedDate, heroImage, readingTime } =
+    Astro.props
 ---
 
 <html lang="en">
@@ -45,6 +49,16 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props
                     <div class="title mb-4 py-4 text-center leading-none">
                         <div class="date text-text-secondary mb-2">
                             <FormattedDate date={pubDate} />
+                            {
+                                readingTime && (
+                                    <>
+                                        <span class="mx-2">&middot;</span>
+                                        <span>
+                                            {formatReadingTime(readingTime)}
+                                        </span>
+                                    </>
+                                )
+                            }
                             {
                                 updatedDate && (
                                     <div class="last-updated-on italic">
