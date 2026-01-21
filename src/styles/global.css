@@ -80,7 +80,7 @@ html.dark {
 }
 body {
     font-family: var(--font-mono);
-    @apply bg-bg-primary text-text-primary m-0 flex min-h-screen flex-col justify-between p-0 text-left text-base leading-relaxed break-words;
+    @apply bg-bg-primary text-text-primary m-0 flex min-h-screen flex-col justify-between p-0 text-left text-base leading-relaxed wrap-break-word;
     letter-spacing: -0.01em;
 }
 main {
