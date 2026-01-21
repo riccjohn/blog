@@ -80,7 +80,7 @@ html.dark {
 }
 body {
     font-family: var(--font-mono);
-    @apply bg-bg-primary text-text-primary m-0 flex min-h-screen flex-col justify-between p-0 text-left text-base leading-relaxed break-words;
+    @apply bg-bg-primary text-text-primary m-0 flex min-h-screen flex-col justify-between p-0 text-left text-base leading-relaxed wrap-break-word;
     letter-spacing: -0.01em;
 }
 main {
@@ -144,6 +144,27 @@ code {
     font-size: 0.9em;
     font-family: var(--font-mono);
 }
+mark {
+    @apply text-text-primary;
+    background-color: rgba(0, 184, 148, 0.2);
+    border-radius: 3px;
+    padding: 1px 4px;
+}
+/* Block-level mark (when wrapping paragraphs or other block content) */
+mark:has(p) {
+    display: block;
+    padding: 0.75rem 1rem;
+    margin: 1rem 0;
+    border-radius: 6px;
+}
+mark:has(p) p,
+mark:has(p) p:last-child,
+.prose mark:has(p) p {
+    margin-bottom: 0;
+}
+html.dark mark {
+    background-color: rgba(7, 245, 189, 0.25);
+}
 pre {
     padding: 1rem;
     @apply bg-code-bg border-border-default border;
@@ -163,6 +184,23 @@ blockquote {
     margin: 1.5rem 0;
     border-radius: 0 6px 6px 0;
     font-size: 1.333em;
+}
+ul,
+ol {
+    margin: 1em 0;
+    padding-left: 2em;
+}
+ul {
+    list-style-type: disc;
+}
+ol {
+    list-style-type: decimal;
+}
+li {
+    margin-bottom: 0.5em;
+}
+li::marker {
+    @apply text-accent-primary;
 }
 hr {
     border: none;
