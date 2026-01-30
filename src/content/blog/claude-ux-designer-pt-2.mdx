@@ -2,6 +2,7 @@
 title: 'Using Claude Code to Generate Design Mockups - Part 2: Skills & Plugins'
 description: 'An ongoing experiment where I use Claude Code to generate design mockups based on text prompts.'
 pubDate: '2026-01-21'
+updatedDate: '2026-01-30'
 heroImage: '../../assets/images/blog_posts/claude-ux-designer-pt-2/andras-vas-Bd7gNnWJBkU-unsplash.jpg'
 ---
 
@@ -94,13 +95,12 @@ To create the screenshot skill, I just asked Claude to help me create a new skil
 
 You'll see that it includes a few pieces:
 
-A `SKILL.md` (located at `.claude/skills/screenshot/SKILL.md`) file that describes what the skill does and how to use it. Notice how the frontmatter at the top specifies the name, description, model, and allowed tools. This frontmatter is added to the main context window, but the rest of the skill is only loaded when the skill is invoked.
+A `SKILL.md` (located at `.claude/skills/screenshot/SKILL.md`) file that describes what the skill does and how to use it. Notice how the frontmatter at the top specifies the name, description, and allowed tools. This frontmatter is added to the main context window, but the rest of the skill is only loaded when the skill is invoked.
 
 ```markdown
 ---
 name: screenshot
 description: Take screenshots of design mockups at multiple viewport sizes using Playwright MCP. Use this skill to visually verify designs and capture screenshots for review.
-model: haiku
 allowed-tools: Read, Bash, mcp__playwright__browser_navigate, mcp__playwright__browser_resize, mcp__playwright__browser_take_screenshot, mcp__playwright__browser_close, mcp__playwright__browser_click, mcp__playwright__browser_snapshot
 ---
 ```
@@ -178,22 +178,6 @@ One reason I chose to use a skill and a plugin (which again, was really just a s
 
 When I'm in the design phase, I don't need knowledge of how to take screenshots taking up space in my context window. In fact, I need context to be as focused as possible so I can get the best results from Claude. By using skills, Claude will only load the `screenshot` skill and the related scripts when they're needed.
 
-### Model Usage
-
-With a Claude skill, I can specify which model to use for that skill. I don't need the screenshot skill using the same model (and number of tokens) as the designer skill. The designer skill benefits from a larger context window and more advanced reasoning capabilities, while the screenshot skill is more procedural and just runs a script to do the bulk of its work. By specifying a smaller model for the screenshot skill, I can save on token usage and costs.
-
-In the [frontmatter of a skill](https://code.claude.com/docs/en/skills#frontmatter-reference), you can specify a bunch of options, including the model to use when that skill is invoked:
-
-```markdown
----
-name: my-skill
-description: What this skill does
-model: haiku
----
-
-Your skill instructions here...
-```
-
 ### Modularity
 
 Using skills keeps the skill logic modular and separate from the main project's context. This makes it easier to maintain and update the skill without affecting the overall project context. If I need to make changes to how screenshots are taken, I can simply update the skill files without worrying about impacting the design generation process.
@@ -203,6 +187,23 @@ It also gives me the flexibility to _move_ the skill. I can keep it within the p
 ## Why Not Use Sub-Agents?
 
 The design and approval process is extremely linear. I don't need any concurrency here, as it wouldn't make sense to take screenshots while the design is still being generated. Using sub-agents would add unnecessary complexity to the workflow. Skills are sufficient for encapsulating the screenshot functionality without the overhead of managing multiple agents. I still have a lot to learn about sub-agents though, so I may explore other use cases for them in future projects.
+
+### A Reason In Favor of Sub-Agents
+
+#### Model Usage
+
+With a Claude skill, I **cannot** specify which model to use. It just uses whichever model my top-level Claude instance uses. A sub-agent, however, _can_ be told to only use a certain model, and that model can be different than the top level Claude instance. This is good for tasks that don't need as much power behind them. In my project, I don't really need the screenshot skill using the same model (and number of tokens) as the designer skill. The designer skill benefits from a larger context window and more advanced reasoning capabilities, while the screenshot skill is more procedural and just runs a script to do the bulk of its work. By specifying a smaller model for the screenshot agent, I can save on token usage and costs. My setup _may_ be better off if I create a screenshot sub-agent that I set up to use a lower model like haiku, and direct that subagent to use my screenshot skill. I'll have to tinker and see if that reduces my token usage by a noticeable amount.
+
+In the [frontmatter of an agent](https://code.claude.com/docs/en/sub-agents#supported-frontmatter-fields), you can specify a bunch of options, including the model to use when that agent is invoked:
+
+```markdown
+---
+name: data-scientist
+description: Data analysis expert for SQL queries, BigQuery operations, and data insights. Use proactively for data analysis tasks and queries.
+tools: Bash, Read, Write
+model: sonnet
+---
+```
 
 # Understanding the Structure
 
