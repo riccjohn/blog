@@ -2,8 +2,8 @@
 title: 'Claude Code Cheat Sheet'
 description: 'A living doc of my own notes as I understand Claude Code concepts like Skills, Sub-Agents, MCP Servers, and Plugins.'
 pubDate: '2026-01-21'
-updatedDate: '2026-01-21'
-heroImage: '../../assets/images/blog_posts/claude-code-cheat-sheet/vackground-com-agUC-v_D1iI-unsplash.jpg'
+updatedDate: '2026-02-04'
+heroImage: '../../assets/blog_posts/claude-code-cheat-sheet/images/vackground-com-agUC-v_D1iI-unsplash.jpg'
 ---
 
 Photo by <a href="https://unsplash.com/@vackground?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">vackground.com</a> on <a href="https://unsplash.com/photos/a-blue-and-pink-abstract-background-with-wavy-lines-agUC-v_D1iI?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
@@ -12,11 +12,11 @@ Photo by <a href="https://unsplash.com/@vackground?utm_source=unsplash&utm_mediu
 
 You can think of skills as modular pieces of knowledge or functionality that Claude can leverage to perform specific tasks more effectively. Skills are more than just a `SKILL.md` file - they can also include scripts, assets, and other resources that help Claude execute the skill's purpose. As you'll see later, I utilize a simple skill to help Claude with something it'll need to repeat over and over.
 
-Claude will not load skills into context until they're invoked (can be explicitly by the user, or automatically by Claude), **BUT** they are added to the same context window as your main Claude instance.
+Claude will not load skills into context until they're invoked (can be explicitly by the user, or automatically by Claude), **BUT** they are added to the same context window as your main Claude instance. They will inherit the model that your main Claude instance uses.
 
 ## Sub-Agents
 
-**Sub-Agents** are autonomous entities within Claude Code that can operate independently to perform specific tasks. Sub-agents can be thought of as mini-versions of Claude that can handle specific aspects of a project. They can have their own skills, context, and objectives, allowing them to work on tasks concurrently or in parallel with the main Claude instance. <mark>Each sub-agent has its own context window separate from the main Claude instance.</mark>
+**Sub-Agents** are autonomous entities within Claude Code that can operate independently to perform specific tasks. Sub-agents can be thought of as mini-versions of Claude that can handle specific aspects of a project. They can have their own skills, context, and objectives, allowing them to work on tasks concurrently or in parallel with the main Claude instance. <mark>Each sub-agent has its own context window separate from the main Claude instance.</mark> Also, <mark>you can specify which model each sub-agent uses</mark>, so you can use low-token models for simple tasks and switch to more powerful models for other tasks.
 
 These are different than skills in that sub-agents can manage their own workflows and make decisions independently, whereas skills are more about providing specific knowledge or capabilities to Claude or its sub-agents. They also have their own, <mark>separate context window</mark>, whereas skills share the same context window as the main Claude instance. In practice, sub-agents are useful for taking on a specific part of a larger project, and often work in parallel and alongside other sub-agents or the main Claude instance.
 
