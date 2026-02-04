@@ -74,11 +74,23 @@ So instead of loading all the knowledge at once, which would overwhelm the conte
 <figure>
     <Image
         src={singleChunkDiagram}
-        alt="Diagram showing a user making a request to an AI agent, which then attempts to load a knowledge-base to get the answer from"
+        alt="Diagram showing a user making a request to an AI agent, which then attempts to load the entire knowledge-base to get the answer from"
         class="mx-auto my-8 block rounded-lg shadow-lg"
     />
     <figcaption>
         Attempting to load all the data will likely fill your context window
+    </figcaption>
+</figure>
+
+<figure>
+    <Image
+        src={multiChunkDiagram}
+        alt="Diagram showing a user making a request to an AI agent, which then fetches a single chunk to get the answer from"
+        class="mx-auto my-8 block rounded-lg shadow-lg"
+    />
+    <figcaption>
+        Loading only the chunks where we think the data is will prevent the
+        context window from getting filled
     </figcaption>
 </figure>
 
