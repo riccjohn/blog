@@ -119,9 +119,6 @@ b {
 p {
     margin-bottom: 1em;
 }
-.prose p {
-    margin-bottom: 2em;
-}
 textarea {
     width: 100%;
     font-size: 16px;
@@ -136,6 +133,32 @@ img {
     max-width: 100%;
     height: auto;
     border-radius: 8px;
+}
+
+/* Video styling - matches terminal aesthetic */
+video {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 2rem auto;
+    border-radius: 8px;
+    @apply border-border-default border;
+    box-shadow: 0 4px 12px var(--color-shadow-default);
+}
+
+/* Video within prose context - additional spacing for readability */
+.prose video {
+    margin: 2.5rem auto;
+}
+
+/* Remove default browser outline on video controls focus */
+video:focus {
+    outline: none;
+}
+
+/* Ensure video maintains aspect ratio in flex/grid contexts */
+video {
+    flex-shrink: 0;
 }
 code {
     padding: 2px 6px;
@@ -185,6 +208,19 @@ blockquote {
     border-radius: 0 6px 6px 0;
     font-size: 1.333em;
 }
+quote {
+    display: block;
+    @apply border-border-default bg-bg-secondary border;
+    margin: 1.5rem 0;
+    border-radius: 6px;
+    font-style: italic;
+    position: relative;
+
+    & > * {
+        margin: 0;
+        padding: 1.25rem 1.5rem;
+    }
+}
 ul,
 ol {
     margin: 1em 0;
@@ -232,6 +268,32 @@ a:hover {
 /* Focus indicators */
 :focus-visible {
     @apply outline-accent-primary outline-2 outline-offset-2;
+}
+
+/* Figure and figcaption styling */
+figure {
+    margin: 1.5rem 0;
+}
+figcaption {
+    @apply text-text-secondary;
+    font-size: 0.875em;
+    font-style: italic;
+    text-align: center;
+    margin-top: 0.75rem;
+    margin-bottom: 0;
+    line-height: 1.4;
+}
+/* Terminal-style prefix for captions */
+figcaption::before {
+    content: '// ';
+    @apply text-text-tertiary;
+    font-style: normal;
+    display: inline;
+}
+/* Ensure paragraph inside figcaption displays inline with the prefix */
+figcaption p {
+    display: inline;
+    margin: 0;
 }
 
 .sr-only {
