@@ -9,16 +9,23 @@ heroImage: '../../assets/blog_posts/langchain-confusion/michelle-tresemer-MjKUUa
 
 I [built a RAG chatbot with LangChain](/blog/how-to-start-learning-ai.mdx), but the more I look at langchain code, the more I keep confusing myself, specifically with the [RunnableSequence](https://reference.langchain.com/javascript/classes/_langchain_core.runnables.RunnableSequence.html). I just had a breakthrough on why I find it confusing and how I could write it in a way that makes more sense to me.
 
-This example is from [Scrimba's Learn LangChain.js course](https://scrimba.com/learn-langchainjs-c02t), which I highly recommend, and it's free!
+This example is from [Scrimba's Learn LangChain.js course](https://scrimba.com/learn-langchainjs-c02t), which I highly recommend, and it's free! _Note: This is just a portion of the full example code, so you'll see some things are not defined._
 
 ```typescript
-const standaloneQuestionTemplate = `Given some conversation history (if any) and a question, convert the question to a standalone question. 
+/**
+ *  More code above, just not relevant to this example
+ */
+
+const standaloneQuestionTemplate = `Given some conversation history (if any) and a question, convert the question to a standalone question.
 conversation history: {conv_history}
-question: {question} 
+question: {question}
 standalone question:`
 const standaloneQuestionPrompt = PromptTemplate.fromTemplate(
     standaloneQuestionTemplate
 )
+
+const retrieverChain = '' // Similar chain, not important here
+const answerChain = '' // Similar chain, not important here
 
 const standaloneQuestionChain = standaloneQuestionPrompt
     .pipe(llm)
