@@ -1,0 +1,135 @@
+---
+title: 'LangChain Confusion'
+description: "Confused by LangChain's RunnableSequence magic? Learn how to write explicit, readable chains that reveal exactly how data flows through your pipeline."
+pubDate: '2026-02-05'
+heroImage: '../../assets/blog_posts/langchain-confusion/michelle-tresemer-MjKUUaYQQ6U-unsplash.jpg'
+---
+
+{/* Photo by <a href="https://unsplash.com/@mtresemer?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Michelle Tresemer</a> on <a href="https://unsplash.com/photos/brown-and-white-medium-coated-dog-MjKUUaYQQ6U?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a> */}
+
+I [built a RAG chatbot with LangChain](/blog/how-to-start-learning-ai.mdx), but the more I look at langchain code, the more I keep confusing myself, specifically with the [RunnableSequence](https://reference.langchain.com/javascript/classes/_langchain_core.runnables.RunnableSequence.html). I just had a breakthrough on why I find it confusing and how I could write it in a way that makes more sense to me.
+
+This example is from [Scrimba's Learn LangChain.js course](https://scrimba.com/learn-langchainjs-c02t), which I highly recommend, and it's free!
+
+```typescript
+const standaloneQuestionTemplate = `Given some conversation history (if any) and a question, convert the question to a standalone question. 
+conversation history: {conv_history}
+question: {question} 
+standalone question:`
+const standaloneQuestionPrompt = PromptTemplate.fromTemplate(
+    standaloneQuestionTemplate
+)
+
+const standaloneQuestionChain = standaloneQuestionPrompt
+    .pipe(llm)
+    .pipe(new StringOutputParser())
+
+const chain = RunnableSequence.from([
+    {
+        standalone_question: standaloneQuestionChain,
+        original_input: new RunnablePassthrough(),
+    },
+    {
+        context: retrieverChain,
+        question: ({ original_input }) => original_input.question,
+        conv_history: ({ original_input }) => original_input.conv_history,
+    },
+    answerChain,
+])
+
+// get user input
+// store conversation history
+
+const response = await chain.invoke({
+    question: question,
+    conv_history: formatConvHistory(convHistory),
+})
+```
+
+Let's walk through this portion of the code. The general idea here is that we want to take the user's input and convert it into a 'standalone question', which just means we want to remove the fluff. So if a user says "I'm looking at buying a jacket from your site, but sometimes they don't fit me well, so I need to know what your return policy is in case I need to return it. I don't want to spend money unless I know I can return." That's not a super helpful input to use for retrieval, so we can have an LLM convert it to a succinct question like "What is your return policy?"
+
+When we call `chain.invoke` and pass it an object, LangChain is doing some magic for us (which I find really hurts my understanding of what's going on). It's taking that object we pass it:
+
+```typescript
+{
+    question: question,
+    conv_history: formatConvHistory(convHistory),
+}
+```
+
+and automatically passing it to the first step in the chain (where we have `const chain = RunnableSequence.from`).
+
+<mark>
+    The `RunnableSequence.from` call chains multiple steps together, piping each
+    result as input to the next step.
+</mark>
+This is where the magic happens. So far, it's like we gave the sequence its
+initial input (again, this happens implicitly), and then gave it a list of steps
+to call with the result of the previous step. If you've used Unix pipes or
+Elixir, this follows the same pattern.
+
+You'll notice `new RunnablePassthrough()` in the code below - it's a simple tool that just passes its input through unchanged; useful when you want to preserve data for later steps.
+
+```typescript
+const chain = RunnableSequence.from([
+    {
+        standalone_question: standaloneQuestionChain,
+        original_input: new RunnablePassthrough(),
+    },
+    {
+        context: retrieverChain,
+        question: ({ original_input }) => original_input.question,
+        conv_history: ({ original_input }) => original_input.conv_history,
+    },
+    answerChain,
+])
+```
+
+Let's look at the first object in that array. Here's what's happening: LangChain takes the input object `{ question, conv_history }` and passes it to both `standaloneQuestionChain` (which needs those fields) and `RunnablePassthrough()` (which just passes it through unchanged). Then it collects both results into a new object with the keys `standalone_question` and `original_input`.
+
+Not only that, but <mark>when a RunnableSequence step is an object literal, something special happens: each key's value gets invoked in parallel with the same input. LangChain collects all the results into a new object.</mark> I had Claude make a little diagram to show this:
+
+```text
+ Input: { question: "...", conv_history: "..." }
+                      ↓
+           ┌──────────┴──────────┐
+           ↓                     ↓
+  standaloneQuestionChain    RunnablePassthrough
+           ↓                     ↓
+      "standalone Q"      { question, conv_history }
+           ↓                     ↓
+           └──────────┬──────────┘
+                      ↓
+  Output: {
+      standalone_question: "standalone Q",
+      original_input: { question, conv_history }
+  }
+```
+
+My big unlock was that you can rewrite this to be completely explicit about what's flowing where. Here's the same logic, but with no magic, just clear function inputs and outputs:
+
+```typescript
+const chain = RunnableSequence.from([
+    // Step 1: Explicitly create the object we want
+    async (input) => ({
+        standalone_question: await standaloneQuestionChain.invoke(input),
+        original_input: input, // Just pass through directly
+    }),
+
+    // Step 2: Build output using previous results
+    async (prevResult) => ({
+        context: await retrieverChain.invoke(prevResult),
+        question: prevResult.original_input.question,
+        conv_history: prevResult.original_input.conv_history,
+    }),
+
+    // Step 3: Generate answer
+    answerChain,
+    // Receives: { context, question, conv_history }
+    // Could also be written as: async (prevResult) => await answerChain.invoke(prevResult)
+])
+```
+
+Here, I'm using arrow functions to show that we're getting the `input` from somewhere (that part is still magic, but at least it's simple), then crafting an object literal, where the value of `standalone_question` is us explicitly invoking another chain.
+
+This makes a _TON_ more sense to me, and hopefully it illustrates what's actually going on a little better for you too!
