@@ -186,7 +186,7 @@ This project has the **Playwright MCP server** configured in `.claude.json`, whi
     - Mobile: 375px width
     - Tablet: 768px width
     - Desktop: 1280px width
-4. **Store screenshots**: Save all screenshots to `.playwright-mcp/` directory (gitignored)
+4. **Store screenshots**: Save all screenshots to `.playwright-mcp/screenshots/` directory (gitignored)
 5. **Verify accessibility**: Use `browser_snapshot` to check accessibility tree structure
 6. **Wait for content**: Use `browser_wait` if pages need time to load or render
 7. **Check console**: Verify no errors or warnings in browser console
@@ -198,7 +198,7 @@ This project has the **Playwright MCP server** configured in `.claude.json`, whi
 - `browser_snapshot` - Get accessibility tree data
 - `browser_wait` - Wait for page loads or specific timeouts
 
-**Important**: Always store screenshots in `.playwright-mcp/` to keep them out of version control.
+**Important**: Always store screenshots in `.playwright-mcp/screenshots/` to keep them organized and out of version control.
 
 ### Visual Verification is Required
 
@@ -253,7 +253,7 @@ Design quality is critical. Before merging:
 
 - **Use Playwright MCP** to automate visual verification (required for all design changes)
     - Capture screenshots at mobile (375px), tablet (768px), and desktop (1280px) viewports
-    - Store screenshots in `.playwright-mcp/` directory
+    - Store screenshots in `.playwright-mcp/screenshots/` directory
     - Test interactive elements programmatically
     - Check browser console for errors
 - **Verify design consistency**:

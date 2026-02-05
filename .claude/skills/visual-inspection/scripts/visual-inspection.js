@@ -180,7 +180,7 @@ const validateFilename = (filename) => {
  * @param {number} days
  */
 const cleanOldScreenshots = (days = 7) => {
-    const screenshotsDir = '.playwright-mcp'
+    const screenshotsDir = '.playwright-mcp/screenshots'
 
     if (!existsSync(screenshotsDir)) {
         console.log(`✗ Directory ${screenshotsDir} does not exist`)
@@ -211,7 +211,7 @@ const cleanOldScreenshots = (days = 7) => {
  * List all screenshots with metadata
  */
 const listScreenshots = () => {
-    const screenshotsDir = '.playwright-mcp'
+    const screenshotsDir = '.playwright-mcp/screenshots'
 
     if (!existsSync(screenshotsDir)) {
         console.log(`✗ Directory ${screenshotsDir} does not exist`)
@@ -221,7 +221,7 @@ const listScreenshots = () => {
     const files = readdirSync(screenshotsDir).filter((f) => f.endsWith('.png'))
 
     if (files.length === 0) {
-        console.log('No screenshots found in .playwright-mcp/')
+        console.log('No screenshots found in .playwright-mcp/screenshots/')
         return
     }
 
