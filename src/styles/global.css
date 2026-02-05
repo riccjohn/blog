@@ -226,21 +226,22 @@ quote {
         padding: 1.25rem 1.5rem;
     }
 }
-ul,
-ol {
+/* Prose list styles - only apply within prose content */
+.prose ul,
+.prose ol {
     margin: 1em 0;
     padding-left: 2em;
 }
-ul {
+.prose ul {
     list-style-type: disc;
 }
-ol {
+.prose ol {
     list-style-type: decimal;
 }
-li {
+.prose li {
     margin-bottom: 0.5em;
 }
-li::marker {
+.prose li::marker {
     @apply text-accent-primary;
 }
 hr {
