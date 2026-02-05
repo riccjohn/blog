@@ -61,28 +61,28 @@ For each page you need to inspect (e.g., homepage `/`, blog index `/blog/`, indi
 ```
 Use browser_navigate to go to http://localhost:4321/path
 Use browser_resize to set viewport width=1280, height=800
-Use browser_take_screenshot with filename="desktop-pagename-YYYY-MM-DD.png"
+Use browser_take_screenshot with filename=".playwright-mcp/screenshots/desktop-pagename-YYYY-MM-DD.png"
 ```
 
 **Tablet (768px width):**
 
 ```
 Use browser_resize to set viewport width=768, height=1024
-Use browser_take_screenshot with filename="tablet-pagename-YYYY-MM-DD.png"
+Use browser_take_screenshot with filename=".playwright-mcp/screenshots/tablet-pagename-YYYY-MM-DD.png"
 ```
 
 **Mobile (375px width):**
 
 ```
 Use browser_resize to set viewport width=375, height=667
-Use browser_take_screenshot with filename="mobile-pagename-YYYY-MM-DD.png"
+Use browser_take_screenshot with filename=".playwright-mcp/screenshots/mobile-pagename-YYYY-MM-DD.png"
 ```
 
 **Important:**
 
 - Use descriptive filenames that include viewport size, page name, and date
-- Do NOT include the `.playwright-mcp/` directory in the filename - the Playwright MCP tool automatically saves to that directory
-- Screenshots will be saved to `.playwright-mcp/` in the project root
+- Save screenshots to `.playwright-mcp/screenshots/` directory by including it in the filename parameter
+- Example: `filename=".playwright-mcp/screenshots/desktop-homepage-2026-01-09.png"`
 
 ### Step 3: Test Interactive States (Hover/Focus)
 
@@ -108,14 +108,14 @@ Use browser_snapshot to get the accessibility tree with element refs
 
 ```
 Use browser_hover with element="Nav link" ref="e6"
-Use browser_take_screenshot with filename="hover-nav-link-2026-01-09.png"
+Use browser_take_screenshot with filename=".playwright-mcp/screenshots/hover-nav-link-2026-01-09.png"
 ```
 
 3. **Test focus states** by tabbing through elements:
 
 ```
 Use browser_press_key with key="Tab" to move focus
-Use browser_take_screenshot with filename="focus-state-2026-01-09.png"
+Use browser_take_screenshot with filename=".playwright-mcp/screenshots/focus-state-2026-01-09.png"
 ```
 
 **What to verify:**
@@ -133,11 +133,11 @@ Use browser_take_screenshot with filename="focus-state-2026-01-09.png"
 1. browser_navigate to http://localhost:4321
 2. browser_snapshot (note the refs for nav links, social icons, etc.)
 3. browser_hover element="Home nav link" ref="e6"
-4. browser_take_screenshot filename="hover-nav-home.png"
+4. browser_take_screenshot filename=".playwright-mcp/screenshots/hover-nav-home.png"
 5. browser_hover element="LinkedIn icon" ref="e10"
-6. browser_take_screenshot filename="hover-social-linkedin.png"
+6. browser_take_screenshot filename=".playwright-mcp/screenshots/hover-social-linkedin.png"
 7. browser_hover element="Theme toggle button" ref="e24"
-8. browser_take_screenshot filename="hover-theme-toggle.png"
+8. browser_take_screenshot filename=".playwright-mcp/screenshots/hover-theme-toggle.png"
 ```
 
 **Tip:** Compare hover screenshots against the design system to ensure accent colors and transition styles match expectations.
@@ -210,7 +210,7 @@ Provide a structured report:
 ### ⚠️ Issues Found
 
 1. **[Issue category]**: [Description]
-    - Screenshot: `[filename].png` (in `.playwright-mcp/`)
+    - Screenshot: `[filename].png` (in `.playwright-mcp/screenshots/`)
     - Severity: Critical/High/Medium/Low
     - Recommendation: [How to fix]
 
@@ -297,9 +297,9 @@ node .claude/skills/visual-inspection/scripts/visual-inspection.js validate desk
 
 ## Output Storage
 
-All screenshots are saved to `.playwright-mcp/` (gitignored). This keeps visual artifacts out of version control while preserving them for review.
+All screenshots are saved to `.playwright-mcp/screenshots/` (gitignored). This keeps visual artifacts out of version control while preserving them for review.
 
-**Note:** The Playwright MCP tool automatically saves screenshots to the `.playwright-mcp/` directory. When using `browser_take_screenshot`, only provide the filename (e.g., `desktop-homepage-2026-01-09.png`), not the full path. Including the directory prefix will cause double-nesting.
+**Note:** When using `browser_take_screenshot`, include the full path with the `screenshots` subdirectory (e.g., `filename=".playwright-mcp/screenshots/desktop-homepage-2026-01-09.png"`) to ensure proper organization.
 
 ## Best Practices
 
