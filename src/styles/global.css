@@ -200,6 +200,11 @@ pre {
 pre > code {
     background: transparent;
     padding: 0;
+    color: inherit;
+}
+/* Ensure Shiki-generated syntax highlighting colors are preserved */
+pre > code span {
+    color: inherit;
 }
 blockquote {
     @apply border-accent-primary bg-bg-secondary border-l-4;
