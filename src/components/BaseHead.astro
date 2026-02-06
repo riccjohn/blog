@@ -50,6 +50,9 @@ const { title, description, image = '/images/profile.jpg' } = Astro.props
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={new URL(image, Astro.url)} />
 
+<!-- Fediverse -->
+<meta name="fediverse:creator" content="@riccjohn@techhub.social" />
+
 <!-- Analytics -->
 <script
     is:inline
