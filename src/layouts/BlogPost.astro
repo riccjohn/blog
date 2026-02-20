@@ -7,6 +7,7 @@ import Footer from '@/components/Footer.astro'
 import FormattedDate from '@/components/FormattedDate.astro'
 import { THEME_INIT_SCRIPT } from '@/utils/theme'
 import { formatReadingTime } from '@/utils/readingTime'
+import ShareButtons from '@/components/ShareButtons.astro'
 
 type Props = CollectionEntry<'blog'>['data'] & {
     readingTime?: number
@@ -72,6 +73,7 @@ const { title, description, pubDate, updatedDate, heroImage, readingTime } =
                         <hr />
                     </div>
                     <slot />
+                    <ShareButtons title={title} pageUrl={Astro.url.href} />
                 </div>
             </article>
         </main>
