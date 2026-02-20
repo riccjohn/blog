@@ -9,6 +9,8 @@ const { hoverable = false } = Astro.props
 <a
     href="https://github.com/riccjohn"
     target="_blank"
+    rel="noopener noreferrer"
+    onclick="window.goatcounter?.count({ path: 'social-click/github', title: 'GitHub', event: true })"
     class:list={[
         'flex no-underline',
         hoverable

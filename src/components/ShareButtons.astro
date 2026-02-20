@@ -1,0 +1,90 @@
+---
+interface Props {
+    title: string
+    pageUrl: string
+}
+
+const { title, pageUrl } = Astro.props
+
+const slug = new URL(pageUrl).pathname.replace(/^\/|\/$/g, '')
+
+const blueskyPostUrl = new URL(pageUrl)
+blueskyPostUrl.searchParams.set('utm_source', 'bluesky')
+blueskyPostUrl.searchParams.set('utm_medium', 'social')
+
+const linkedinPostUrl = new URL(pageUrl)
+linkedinPostUrl.searchParams.set('utm_source', 'linkedin')
+linkedinPostUrl.searchParams.set('utm_medium', 'social')
+
+const blueskyText = `${title}\n\n${blueskyPostUrl.toString()}`
+const blueskyShareUrl = `https://bsky.app/intent/compose?text=${encodeURIComponent(blueskyText)}`
+const linkedinShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(linkedinPostUrl.toString())}`
+
+const maskId = `linkedin-share-mask-${crypto.randomUUID()}`
+---
+
+<div class="border-border-default mt-8 border-t pt-6">
+    <span class="text-text-tertiary mb-3 block text-sm">// share this post</span
+    >
+    <div class="flex gap-4">
+        <a
+            href={blueskyShareUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onclick={`window.goatcounter?.count({ path: 'blog-share/bluesky/${slug}', title: 'Share on Bluesky', event: true })`}
+            class="text-text-secondary hover:text-accent-primary flex items-center gap-1.5 text-sm no-underline transition-all duration-200"
+        >
+            <svg
+                width="16"
+                height="16"
+                viewBox="0 0 4267 4267"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                xml:space="preserve"
+                style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"
+                aria-hidden="true"
+            >
+                <g transform="matrix(2.08333,0,0,2.08333,0,0)">
+                    <g
+                        transform="matrix(3.60563,0,0,3.60563,-822.085,-915.973)"
+                    >
+                        <path
+                            fill="currentColor"
+                            d="M351.121,315.106C416.241,363.994 486.281,463.123 512,516.315C537.719,463.123 607.759,363.994 672.879,315.106C719.866,279.83 796,252.536 796,339.388C796,356.734 786.055,485.101 780.222,505.943C759.947,578.396 686.067,596.876 620.347,585.691C735.222,605.242 764.444,670.002 701.333,734.762C581.473,857.754 529.061,703.903 515.631,664.481C513.169,657.254 512.017,653.873 512,656.748C511.983,653.873 510.831,657.254 508.369,664.481C494.939,703.903 442.527,857.754 322.667,734.762C259.556,670.002 288.778,605.242 403.653,585.691C337.933,596.876 264.053,578.396 243.778,505.943C237.945,485.101 228,356.734 228,339.388C228,252.536 304.134,279.83 351.121,315.106Z"
+                        ></path>
+                    </g>
+                </g>
+            </svg>
+            <span class="sr-only">Share on Bluesky</span>
+            Bluesky
+        </a>
+        <a
+            href={linkedinShareUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onclick={`window.goatcounter?.count({ path: 'blog-share/linkedin/${slug}', title: 'Share on LinkedIn', event: true })`}
+            class="text-text-secondary hover:text-accent-primary flex items-center gap-1.5 text-sm no-underline transition-all duration-200"
+        >
+            <svg
+                height="16"
+                viewBox="0 0 72 72"
+                width="16"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                ><defs
+                    ><mask id={maskId}
+                        ><rect width="72" height="72" fill="white"></rect><path
+                            d="M62,62 L51.315625,62 L51.315625,43.8021149 C51.315625,38.8127542 49.4197917,36.0245323 45.4707031,36.0245323 C41.1746094,36.0245323 38.9300781,38.9261103 38.9300781,43.8021149 L38.9300781,62 L28.6333333,62 L28.6333333,27.3333333 L38.9300781,27.3333333 L38.9300781,32.0029283 C38.9300781,32.0029283 42.0260417,26.2742151 49.3825521,26.2742151 C56.7356771,26.2742151 62,30.7644705 62,40.051212 L62,62 Z M16.349349,22.7940133 C12.8420573,22.7940133 10,19.9296567 10,16.3970067 C10,12.8643566 12.8420573,10 16.349349,10 C19.8566406,10 22.6970052,12.8643566 22.6970052,16.3970067 C22.6970052,19.9296567 19.8566406,22.7940133 16.349349,22.7940133 Z M11.0325521,62 L21.769401,62 L21.769401,27.3333333 L11.0325521,27.3333333 L11.0325521,62 Z"
+                            fill="black"></path></mask
+                    ></defs
+                ><path
+                    d="M8,72 L64,72 C68.418278,72 72,68.418278 72,64 L72,8 C72,3.581722 68.418278,-8.11624501e-16 64,0 L8,0 C3.581722,8.11624501e-16 -5.41083001e-16,3.581722 0,8 L0,64 C5.41083001e-16,68.418278 3.581722,72 8,72 Z"
+                    fill="currentColor"
+                    mask={`url(#${maskId})`}></path></svg
+            >
+            <span class="sr-only">Share on LinkedIn</span>
+            LinkedIn
+        </a>
+    </div>
+</div>
