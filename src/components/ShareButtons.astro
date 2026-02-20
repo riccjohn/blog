@@ -6,6 +6,8 @@ interface Props {
 
 const { title, pageUrl } = Astro.props
 
+const slug = new URL(pageUrl).pathname.replace(/^\/|\/$/g, '')
+
 const blueskyPostUrl = new URL(pageUrl)
 blueskyPostUrl.searchParams.set('utm_source', 'bluesky')
 blueskyPostUrl.searchParams.set('utm_medium', 'social')
@@ -22,13 +24,14 @@ const maskId = `linkedin-share-mask-${crypto.randomUUID()}`
 ---
 
 <div class="border-border-default mt-8 border-t pt-6">
-    <p class="text-text-tertiary mb-3 text-sm">// share this post</p>
+    <span class="text-text-tertiary mb-3 block text-sm">// share this post</span
+    >
     <div class="flex gap-4">
         <a
             href={blueskyShareUrl}
             target="_blank"
             rel="noopener noreferrer"
-            onclick="window.goatcounter?.count({ path: 'blog-share/bluesky', title: 'Share on Bluesky', event: true })"
+            onclick={`window.goatcounter?.count({ path: 'blog-share/bluesky/${slug}', title: 'Share on Bluesky', event: true })`}
             class="text-text-secondary hover:text-accent-primary flex items-center gap-1.5 text-sm no-underline transition-all duration-200"
         >
             <svg
@@ -60,7 +63,7 @@ const maskId = `linkedin-share-mask-${crypto.randomUUID()}`
             href={linkedinShareUrl}
             target="_blank"
             rel="noopener noreferrer"
-            onclick="window.goatcounter?.count({ path: 'blog-share/linkedin', title: 'Share on LinkedIn', event: true })"
+            onclick={`window.goatcounter?.count({ path: 'blog-share/linkedin/${slug}', title: 'Share on LinkedIn', event: true })`}
             class="text-text-secondary hover:text-accent-primary flex items-center gap-1.5 text-sm no-underline transition-all duration-200"
         >
             <svg
