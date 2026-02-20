@@ -1,6 +1,7 @@
 ---
 import Bluesky from '@/components/Social/Bluesky.astro'
 import GitHub from '@/components/Social/GitHub.astro'
+import Mastodon from '@/components/Social/Mastodon.astro'
 import LinkedIn from './Social/LinkedIn.astro'
 import Email from './Social/Email.astro'
 const today = new Date()
@@ -13,10 +14,8 @@ const today = new Date()
     <div class="social-links mt-4 flex items-center justify-center gap-4">
         <LinkedIn hoverable />
         <Bluesky hoverable />
+        <Mastodon hoverable />
         <GitHub hoverable />
         <Email hoverable />
     </div>
-    <a rel="me" href="https://techhub.social/@riccjohn" class="hidden"
-        >Mastodon</a
-    >
 </footer>
