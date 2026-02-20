@@ -9,6 +9,7 @@ const { hoverable = false } = Astro.props
 <a
     href="https://bsky.app/profile/arcanegrain.dev"
     target="_blank"
+    onclick="window.goatcounter?.count({ path: 'social-click/bluesky', title: 'Bluesky', event: true })"
     class:list={[
         'flex no-underline',
         hoverable
