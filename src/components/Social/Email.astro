@@ -9,6 +9,7 @@ const { hoverable = false } = Astro.props
 <a
     href="mailto:john@arcanegrain.dev"
     target="_blank"
+    onclick="window.goatcounter?.count({ path: 'social-click/email', title: 'Email', event: true })"
     class:list={[
         '-ml-1 flex items-center justify-center leading-[0] no-underline',
         hoverable
