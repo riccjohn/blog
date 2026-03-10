@@ -1,0 +1,1 @@
+my approach to testing RAG changes: make a tweak, fire up the app, ask some questions, squint at the results, try to remember if it felt better last time. totally scientific. I just wrote about why that doesn't scale and a better way [link]

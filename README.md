@@ -80,7 +80,3 @@ Files prefixed with `.` (e.g., `.draft-post.md`) are excluded from builds.
 ## Claude Code Configuration
 
 This project includes a `.claude.json` file that configures the Playwright MCP server for automated browser testing when using [Claude Code](https://claude.ai/code). See `CLAUDE.md` for detailed guidance on working with this codebase.
-
-## Credits
-
-Theme based on [Bear Blog](https://github.com/HermanMartinus/bearblog/) by Herman Martinus.
