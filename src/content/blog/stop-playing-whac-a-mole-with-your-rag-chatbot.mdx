@@ -1,0 +1,157 @@
+---
+title: 'Stop Playing Whac-a-Mole With Your RAG Chatbot'
+description: "Tired of fixing one RAG answer only to break another? Here's how I replaced manual testing with retrieval evals, recall@k, and a CI gate."
+pubDate: '2026-03-10'
+heroImage: '../../assets/blog_posts/stop-playing-whac-a-mole-with-your-rag-chatbot/peter.gif'
+---
+
+import { Image } from 'astro:assets'
+import itCrowdImage from '../../assets/blog_posts/stop-playing-whac-a-mole-with-your-rag-chatbot/maurice.gif'
+import RepoLink from '../../components/RepoLink.astro'
+
+_This post is part of a pseudo-series where I share my learnings about AI dev as I go. Check out my other posts about this project below_
+
+- [How To Start Learning AI](/blog/how-to-start-learning-ai.mdx)
+- [LangChain Confusion](/blog/langchain-confusion.mdx)
+
+Some background if you haven't read the related posts: I'm building a RAG chatbot that answers questions about Dungeons & Dragons rules as a way to learn about AI dev. You can [view the repo for the project, The Grimoire Oracle, here.](https://github.com/riccjohn/grimoire-oracle-web). I had initially created a TUI local-model-powered version, but built a web version so I could see how everything gets deployed.
+
+For a while, the way I was testing retrieval was by firing up my chatbot and asking it a few questions manually that I knew the answers to. "How much damage does a PC take from falling 35'?" It worked great. At first, I saw the chatbot hallucinate and knew it wasn't getting the right documents returned, so I altered my prompt to prevent hallucinations when it didn't know the answer. I tweaked my ingestion pipeline and retrieval methods. I pulled every lever and turned every knob in front of me like a child let loose in a NASA control room until it finally answered the question correctly. That felt great! Then a week later I noticed that asking "How long does a Light spell last?" returned complete nonsense. I had fixed the 'fall damage' question so well that I broke magic. Oops. That's when I decided to stop playing this game with my app.
+
+## Why Manual Testing Doesn't Scale
+
+There are two main stages that happen when you give a RAG chatbot a prompt:
+
+1. It goes off to find the relevant docs / knowledge
+1. It uses that knowledge to formulate a response to your prompt
+
+Oftentimes when I was seeing incorrect answers, it wasn't really the chatbot that was the issue, it was <mark>retrieval</mark>. Once I updated my system prompt to include instructions for what to do when it didn't find the answer, it stopped hallucinating, but it became clear how often my retrieval mechanism was failing.
+
+```text wrap
+IMPORTANT: If the context does not contain the answer, say "The Oracle did not return any results for that rule." Do NOT make up or invent any rules, numbers, or game mechanics.
+```
+
+My first method of testing was asking it questions manually. Asking it questions manually didn't work for a lot of reasons, but mainly: It's time-consuming and error prone, it's not targeting retrieval only, and I don't get a quantitative gauge of the effect my changes are having.
+
+Even if I copy/paste a handful of questions to the chatbot after each change, that's still a manual approach. Copy/paste reduces the likelihood of a typo, but I still need to make a change, fire up the app, ask X questions, and then figure out how well the chatbot did and if it's an improvement or not. I found that I was making multiple attempts at fixing issues before I'd actually notice a change. Then, I'd be afraid to undo any of my 'improvements', because I wasn't really sure which one fixed it. That meant I was accruing tech debt and unnecessary complexity. For a project that I'm using as a learning opportunity, I need to be able to keep the mental model in my head, and it was slowly growing out of control.
+
+Asking questions by hand also meant I was testing both parts of the chatbot's 'answer' at once - retrieval AND response generation. Not only did that mean I was burning extra tokens and time, but I had no view into what was happening behind the scenes. I added debug logs and even used [LangSmith](https://docs.langchain.com/langsmith/home) as observability tooling for a while, but it was still a long process.
+
+Not only that, but having most test questions pass except for one and fixing it only to watch a different question break—was incredibly frustrating. Solve one problem, create another, and have no idea why.
+
+All of this combined just resulted in slow feedback loops and tech debt disguised as progress.
+
+<Image
+    src={itCrowdImage}
+    alt={
+        'Gif from The IT Crowd TV show. Maurice sits at desk typing on computer while fire burns in foreground.'
+    }
+    class="mx-auto my-8 block rounded-lg shadow-lg"
+/>
+
+## What a Retrieval Eval Actually Is
+
+We need to be able to evaluate the quality of our retrieval in isolation - that's where retrieval evals come in. Getting a good answer from the chatbot depends on whether or not the right docs were handed to it so it could formulate its response. For example, if I ask about a character taking fall damage, does it actually fetch the correct rule where fall damage is mentioned, or is it finding rules that are unrelated? What I want to see here is given a question "What weapons can a Magic-User use?" does it return part of the file where the Magic User class is mentioned (`2. Classes/6. Magic-User.md`)? Since this is binary and hit or miss, we can measure it with something called <mark>recall@k</mark>. `k` is a variable used to tell the retriever how many chunks to return for a given input. The more chunks you return, the more likely your answer lies in one of them, but the more context you're using and the more diluted that answer is in all those chunks. <mark>recall@k</mark> is the measure of how often _relevant_ docs appear in the top `k` retrieved results. So we ask a question, look at the docs that are retrieved, and check if the answer we're looking for is included or not.
+
+```text
+recall@k = positive recalls / total recalls (k)
+```
+
+Something to keep in mind though: This only tests retrieval, not answer quality. The LLM could still hallucinate even with a perfect score, but that's a problem for a later step. We want to test one thing at a time. Once we get retrieval right, we can work on answer quality.
+
+To actually get that <mark>recall@k</mark> value, we need to create some fixtures that have pre-written questions, the raw file I expect the answer to be in, and a substring for a portion of the answer. I then create a small script to loop over each fixture and check whether the expected substring appears in the retrieved chunks.
+
+## The Fixture
+
+```json
+[
+    {
+        "question": "How much damage does a PC take from falling 30'?",
+        "expectedChunkSubstring": "Falling from a height onto a hard surface inflicts 1d6 damage per 10' fallen.",
+        "source": "vault/5. Adventures/4. Hazards and Challenges.md"
+    },
+    {
+        "question": "What armor can a Magic-User wear?",
+        "expectedChunkSubstring": "Magic-users can only use daggers and cannot use shields or wear any armor",
+        "source": "vault/2. Classes/6. Magic-User.md"
+    },
+    {
+        "question": "What is the hit die for a Fighter?",
+        "expectedChunkSubstring": "Hit Dice        | 1d8",
+        "source": "vault/2. Classes/4. Fighter.md"
+    }
+]
+```
+
+The fixture I built is a json file with 12 objects containing a sample question, the substring that the answer is found in, and the source file. I tried to cover a range of questions that had specific answers so I could be confident that retrieval was working across the knowledge base. This includes answers that are found in formats like markdown tables rather than only being in paragraphs of text.
+
+## The Eval Script
+
+Here's the full script:
+
+`RECALL_K_THRESHOLD` here is set to `0.8` (80%). It's just an arbitrary value I chose where the CI pipeline will fail if less than 80% of the retrieval evals pass.
+
+```typescript
+import { RECALL_K_THRESHOLD } from '@/lib/constants'
+import { DocumentMatch, retrieveRawChunks } from '@/lib/retrieval'
+import fixtures from '@/scripts/eval-fixtures.json'
+
+const main = async () => {
+    const hits = await fixtures.reduce(async (accPromise, fixture) => {
+        const acc = await accPromise
+        const chunks = await retrieveRawChunks(fixture.question)
+        const hit = checkHit(chunks, fixture.expectedChunkSubstring)
+        console.log(
+            `${hit ? 'PASS' : `FAIL (expected in: ${fixture.source})`} — ${fixture.question}`
+        )
+        return acc + (hit ? 1 : 0)
+    }, Promise.resolve(0))
+
+    const recall = computeRecall(hits, fixtures.length)
+    console.log(`\nRecall@K: ${hits}/${fixtures.length} = ${recall.toFixed(2)}`)
+
+    if (isPassing(recall, RECALL_K_THRESHOLD)) {
+        console.log('\nPASS')
+        process.exit(0)
+    } else {
+        console.log(
+            `\nFAIL: recall below ${RECALL_K_THRESHOLD * 100}% threshold`
+        )
+        process.exit(1)
+    }
+}
+
+export const checkHit = (chunks: DocumentMatch[], substring: string) => {
+    return chunks.some(({ content }) => content.includes(substring))
+}
+
+export const computeRecall = (hits: number, total: number) => {
+    if (total === 0) {
+        return 0
+    }
+    return hits / total
+}
+
+export const isPassing = (recallK: number, recallKThreshold: number) => {
+    return recallK >= recallKThreshold
+}
+
+if (import.meta.url === new URL(process.argv[1], import.meta.url).href) {
+    main()
+}
+```
+
+Notice how I'm importing the _real_ `retrieveRawChunks` function from `lib/retrieval.ts` - that's the function my chatbot actually uses, not something I wrote just for the tests. That ensures I'm testing my actual logic, not a mock or a copy. I want to catch regressions and test improvements in the retrieval module itself here, so I need this to be as realistic as possible.
+
+It also fails (exits `1`) if recall@k is below the given threshold. This allows me to use this as a CI gate in my pipeline, protecting every PR I make. I added a step to my GitHub Actions CI pipeline that runs this eval on every PR. If retrieval regresses, the PR fails before I can merge, so I don't even need to remember to test this.
+
+## What Changed
+
+Before I implemented the eval, every change felt like a guess. I never truly knew what changes were resulting in better retrieval, my feedback loops were slow with all the manual testing, and I couldn't be completely confident that an issue was tied to retrieval rather than the chatbot model, my system prompt, or something else. This let me isolate variables, automate the tests, and quantify the effect of my changes. Every retrieval change I made now has a number attached to it, so I can make tradeoffs on purpose instead of by accident.
+
+While LLMs produce nondeterministic results, you can still test portions of the work in measurable ways and narrow down the surface area available to nondeterministic issues. So go write your fixtures. It's 15 minutes of JSON and a little time spent crafting a script and pipeline, but the time saved and second-guessing prevented is immense. The whac-a-mole game doesn't go away, but you finally get to keep score.
+
+<RepoLink
+    href="https://github.com/riccjohn/grimoire-oracle-web"
+    text="Grimoire Oracle - A RAG-powered chatbot that answers Old School Essentials TTRPG rules questions using semantic search over markdown rule documents"
+/>
