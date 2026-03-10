@@ -11,10 +11,10 @@ import RepoLink from '../../components/RepoLink.astro'
 
 _This post is part of a pseudo-series where I share my learnings about AI dev as I go. Check out my other posts about this project below_
 
-- [How To Start Learning AI](/blog/how-to-start-learning-ai.mdx)
-- [LangChain Confusion](/blog/langchain-confusion.mdx)
+- [How To Start Learning AI](/blog/how-to-start-learning-ai)
+- [LangChain Confusion](/blog/langchain-confusion)
 
-Some background if you haven't read the related posts: I'm building a RAG chatbot that answers questions about Dungeons & Dragons rules as a way to learn about AI dev. You can [view the repo for the project, The Grimoire Oracle, here.](https://github.com/riccjohn/grimoire-oracle-web). I had initially created a TUI local-model-powered version, but built a web version so I could see how everything gets deployed.
+Some background if you haven't read the related posts: I'm building a RAG chatbot that answers questions about Dungeons & Dragons rules as a way to learn about AI dev. You can [view the repo for the project, The Grimoire Oracle, here.](https://github.com/riccjohn/grimoire-oracle-web) I had initially created a TUI local-model-powered version, but built a web version so I could see how everything gets deployed.
 
 For a while, the way I was testing retrieval was by firing up my chatbot and asking it a few questions manually that I knew the answers to. "How much damage does a PC take from falling 35'?" It worked great. At first, I saw the chatbot hallucinate and knew it wasn't getting the right documents returned, so I altered my prompt to prevent hallucinations when it didn't know the answer. I tweaked my ingestion pipeline and retrieval methods. I pulled every lever and turned every knob in front of me like a child let loose in a NASA control room until it finally answered the question correctly. That felt great! Then a week later I noticed that asking "How long does a Light spell last?" returned complete nonsense. I had fixed the 'fall damage' question so well that I broke magic. Oops. That's when I decided to stop playing this game with my app.
 
