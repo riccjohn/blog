@@ -31,15 +31,15 @@ Oftentimes when I was seeing incorrect answers, it wasn't really the chatbot tha
 IMPORTANT: If the context does not contain the answer, say "The Oracle did not return any results for that rule." Do NOT make up or invent any rules, numbers, or game mechanics.
 ```
 
-My first method of testing was asking it questions manually. Asking it questions manually didn't work for a lot of reasons, but mainly: It's time-consuming and error prone, it's not targeting retrieval only, and I don't get a quantitative gauge of the effect my changes are having.
+My first method of testing was asking it questions manually. Testing it that way didn't work for a lot of reasons, but mainly: It's time-consuming and error prone, it's not targeting retrieval only, and I don't get a quantitative gauge of the effect my changes are having.
 
 Even if I copy/paste a handful of questions to the chatbot after each change, that's still a manual approach. Copy/paste reduces the likelihood of a typo, but I still need to make a change, fire up the app, ask X questions, and then figure out how well the chatbot did and if it's an improvement or not. I found that I was making multiple attempts at fixing issues before I'd actually notice a change. Then, I'd be afraid to undo any of my 'improvements', because I wasn't really sure which one fixed it. That meant I was accruing tech debt and unnecessary complexity. For a project that I'm using as a learning opportunity, I need to be able to keep the mental model in my head, and it was slowly growing out of control.
 
 Asking questions by hand also meant I was testing both parts of the chatbot's 'answer' at once - retrieval AND response generation. Not only did that mean I was burning extra tokens and time, but I had no view into what was happening behind the scenes. I added debug logs and even used [LangSmith](https://docs.langchain.com/langsmith/home) as observability tooling for a while, but it was still a long process.
 
-Not only that, but having most test questions pass except for one and fixing it only to watch a different question break—was incredibly frustrating. Solve one problem, create another, and have no idea why.
+Worst of all, having all my test questions pass except for one and then fixing it only to watch a different question break was incredibly frustrating. Solve one problem, create another, and have no idea why.
 
-All of this combined just resulted in slow feedback loops and tech debt disguised as progress.
+All of this just resulted in slow feedback loops and tech debt disguised as progress.
 
 <Image
     src={itCrowdImage}
@@ -51,15 +51,15 @@ All of this combined just resulted in slow feedback loops and tech debt disguise
 
 ## What a Retrieval Eval Actually Is
 
-We need to be able to evaluate the quality of our retrieval in isolation - that's where retrieval evals come in. Getting a good answer from the chatbot depends on whether or not the right docs were handed to it so it could formulate its response. For example, if I ask about a character taking fall damage, does it actually fetch the correct rule where fall damage is mentioned, or is it finding rules that are unrelated? What I want to see here is given a question "What weapons can a Magic-User use?" does it return part of the file where the Magic User class is mentioned (`2. Classes/6. Magic-User.md`)? Since this is binary and hit or miss, we can measure it with something called <mark>recall@k</mark>. `k` is a variable used to tell the retriever how many chunks to return for a given input. The more chunks you return, the more likely your answer lies in one of them, but the more context you're using and the more diluted that answer is in all those chunks. <mark>recall@k</mark> is the measure of how often _relevant_ docs appear in the top `k` retrieved results. So we ask a question, look at the docs that are retrieved, and check if the answer we're looking for is included or not.
+We need to be able to evaluate the quality of our retrieval in isolation - that's where retrieval evals come in. Getting a good answer from the chatbot depends on whether or not the right docs were handed to it so it could formulate its response. For example, if I ask about a character taking fall damage, does it actually fetch the correct rule where fall damage is mentioned, or is it finding rules that are unrelated? What I want to see here is given a question "What weapons can a Magic-User use?" does it return part of the file where the Magic User class is mentioned (`2. Classes/6. Magic-User.md`)? Since this is binary and hit or miss, we can measure it with something called <mark>recall@k</mark>. <mark>k,</mark> is a variable used to tell the retriever how many chunks to return for a given input. The more chunks you return, the more likely your answer lies in one of them, but the more context you're using and the more diluted that answer is in all those chunks. <mark>recall@k</mark> is the measure of how often _relevant_ docs appear in the top <mark>k</mark> retrieved results. So we ask a question, look at the docs that are retrieved, and check if the answer we're looking for is included or not.
 
 ```text
-recall@k = positive recalls / total recalls (k)
+recall@k = positive recalls / total recalls
 ```
 
 Something to keep in mind though: This only tests retrieval, not answer quality. The LLM could still hallucinate even with a perfect score, but that's a problem for a later step. We want to test one thing at a time. Once we get retrieval right, we can work on answer quality.
 
-To actually get that <mark>recall@k</mark> value, we need to create some fixtures that have pre-written questions, the raw file I expect the answer to be in, and a substring for a portion of the answer. I then create a small script to loop over each fixture and check whether the expected substring appears in the retrieved chunks.
+To actually get that <mark>recall@k</mark> value, we need to create some fixtures that have pre-written questions, the path of the raw file I expect the answer to be in, and a substring for a portion of the answer. I then create a small script to loop over each fixture and check whether the expected substring appears in the retrieved chunks.
 
 ## The Fixture
 
@@ -83,7 +83,7 @@ To actually get that <mark>recall@k</mark> value, we need to create some fixture
 ]
 ```
 
-The fixture I built is a json file with 12 objects containing a sample question, the substring that the answer is found in, and the source file. I tried to cover a range of questions that had specific answers so I could be confident that retrieval was working across the knowledge base. This includes answers that are found in formats like markdown tables rather than only being in paragraphs of text.
+The fixture I built has 12 question objects in it, but I may end up adding more. I tried to cover a range of questions that had specific answers so I could be confident that retrieval was working across the knowledge base. This includes answers that are found in odd formats like markdown tables rather than only being in paragraphs of text.
 
 ## The Eval Script
 
