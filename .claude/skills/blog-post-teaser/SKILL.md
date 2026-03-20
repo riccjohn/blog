@@ -83,6 +83,8 @@ The whole post is 1–3 sentences max.
 
 **No**: Hashtags unless they're ironic. No emojis unless a single one would land perfectly.
 
+**Grammar**: Use standard capitalization and full sentences — every sentence needs a subject. Don't drop it to sound casual ("Had Claude explain..." should be "Getting Claude to explain..." or restructure the sentence). At the same time, don't mechanically start every sentence with "I" — that reads as egotistical and robotic. Vary sentence structure naturally: lead with a clause ("When I rebuilt..."), use a gerund ("Getting Claude to..."), or find a subject that isn't "I" when it fits.
+
 ---
 
 ## Process
@@ -130,6 +132,16 @@ writing unless the post content hasn't been shared — just read it and go.
 Include the character count for the Bluesky post (excluding the placeholder) so the user knows
 how much room they have for the URL.
 
+## AI Writing Patterns to Avoid
+
+These are tells that the copy was written by an AI, not a person. Avoid them:
+
+- **Em-dash overuse**: One em-dash per post is fine. Using it as a default connector ("Not X — just Y", "I did this — and then that") is an AI tic. Use a period or rewrite the sentence instead.
+- **"It's not X, it's Y" constructions**: "Not solve it — teach it. There's a difference." is a classic AI rhetorical move. Just say what it is without the contrast frame.
+- **Sentence fragments used as punchy emphasis**: "Classic." / "There's a difference." / "Real ones know." — these read as AI mimicking punchy writing, not actual punchy writing.
+- **The dramatic pause paragraph**: A one-word or one-clause paragraph for emphasis ("Then the Pi died." on its own line for drama) — used sparingly it's fine, but AI overuses it.
+- **Over-telegraphed structure**: "Here's what I mean." / "Let me explain." / "Here's the thing:" — AI often signals transitions that a real writer would just make.
+
 ## Voice Calibration
 
 **Generic LinkedIn (avoid)**:
@@ -156,4 +168,4 @@ how much room they have for the URL.
 
 **On-brand Bluesky**:
 
-> "fixed my RAG chatbot's retrieval by breaking everything trying to fix it manually. wrote about recall@k evals and finally having a number to point at [link]"
+> "I fixed my RAG chatbot's retrieval by breaking everything trying to fix it manually. Wrote about recall@k evals and finally having a number to point at. [link]"
