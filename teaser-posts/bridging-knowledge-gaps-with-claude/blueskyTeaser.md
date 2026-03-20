@@ -1,0 +1,1 @@
+When I rebuilt my home server, I kept hitting a conceptual wall that every tutorial assumed you'd already cleared. Getting Claude to explain the missing pieces first made a bigger difference than expected. [link]
