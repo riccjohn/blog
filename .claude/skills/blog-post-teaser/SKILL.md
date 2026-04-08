@@ -93,7 +93,6 @@ The whole post is 1–3 sentences max.
 2. **Derive the post slug** from the filename (e.g. `stop-playing-whac-a-mole-with-your-rag-chatbot.mdx`
    → `stop-playing-whac-a-mole-with-your-rag-chatbot`).
 3. **Extract the hook, not the answer**:
-
     - The core frustration or wrong turn (what made him want to write the post at all)
     - The specific pain that makes someone think "yes, I've been there"
     - The _existence_ of a resolution — not what it is
