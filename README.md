@@ -77,6 +77,13 @@ heroImage: '../../assets/images/hero.jpg' # Optional - relative path from conten
 
 Files prefixed with `.` (e.g., `.draft-post.md`) are excluded from builds.
 
+**Shortcut**: Use `pnpm new-post` to scaffold a draft with pre-filled frontmatter:
+
+```bash
+pnpm new-post "My Post Title"
+# Creates: src/content/blog/.my-post-title.mdx
+```
+
 ## Claude Code Configuration
 
 This project includes a `.claude.json` file that configures the Playwright MCP server for automated browser testing when using [Claude Code](https://claude.ai/code). See `CLAUDE.md` for detailed guidance on working with this codebase.
