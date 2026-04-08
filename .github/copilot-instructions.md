@@ -8,13 +8,11 @@ Keep this short, concrete, and tightly coupled to the codebase.
 This repo is an Astro (v5) static blog scaffold with content collections, MDX support, and a small component/layout structure. Use the notes below to move quickly and make correct, low-risk changes.
 
 1. Big picture
-
     - Astro site (see `astro.config.mjs`) with integrations: `@astrojs/mdx`, `@astrojs/sitemap`.
     - Content lives in `src/content/` (collections configured in `src/content.config.ts`). The primary blog collection is `src/content/blog/` and accepts `.md`/`.mdx` files.
     - Reusable UI is in `src/components/`; top-level layouts are in `src/layouts/` (e.g. `Layout.astro` and `BlogPost.astro`). Pages live in `src/pages/`.
 
 2. Key developer workflows (run from project root)
-
     - Install: `pnpm install` (this repo uses `pnpm`; packageManager indicates `pnpm@10.10.0`).
     - Dev: `pnpm dev` — starts Astro dev server on `localhost:4321`.
     - Build: `pnpm build` — produces `./dist/`.
@@ -22,26 +20,22 @@ This repo is an Astro (v5) static blog scaffold with content collections, MDX su
     - Formatting: `pnpm run prettier:write` (Prettier + Astro + Tailwind plugins installed).
 
 3. Content & frontmatter conventions (important to validate)
-
     - Schema is declared in `src/content.config.ts` using `astro:content` + `zod`:
         - Required: `title: string`, `description: string`, `pubDate: Date` (coerced from string).
         - Optional: `updatedDate: Date`, `heroImage: string`.
     - Add new posts as `.md` or `.mdx` files under `src/content/blog/`. Ensure frontmatter satisfies the schema or the site will type-check fail.
 
 4. Code patterns to follow
-
     - Path alias: `@/*` maps to `src/*` (see `tsconfig.json`). Use `@/components/...`, `@/layouts/...`, `@/consts` for imports.
     - Layouts expect explicit props (e.g. `Layout.astro` expects `{ title, description }`). `BlogPost.astro` consumes a `CollectionEntry<'blog'>` data shape.
     - Dates are displayed using `src/components/FormattedDate.astro` — reuse it instead of custom date formatting.
     - Hero images in `BlogPost.astro` are rendered with width 1020×510; follow that sizing when adding images.
 
 5. Integrations & external dependencies to be cautious about
-
     - Tailwind is configured via Vite plugin (`@tailwindcss/vite`) in `astro.config.mjs` — don't replace with a different Tailwind integration without adjusting `vite` config.
     - RSS and sitemap support exist (`@astrojs/rss` and `@astrojs/sitemap`). If you add routes impacting feed/sitemap, update their generators (`src/pages/rss.xml.js` and `astro.config.mjs`).
 
 6. Where to make common changes (examples)
-
     - Site title/description: `src/consts.ts`.
     - Header/footer links: `src/components/Header.astro` and `src/components/Footer.astro`.
     - Social icons: `src/components/Social/*.astro` (e.g. `Bluesky.astro`) — follow existing SVG + `hoverable` pattern.
