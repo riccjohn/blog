@@ -7,7 +7,8 @@
         "build": "astro build",
         "preview": "astro preview",
         "astro": "astro",
-        "prettier:write": "prettier . --write"
+        "prettier:write": "prettier . --write",
+        "new-post": "node scripts/new-post.js"
     },
     "dependencies": {
         "@astrojs/check": "^0.9.8",
