@@ -1,0 +1,225 @@
+---
+
+---
+
+<dialog id="lightbox" aria-label="Image lightbox">
+    <div class="lightbox-inner">
+        <button
+            id="lightbox-close"
+            autofocus
+            aria-label="Close lightbox"
+            class="bg-bg-tertiary border-border-default text-text-secondary hover:border-accent-primary hover:text-accent-primary flex cursor-pointer items-center justify-center rounded border p-2 transition-all duration-200"
+        >
+            <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <line
+                    x1="2"
+                    y1="2"
+                    x2="14"
+                    y2="14"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"></line>
+                <line
+                    x1="14"
+                    y1="2"
+                    x2="2"
+                    y2="14"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"></line>
+            </svg>
+        </button>
+        <div id="lightbox-skeleton" hidden></div>
+        <img id="lightbox-img" src="" alt="" />
+        <p id="lightbox-caption"></p>
+    </div>
+</dialog>
+
+<!-- is:global required: article img lives in slotted MDX content outside this component's scope -->
+<style is:global>
+    article img:not([data-no-lightbox]) {
+        cursor: zoom-in;
+    }
+
+    #lightbox {
+        padding: 0;
+        border: none;
+        background: transparent;
+        max-width: 100vw;
+        max-height: 100vh;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0;
+    }
+
+    #lightbox::backdrop {
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(4px);
+    }
+
+    .lightbox-inner {
+        position: relative;
+        background: var(--color-bg-primary);
+        border: 1px solid var(--color-border-default);
+        box-shadow: 0 8px 32px var(--color-shadow-default);
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+        max-width: 90vw;
+        max-height: 90vh;
+    }
+
+    #lightbox-close {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+    }
+
+    #lightbox-img {
+        display: block;
+        max-width: 85vw;
+        max-height: 75vh;
+        cursor: zoom-out;
+    }
+
+    #lightbox-skeleton {
+        background: var(--color-border-default);
+        max-width: 85vw;
+        max-height: 75vh;
+        animation: lightbox-pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes lightbox-pulse {
+        0%,
+        100% {
+            opacity: 0.6;
+        }
+        50% {
+            opacity: 0.15;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        #lightbox-skeleton {
+            animation: none;
+            opacity: 0.4;
+        }
+    }
+
+    #lightbox-caption {
+        color: var(--color-text-secondary);
+        font-family: monospace;
+        font-size: 0.875rem;
+        text-align: center;
+        margin: 0;
+    }
+
+    #lightbox-caption::before {
+        content: '// ';
+    }
+</style>
+
+<script>
+    const dialog = document.querySelector<HTMLDialogElement>('#lightbox')
+    const lightboxImg =
+        document.querySelector<HTMLImageElement>('#lightbox-img')
+    const lightboxCaption =
+        document.querySelector<HTMLParagraphElement>('#lightbox-caption')
+    const lightboxSkeleton =
+        document.querySelector<HTMLElement>('#lightbox-skeleton')
+
+    if (!dialog || !lightboxImg || !lightboxCaption || !lightboxSkeleton) {
+        throw new Error('Lightbox: required elements not found in DOM')
+    }
+
+    document.addEventListener('click', (e) => {
+        const img = (e.target as Element).closest(
+            'article img:not([data-no-lightbox])'
+        )
+        if (!img || !(img instanceof HTMLImageElement)) return
+        lightboxImg.src = img.src
+        lightboxImg.alt = img.alt
+        const figcaption = img.closest('figure')?.querySelector('figcaption')
+        // Strip the CSS-injected "// " prefix (see #lightbox-caption::before)
+        const captionText =
+            figcaption?.textContent?.replace(/^\/\/\s*/, '') ?? ''
+        lightboxCaption.textContent = captionText
+        lightboxCaption.hidden = !captionText
+        // Scale image to fill available lightbox space
+        const maxW = window.innerWidth * 0.85
+        const maxH = window.innerHeight * 0.75
+        if (img.naturalWidth && img.naturalHeight) {
+            const scale = Math.min(
+                maxW / img.naturalWidth,
+                maxH / img.naturalHeight
+            )
+            lightboxImg.style.width =
+                Math.round(img.naturalWidth * scale) + 'px'
+            lightboxImg.style.height = 'auto'
+        } else {
+            lightboxImg.style.width = Math.round(maxW) + 'px'
+            lightboxImg.style.height = 'auto'
+        }
+        // Show skeleton until image loads
+        const showImage = () => {
+            lightboxSkeleton.hidden = true
+            lightboxImg.hidden = false
+        }
+        if (lightboxImg.complete && lightboxImg.naturalWidth) {
+            showImage()
+        } else {
+            lightboxImg.hidden = true
+            lightboxSkeleton.style.width = lightboxImg.style.width
+            // Fall back to 16:9 if natural dimensions unavailable (e.g. uncached image)
+            const aspectRatio =
+                img.naturalWidth && img.naturalHeight
+                    ? img.naturalHeight / img.naturalWidth
+                    : 9 / 16
+            lightboxSkeleton.style.height =
+                Math.round(
+                    Number.parseInt(lightboxImg.style.width, 10) * aspectRatio
+                ) + 'px'
+            lightboxSkeleton.hidden = false
+            lightboxImg.addEventListener('load', showImage, { once: true })
+            lightboxImg.addEventListener(
+                'error',
+                () => {
+                    lightboxSkeleton.hidden = true
+                    lightboxImg.hidden = false
+                },
+                { once: true }
+            )
+        }
+        dialog.showModal()
+    })
+
+    dialog.addEventListener('click', (e) => {
+        if (e.target === dialog) dialog.close()
+    })
+
+    lightboxImg.addEventListener('click', () => dialog.close())
+
+    document
+        .querySelector('#lightbox-close')
+        ?.addEventListener('click', () => dialog.close())
+
+    dialog.addEventListener('close', () => {
+        lightboxImg.src = ''
+        lightboxImg.style.width = ''
+        lightboxImg.style.height = ''
+        lightboxImg.hidden = false
+        lightboxSkeleton.hidden = true
+        lightboxSkeleton.style.width = ''
+        lightboxSkeleton.style.height = ''
+    })
+</script>
