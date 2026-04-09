@@ -1,0 +1,1 @@
+Every time we build with AI's recommendations, we feed the next model's training data. The bias doesn't stay flat. It compounds. I wrote about why that's a problem for technical innovation, and what we can do about it. [link]
