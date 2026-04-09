@@ -115,6 +115,7 @@ h5 {
 strong,
 b {
     font-weight: 700;
+    @apply text-accent-primary;
 }
 p {
     margin-bottom: 1em;
@@ -259,11 +260,11 @@ hr {
 
 /* Link styling */
 a {
-    @apply text-accent-primary decoration-accent-muted underline transition-all duration-200;
+    @apply text-accent-primary decoration-accent-primary underline decoration-2 transition-all duration-200;
 }
 
 a:hover {
-    @apply text-accent-hover decoration-accent-primary;
+    @apply text-accent-hover decoration-accent-hover decoration-4;
 }
 
 /* Selection color */
