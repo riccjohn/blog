@@ -18,12 +18,10 @@ const {
 ---
 
 <figure>
-    {
-        typeof src === 'string' ? (
-            <img src={src} alt={alt} class={className} />
-        ) : (
-            <Image {src} {alt} class={className} />
-        )
-    }
+    {typeof src === 'string' ? (
+        <img src={src} alt={alt} class={className} />
+    ) : (
+        <Image {src} {alt} class={className} />
+    )}
     <figcaption>{caption}</figcaption>
 </figure>

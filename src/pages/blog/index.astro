@@ -16,63 +16,57 @@ const posts = (await getCollection('blog')).sort(
 <!doctype html>
 <html lang="en">
     <head>
-        <script is:inline set:html={THEME_INIT_SCRIPT} />
+        <script is:inline set:html={THEME_INIT_SCRIPT}></script>
         <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
     </head>
     <body>
         <Header />
         <main class="blog-grid-width">
             <section>
-                <ul
-                    class="m-0 grid list-none grid-cols-2 gap-8 p-0 max-md:grid-cols-1 max-md:gap-2"
-                >
-                    {
-                        posts.map((post, index) => (
-                            <li
-                                class:list={[
-                                    'max-md:text-center',
-                                    index === 0 &&
-                                        'col-span-2 mb-4 text-center max-md:col-span-1 max-md:mb-0',
-                                ]}
+                <ul class="m-0 grid list-none grid-cols-2 gap-8 p-0 max-md:grid-cols-1 max-md:gap-2">
+                    {posts.map((post, index) => (
+                        <li
+                            class:list={[
+                                'max-md:text-center',
+                                index === 0 &&
+                                    'col-span-2 mb-4 text-center max-md:col-span-1 max-md:mb-0',
+                            ]}
+                        >
+                            <a
+                                href={`/blog/${post.id}/`}
+                                class="group block no-underline [&>*]:no-underline [&>*]:transition-all [&>*]:duration-200"
                             >
-                                <a
-                                    href={`/blog/${post.id}/`}
-                                    class="group block no-underline [&>*]:no-underline [&>*]:transition-all [&>*]:duration-200"
-                                >
-                                    {post.data.heroImage && (
-                                        <div
-                                            class:list={[
-                                                'border-border-default group-hover:border-accent-primary mb-2 aspect-video overflow-hidden rounded-xl border group-hover:shadow-[0_0_0_2px_var(--color-accent-muted)]',
-                                                index === 0 && 'w-full',
-                                            ]}
-                                        >
-                                            <Image
-                                                class="h-full w-full object-cover"
-                                                width={720}
-                                                height={405}
-                                                src={post.data.heroImage}
-                                                alt=""
-                                            />
-                                        </div>
-                                    )}
-                                    <h4
+                                {post.data.heroImage && (
+                                    <div
                                         class:list={[
-                                            'title text-text-heading group-hover:text-accent-primary m-0 leading-none',
-                                            index === 0 &&
-                                                'text-[2.369rem] max-md:text-[1.563rem]',
+                                            'border-border-default group-hover:border-accent-primary mb-2 aspect-video overflow-hidden rounded-xl border group-hover:shadow-[0_0_0_2px_var(--color-accent-muted)]',
+                                            index === 0 && 'w-full',
                                         ]}
                                     >
-                                        {post.data.title}
-                                    </h4>
-                                    <p class="date text-text-secondary group-hover:text-accent-primary m-0">
-                                        <FormattedDate
-                                            date={post.data.pubDate}
+                                        <Image
+                                            class="h-full w-full object-cover"
+                                            width={720}
+                                            height={405}
+                                            src={post.data.heroImage}
+                                            alt=""
                                         />
-                                    </p>
-                                </a>
-                            </li>
-                        ))
-                    }
+                                    </div>
+                                )}
+                                <h4
+                                    class:list={[
+                                        'title text-text-heading group-hover:text-accent-primary m-0 leading-none',
+                                        index === 0 &&
+                                            'text-[2.369rem] max-md:text-[1.563rem]',
+                                    ]}
+                                >
+                                    {post.data.title}
+                                </h4>
+                                <p class="date text-text-secondary group-hover:text-accent-primary m-0">
+                                    <FormattedDate date={post.data.pubDate} />
+                                </p>
+                            </a>
+                        </li>
+                    ))}
                 </ul>
             </section>
         </main>

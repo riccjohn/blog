@@ -6,9 +6,7 @@ import Email from '@/components/Social/Email.astro'
 const today = new Date()
 ---
 
-<footer
-    class="bg-bg-secondary border-border-default text-text-secondary border-t px-4 py-8 text-center text-sm"
->
+<footer class="bg-bg-secondary border-border-default text-text-secondary border-t px-4 py-8 text-center text-sm">
     &copy; {today.getFullYear()} John Riccardi. Made with ❤️ in Madison, WI.
     <div class="social-links mt-4 flex items-center justify-center gap-4">
         <LinkedIn hoverable />
@@ -16,7 +14,7 @@ const today = new Date()
         <GitHub hoverable />
         <Email hoverable />
     </div>
-    <a rel="me" href="https://techhub.social/@riccjohn" class="hidden"
-        >Mastodon</a
-    >
+    <a rel="me" href="https://techhub.social/@riccjohn" class="hidden">
+        Mastodon
+    </a>
 </footer>
