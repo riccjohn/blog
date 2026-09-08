@@ -20,7 +20,7 @@ jobs:
             - name: Setup Node
               uses: actions/setup-node@v4
               with:
-                  node-version-file: .tool-versions
+                  node-version: '23.11.0'
             - name: Install dependencies
               run: pnpm i --frozen-lockfile
             - name: Build with Astro
