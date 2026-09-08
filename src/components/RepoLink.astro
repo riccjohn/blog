@@ -21,7 +21,9 @@ const { href, text = 'View the repo on GitHub' } = Astro.props
         ></path>
     </svg>
     <span>
-        <a href={href} target="_blank" rel="noopener noreferrer">{text}</a>
+        <a href={href} target="_blank" rel="noopener noreferrer">
+            {text}
+        </a>
         <slot />
     </span>
 </p>
