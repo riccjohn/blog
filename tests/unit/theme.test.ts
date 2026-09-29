@@ -378,6 +378,38 @@ describe('THEME_INIT_SCRIPT with ?theme=', () => {
     })
 })
 
+describe('THEME_INIT_SCRIPT when storage throws', () => {
+    it('still applies the requested theme and cleans the URL', () => {
+        const env = stubBrowser({
+            classes: [],
+            stored: null,
+            prefersDark: false,
+            search: '?theme=early-web',
+        })
+        const denied = () => {
+            throw new Error('denied')
+        }
+        vi.stubGlobal('localStorage', { getItem: denied, setItem: denied })
+        new Function(THEME_INIT_SCRIPT)()
+        expect(env.classList.snapshot()).toEqual(['early-web'])
+        expect(env.replaced).toEqual(['/blog/post/'])
+    })
+
+    it('falls back to the system preference without a request', () => {
+        const env = stubBrowser({
+            classes: [],
+            stored: null,
+            prefersDark: true,
+        })
+        const denied = () => {
+            throw new Error('denied')
+        }
+        vi.stubGlobal('localStorage', { getItem: denied, setItem: denied })
+        new Function(THEME_INIT_SCRIPT)()
+        expect(env.classList.snapshot()).toEqual(['dark'])
+    })
+})
+
 describe('observeSystemThemeChanges', () => {
     it('never switches away from a stored theme', () => {
         fc.assert(

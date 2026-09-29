@@ -64,13 +64,19 @@ const toTheme = (value) => (value === null ? null : themeByValue.get(value) ?? n
 const params = new URLSearchParams(location.search)
 const requestedTheme = toTheme(params.get(${JSON.stringify(THEME_QUERY_PARAM)}))
 if (requestedTheme) {
-    localStorage.setItem(${JSON.stringify(THEME_STORAGE_KEY)}, requestedTheme)
+    try {
+        localStorage.setItem(${JSON.stringify(THEME_STORAGE_KEY)}, requestedTheme)
+    } catch {}
     params.delete(${JSON.stringify(THEME_QUERY_PARAM)})
     const query = params.toString()
     history.replaceState(history.state, '', location.pathname + (query ? '?' + query : '') + location.hash)
 }
 const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-const theme = toTheme(localStorage.getItem(${JSON.stringify(THEME_STORAGE_KEY)}))
+let stored = null
+try {
+    stored = localStorage.getItem(${JSON.stringify(THEME_STORAGE_KEY)})
+} catch {}
+const theme = requestedTheme ?? toTheme(stored)
     ?? (systemPrefersDark ? ${JSON.stringify(THEMES.dark)} : ${JSON.stringify(THEMES.light)})
 document.documentElement.classList.remove(...${JSON.stringify(THEME_CLASSES)})
 if (theme !== ${JSON.stringify(THEMES.light)}) {
