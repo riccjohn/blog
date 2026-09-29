@@ -42,24 +42,18 @@ import RetroGif from '@/components/Retro/RetroGif.astro'
 </div>
 
 <script>
-    const CLIPPY_KEY = 'retro-clippy-dismissed'
-
+    // Dismissal lasts for this page view only: Clippy is back on the next load
     const clippy = document.querySelector('[data-retro="clippy"]')
-    const dismiss = clippy?.querySelector('[data-retro="clippy-dismiss"]')
-
-    if (localStorage.getItem(CLIPPY_KEY) === 'true') {
-        clippy?.remove()
-    } else {
-        dismiss?.addEventListener('click', () => {
-            const source = clippy?.querySelector('source')
-            const img = clippy?.querySelector('img')
-            const tip = clippy?.querySelector('.retro-tip')
+    clippy
+        ?.querySelector('[data-retro="clippy-dismiss"]')
+        ?.addEventListener('click', () => {
+            const source = clippy.querySelector('source')
+            const img = clippy.querySelector('img')
+            const tip = clippy.querySelector('.retro-tip')
             if (!source || !img || !tip) return
             source.srcset = '/retro/clippy-stomp.static.png'
             img.src = '/retro/clippy-stomp.gif'
             img.alt = 'A giant foot stomps Clippy flat'
             tip.textContent = 'Clippy has been dismissed. Permanently.'
-            localStorage.setItem(CLIPPY_KEY, 'true')
         })
-    }
 </script>

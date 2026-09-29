@@ -8,11 +8,13 @@ import { expect, test, type Page } from '@playwright/test'
  *   close button                 getByRole('button', { name: /close/i }) inside the dialog
  *   [data-retro="graincoin-link"] retro-only hidden footer link; opens the same dialog
  *   [data-retro="bonzi"]         Bonzi buddy wrapper (contains img/picture, and a speech bubble with text),
- *                                footer area, visible only in retro
- *   [data-retro="clippy"]        Clippy "Office Assistant" window (text /office assistant/i), footer area
+ *                                visible only in retro
+ *   [data-retro="clippy"]        Clippy "Office Assistant" window (text /office assistant/i)
+ *   Buddies float (position: fixed) at the bottom of the viewport from 1200px up, sliding in from
+ *   below unless reduced motion is set; narrower viewports keep them in the footer.
  *   [data-retro="clippy-dismiss"] "Don't show again" button inside clippy; click swaps the clippy
- *                                image to /retro/clippy-stomp.gif (static: clippy-stomp.static.png)
- *   localStorage key             'retro-clippy-dismissed' (value 'true') persists the dismissal
+ *                                image to /retro/clippy-stomp.gif (static: clippy-stomp.static.png).
+ *                                The dismissal is not persisted: Clippy is back on the next page load.
  *   GIFs                         <picture><source media="(prefers-reduced-motion: reduce)" srcset="X.static.png">
  *                                <img src="/retro/X.gif"></picture>
  *   Konami: keydown on document; ignored when target is input/textarea.
@@ -21,7 +23,6 @@ import { expect, test, type Page } from '@playwright/test'
  */
 
 const SHORT = { timeout: 2000 }
-const CLIPPY_KEY = 'retro-clippy-dismissed'
 const BONZI = '[data-retro="bonzi"]'
 const CLIPPY = '[data-retro="clippy"]'
 const CLIPPY_DISMISS = '[data-retro="clippy-dismiss"]'
@@ -225,9 +226,7 @@ test.describe('buddies', () => {
         )
     })
 
-    test('after dismissal and reload Clippy is not shown and the key is persisted', async ({
-        page,
-    }) => {
+    test('after dismissal and reload Clippy comes back', async ({ page }) => {
         await open(page, 'retro')
         await scrollBottom(page)
         await page.locator(CLIPPY_DISMISS).click(SHORT)
@@ -236,14 +235,29 @@ test.describe('buddies', () => {
             /clippy-stomp/,
             SHORT
         )
-        expect(
-            await page.evaluate((k) => localStorage.getItem(k), CLIPPY_KEY)
-        ).toBe('true')
         await page.reload()
         await page.waitForLoadState('networkidle')
         await scrollBottom(page)
-        await expect(page.locator(CLIPPY)).toBeHidden(SHORT)
+        await expect(page.locator(CLIPPY)).toBeVisible(SHORT)
+        await expect(page.locator(`${CLIPPY} img`)).toHaveAttribute(
+            'src',
+            /\/clippy\.gif/,
+            SHORT
+        )
         await expect(page.locator(BONZI)).toBeVisible(SHORT)
+    })
+
+    test('a dismissal remembered by an older version is ignored', async ({
+        page,
+    }) => {
+        await open(page, 'retro')
+        await page.evaluate(() =>
+            localStorage.setItem('retro-clippy-dismissed', 'true')
+        )
+        await page.reload()
+        await page.waitForLoadState('networkidle')
+        await scrollBottom(page)
+        await expect(page.locator(CLIPPY)).toBeVisible(SHORT)
     })
 
     test('buddies and closed dialog are invisible outside retro', async ({
@@ -258,6 +272,98 @@ test.describe('buddies', () => {
             await expect(p.getByRole('dialog')).toHaveCount(0)
             await p.close()
         }
+    })
+})
+
+const buddyBoxes = (page: Page) =>
+    page.evaluate(
+        ([w, b, c]) => {
+            const rect = (s: string) => {
+                const el = document.querySelector(s)!
+                const r = el.getBoundingClientRect()
+                return {
+                    top: r.top,
+                    bottom: r.bottom,
+                    left: r.left,
+                    right: r.right,
+                    position: getComputedStyle(
+                        el.closest('.retro-buddies') ?? el
+                    ).position,
+                }
+            }
+            return {
+                win: rect(w),
+                bonzi: rect(b),
+                clippy: rect(c),
+                vw: window.innerWidth,
+                vh: window.innerHeight,
+            }
+        },
+        [WINDOW, BONZI, CLIPPY]
+    )
+
+const riseAnimations = (page: Page, sel: string) =>
+    page.locator(sel).evaluate((el) =>
+        el
+            .getAnimations()
+            .map((a) => (a instanceof CSSAnimation ? a.animationName : ''))
+            .filter((n) => n.startsWith('retro-buddy-rise'))
+    )
+
+test.describe('floating buddies', () => {
+    test.use({ viewport: { width: 1280, height: 800 } })
+
+    test('float at the bottom of the viewport without scrolling, clear of the reading window', async ({
+        page,
+    }) => {
+        await open(page, 'retro', POST)
+        await expect(page.locator(BONZI)).toBeInViewport(SHORT)
+        await expect(page.locator(CLIPPY)).toBeInViewport(SHORT)
+        await expect
+            .poll(
+                async () => {
+                    const b = await buddyBoxes(page)
+                    return (
+                        b.bonzi.position === 'fixed' &&
+                        Math.abs(b.bonzi.bottom - b.vh) < 24 &&
+                        Math.abs(b.clippy.bottom - b.vh) < 24
+                    )
+                },
+                { timeout: 5000 }
+            )
+            .toBe(true)
+        const b = await buddyBoxes(page)
+        expect(b.bonzi.right).toBeLessThanOrEqual(b.win.left)
+        expect(b.clippy.left).toBeGreaterThanOrEqual(b.win.right)
+    })
+
+    test('stay put while the page scrolls', async ({ page }) => {
+        await open(page, 'retro', POST)
+        await page.waitForTimeout(4000)
+        const before = await buddyBoxes(page)
+        await page.evaluate(() => window.scrollBy(0, 600))
+        await page.waitForTimeout(100)
+        const after = await buddyBoxes(page)
+        expect(Math.abs(after.bonzi.bottom - before.bonzi.bottom)).toBeLessThan(
+            12
+        )
+        expect(
+            Math.abs(after.clippy.bottom - before.clippy.bottom)
+        ).toBeLessThan(12)
+    })
+
+    test('slide in from the bottom of the screen', async ({ page }) => {
+        await open(page, 'retro')
+        expect(await riseAnimations(page, BONZI)).toHaveLength(1)
+        expect(await riseAnimations(page, CLIPPY)).toHaveLength(1)
+    })
+
+    test('reduced motion: no slide-in', async ({ page }) => {
+        await page.emulateMedia({ reducedMotion: 'reduce' })
+        await open(page, 'retro')
+        await expect(page.locator(BONZI)).toBeInViewport(SHORT)
+        expect(await riseAnimations(page, BONZI)).toHaveLength(0)
+        expect(await riseAnimations(page, CLIPPY)).toHaveLength(0)
     })
 })
 

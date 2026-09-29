@@ -412,6 +412,63 @@ html.retro .retro-bud-right {
     flex-direction: row-reverse;
 }
 
+/* Wide screens: buddies float in the side gutters, clear of the 720px reading window */
+@media (min-width: 1200px) {
+    html.retro .retro-buddies {
+        position: fixed;
+        inset: auto 0 0;
+        z-index: 40;
+        flex-wrap: nowrap;
+        margin: 0;
+        padding: 0 16px 12px;
+        pointer-events: none;
+    }
+
+    html.retro .retro-bud,
+    html.retro .retro-bud-right {
+        flex-direction: column-reverse;
+        align-items: flex-start;
+        max-width: 210px;
+        pointer-events: auto;
+    }
+
+    html.retro .retro-bud-right {
+        align-items: flex-end;
+    }
+}
+
+@keyframes retro-buddy-rise {
+    from {
+        transform: translateY(calc(100% + 24px));
+    }
+}
+
+@keyframes retro-buddy-float {
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
+/* The whole buddy rises; only the character bobs, so the tip's button stays still */
+@media (min-width: 1200px) and (prefers-reduced-motion: no-preference) {
+    html.retro .retro-bud {
+        animation: retro-buddy-rise 1.2s cubic-bezier(0.2, 0.8, 0.3, 1) 0.3s
+            both;
+    }
+
+    html.retro .retro-bud-right {
+        animation-delay: 0.9s;
+    }
+
+    html.retro .retro-bud > :not(.retro-tip) {
+        animation: retro-buddy-float 4s ease-in-out 1.5s infinite;
+    }
+
+    html.retro .retro-bud-right > :not(.retro-tip) {
+        animation-delay: 2.1s;
+    }
+}
+
 html.retro .retro-tip {
     position: relative;
     max-width: 210px;
