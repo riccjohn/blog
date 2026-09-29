@@ -14,7 +14,7 @@ export default defineConfig({
         },
     ],
     webServer: {
-        command: 'pnpm build && pnpm preview --port 4329',
+        command: 'pnpm build && pnpm preview --port 4329 --ignore-lock',
         url: 'http://localhost:4329',
         // Never reuse: another local Astro app on the port would be tested silently
         reuseExistingServer: false,

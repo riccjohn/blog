@@ -221,8 +221,32 @@ html.retro :is(header, footer) {
         1px 1px 0 #000;
 }
 
-html.retro :is(header, footer) a {
+html.retro :is(header, footer) a,
+html.retro :is(header, footer) a:visited {
     color: #7fffd4;
+}
+
+/* Keep the theme toggle in the top-right corner while the retro nav is centred */
+html.retro header {
+    position: relative;
+}
+
+html.retro header #theme-toggle {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+}
+
+html.retro header [data-retro='music-toggle'] {
+    position: absolute;
+    top: 12px;
+    right: 62px;
+}
+
+html.retro header [data-retro='music-toggle'][aria-pressed='true'] {
+    background: #000080;
+    border-style: inset;
+    color: #0ff;
 }
 
 html.retro .retro-mast {

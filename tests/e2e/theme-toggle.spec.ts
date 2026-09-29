@@ -159,3 +159,23 @@ test.describe('retro base styling', () => {
         expect(family.toLowerCase()).toMatch(/^["']?verdana/)
     })
 })
+
+test.describe('retro toggle placement', () => {
+    for (const width of [375, 1280]) {
+        test(`toggle stays in the top-right corner at ${width}px`, async ({
+            page,
+        }) => {
+            await page.addInitScript(() =>
+                localStorage.setItem('theme-preference', 'retro')
+            )
+            await page.route('**/counter/**', (r) => r.abort())
+            await page.setViewportSize({ width, height: 900 })
+            await page.goto('/')
+            const box = await page.locator('#theme-toggle').boundingBox()
+            expect(box).not.toBeNull()
+            if (!box) return
+            expect(width - (box.x + box.width)).toBeLessThanOrEqual(24)
+            expect(box.y).toBeLessThanOrEqual(24)
+        })
+    }
+})

@@ -63,6 +63,7 @@ import RetroGif from '@/components/Retro/RetroGif.astro'
         parseGoatCounterCount,
         toCounterDigits,
     } from '@/utils/retro'
+    import { GOATCOUNTER_PUBLIC_COUNTER } from '@/consts'
 
     const render = (count: number) => {
         const counter = document.querySelector('[data-retro="hit-counter"]')
@@ -79,6 +80,10 @@ import RetroGif from '@/components/Retro/RetroGif.astro'
     }
 
     const loadCount = async () => {
+        if (!GOATCOUNTER_PUBLIC_COUNTER) {
+            render(fallbackVisitorCount(Math.random()))
+            return
+        }
         try {
             const res = await fetch(
                 `https://arcanegrain.goatcounter.com/counter/${encodeURIComponent(location.pathname)}.json`

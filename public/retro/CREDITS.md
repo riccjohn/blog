@@ -26,3 +26,7 @@ All licensed under the SIL Open Font License 1.1 (see `fonts/OFL.txt`). Latin su
 - VT323 (`VT323-400.woff2`)
 - Silkscreen (`Silkscreen-400.woff2`)
 - Pixelify Sans 500 and 700 (`PixelifySans-500.woff2`, `PixelifySans-700.woff2`; one variable-weight file served for both)
+
+## Music (`music/`)
+
+- `background.mp3`: "Shadow of the Day" by Linkin Park, MIDI rendition from https://www.mididb.com/linkin-park/shadow-of-the-day-midi/. The composition is copyrighted by its rights holders and is not licensed for this use; remove on request.
