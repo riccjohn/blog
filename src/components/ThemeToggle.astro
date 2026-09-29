@@ -9,7 +9,7 @@
     class="bg-bg-tertiary border-border-default text-text-secondary hover:border-accent-primary hover:text-accent-primary flex cursor-pointer items-center justify-center rounded border p-2 transition-all duration-200"
 >
     <svg
-        class="sun retro:hidden h-5 w-5 dark:hidden"
+        class="sun early-web:hidden h-5 w-5 dark:hidden"
         width="20"
         height="20"
         viewBox="0 0 20 20"
@@ -101,7 +101,7 @@
         <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
     </svg>
     <svg
-        class="retro-icon retro:block hidden h-5 w-5"
+        class="retro-icon early-web:block hidden h-5 w-5"
         width="20"
         height="20"
         viewBox="0 0 20 20"
@@ -117,8 +117,9 @@
         initTheme,
         toggleTheme,
         getTheme,
-        nextTheme,
         observeSystemThemeChanges,
+        themeToggleLabel,
+        THEMES,
     } from '@/utils/theme'
     import { playDialup } from '@/utils/dialup'
 
@@ -129,15 +130,15 @@
 
     const updateLabel = () => {
         if (!toggle) return
-        const next = nextTheme(getTheme())
-        toggle.setAttribute('aria-label', `Switch to ${next} theme`)
-        toggle.setAttribute('title', `Switch to ${next} theme`)
+        const label = themeToggleLabel(getTheme())
+        toggle.setAttribute('aria-label', label)
+        toggle.setAttribute('title', label)
     }
 
     updateLabel()
     if (toggle) {
         toggle.addEventListener('click', () => {
-            if (toggleTheme() === 'retro') playDialup()
+            if (toggleTheme() === THEMES.earlyWeb) playDialup()
             updateLabel()
         })
     }

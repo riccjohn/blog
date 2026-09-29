@@ -42,7 +42,7 @@ const posts = (await getCollection('blog')).sort(
                                     {post.data.heroImage && (
                                         <div
                                             class:list={[
-                                                'border-border-default group-hover:border-accent-primary mb-2 aspect-video overflow-hidden rounded-xl border retro:rounded-none group-hover:shadow-[0_0_0_2px_var(--color-accent-muted)]',
+                                                'border-border-default group-hover:border-accent-primary mb-2 aspect-video overflow-hidden rounded-xl border early-web:rounded-none group-hover:shadow-[0_0_0_2px_var(--color-accent-muted)]',
                                                 index === 0 && 'w-full',
                                             ]}
                                         >
@@ -55,7 +55,7 @@ const posts = (await getCollection('blog')).sort(
                                             />
                                         </div>
                                     )}
-                                    <div class="contents retro:flex retro:items-center retro:justify-center retro:gap-2">
+                                    <div class="contents early-web:flex early-web:items-center early-web:justify-center early-web:gap-2">
                                         <h4
                                             class:list={[
                                                 'title text-text-heading group-hover:text-accent-primary m-0 leading-none transition-all duration-200',

@@ -18,7 +18,7 @@
 
 <script>
     import { createKonamiMatcher } from '@/utils/retro'
-    import { getTheme, nextTheme, setTheme } from '@/utils/theme'
+    import { getTheme, setTheme, themeToggleLabel, THEMES } from '@/utils/theme'
 
     const dialog = document.querySelector<HTMLDialogElement>(
         '[data-retro="graincoin-dialog"]'
@@ -52,9 +52,9 @@
             return
         }
         if (!matches(e.key)) return
-        if (getTheme() !== 'retro') {
-            setTheme('retro')
-            const label = `Switch to ${nextTheme('retro')} theme`
+        if (getTheme() !== THEMES.earlyWeb) {
+            setTheme(THEMES.earlyWeb)
+            const label = themeToggleLabel(THEMES.earlyWeb)
             const toggle = document.getElementById('theme-toggle')
             toggle?.setAttribute('aria-label', label)
             toggle?.setAttribute('title', label)

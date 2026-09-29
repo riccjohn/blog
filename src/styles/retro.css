@@ -1,5 +1,9 @@
-/* 90s retro theme: every rule is scoped under html.retro / the retro: variant */
-@custom-variant retro (.retro &);
+/*
+ * Early-web theme (GeoCities chrome, Win95 reading window).
+ * The theme id lives in THEMES.earlyWeb (src/utils/theme.ts); CSS can't import
+ * it, so this file names it twice: the Tailwind variant and the one wrapper below.
+ */
+@custom-variant early-web (.early-web &);
 
 @font-face {
     font-family: 'VT323';
@@ -22,7 +26,25 @@
     font-display: swap;
 }
 
-html.retro {
+@keyframes retro-marquee-scroll {
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+@keyframes retro-buddy-rise {
+    from {
+        transform: translateY(calc(100% + 24px));
+    }
+}
+
+@keyframes retro-buddy-float {
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
+html.early-web {
     --font-retro-body: Verdana, Geneva, Tahoma, sans-serif;
     --font-retro-heading: 'Pixelify Sans', Verdana, sans-serif;
     --font-retro-chrome: 'Silkscreen', 'VT323', monospace;
@@ -47,522 +69,504 @@ html.retro {
 
     --color-code-bg: #000;
     --color-code-inline-bg: #e0e0e0;
-}
 
-html.retro body {
-    font-family: var(--font-retro-body);
-    font-size: 16px;
-    line-height: 1.7;
-    letter-spacing: normal;
-    background-color: #000018;
-    color: #e0e0e0;
-    text-shadow: 0 1px 2px #000018;
-    cursor: default;
-}
-
-html.retro a:visited {
-    color: #551a8b;
-}
-
-html.retro a,
-html.retro button {
-    cursor: pointer;
-}
-
-html.retro img,
-html.retro video,
-html.retro pre,
-html.retro code,
-html.retro blockquote,
-html.retro button {
-    border-radius: 0;
-}
-
-/* ---------- Win95 window + reading surface ---------- */
-html.retro [data-retro-window] {
-    max-width: 720px;
-    width: 100%;
-    margin: 0 auto;
-    padding: 3px;
-    background: #c0c0c0;
-    color: #000;
-    text-shadow: none;
-    box-shadow:
-        inset -1px -1px #0a0a0a,
-        inset 1px 1px #dfdfdf,
-        inset -2px -2px #808080,
-        inset 2px 2px #fff;
-}
-
-html.retro [data-retro-titlebar] {
-    background: linear-gradient(90deg, #000080, #0a3d8f);
-    color: #fff;
-    font: 700 13px/1.4 var(--font-retro-chrome);
-    padding: 3px 4px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-html.retro [data-retro-statusbar] {
-    margin-top: 2px;
-    gap: 3px;
-    font: 12px var(--font-retro-body);
-    color: #000;
-}
-
-html.retro [data-retro-statusbar] span {
-    flex: 1;
-    padding: 1px 6px;
-    box-shadow:
-        inset -1px -1px #fff,
-        inset 1px 1px #808080;
-}
-
-html.retro [data-retro-surface] {
-    --color-text-primary: #1a1a1a;
-    --color-text-secondary: #595959;
-    --color-text-tertiary: #595959;
-    --color-border-default: #808080;
-    background-color: #fffff0;
-    color: #1a1a1a;
-    text-shadow: none;
-    margin: 3px;
-    padding: 20px clamp(14px, 4vw, 32px) 24px;
-    font: 16px/1.7 var(--font-retro-body);
-    overflow-wrap: anywhere;
-    box-shadow:
-        inset -1px -1px #fff,
-        inset 1px 1px #808080,
-        inset -2px -2px #dfdfdf,
-        inset 2px 2px #0a0a0a;
-}
-
-html.retro [data-retro-surface] :is(h1, h2, h3, h4) {
-    font-family: var(--font-retro-heading);
-    font-weight: 700;
-    color: #000080;
-}
-
-html.retro [data-retro-surface] a,
-html.retro [data-retro-surface] a:visited {
-    color: #0000ee;
-}
-
-html.retro [data-retro-surface] a :is(h1, h2, h3, h4) {
-    color: inherit;
-}
-
-html.retro [data-retro-surface] a:hover {
-    color: #551a8b;
-}
-
-html.retro [data-retro-surface] :is(.date, .last-updated-on) {
-    color: #595959;
-}
-
-html.retro [data-retro-surface] img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 0;
-    box-shadow: none;
-}
-
-html.retro [data-retro-surface] pre {
-    background: #000;
-    color: #33ff33;
-    font:
-        15px/1.5 'Courier New',
-        monospace;
-    padding: 12px 14px;
-    max-width: 100%;
-    overflow-x: auto;
-    border: 0;
-    box-shadow:
-        inset 2px 2px #808080,
-        inset -2px -2px #fff;
-}
-
-html.retro [data-retro-surface] pre code {
-    background: transparent;
-    color: inherit;
-    padding: 0;
-}
-
-html.retro [data-retro-surface] :not(pre) > code {
-    background: #e0e0e0;
-    color: #000080;
-    padding: 1px 4px;
-}
-
-html.retro [data-retro-surface] blockquote {
-    margin-left: 0;
-    padding: 4px 14px;
-    color: #1a1a1a;
-    background: transparent;
-    border-left: 4px solid #808080;
-}
-
-/* ---------- chrome: header / footer set pieces ---------- */
-html.retro :is(header, footer) {
-    background-color: #000018;
-    background-image:
-        radial-gradient(1px 1px at 10px 14px, #fff 99%, transparent),
-        radial-gradient(1px 1px at 47px 60px, #fff 99%, transparent),
-        radial-gradient(1.5px 1.5px at 80px 30px, #ffd 99%, transparent),
-        radial-gradient(1px 1px at 120px 90px, #fff 99%, transparent),
-        radial-gradient(1px 1px at 30px 110px, #aaf 99%, transparent),
-        radial-gradient(2px 2px at 140px 20px, #fff 99%, transparent);
-    background-size: 160px 130px;
-    color: #e0e0e0;
-    text-shadow:
-        0 0 3px #000,
-        0 0 3px #000,
-        1px 1px 0 #000;
-}
-
-html.retro :is(header, footer) a,
-html.retro :is(header, footer) a:visited {
-    color: #7fffd4;
-}
-
-/* Keep the theme toggle in the top-right corner while the retro nav is centred */
-html.retro header {
-    position: relative;
-}
-
-html.retro header #theme-toggle {
-    position: absolute;
-    top: 12px;
-    right: 16px;
-}
-
-html.retro header [data-retro='music-toggle'] {
-    position: absolute;
-    top: 12px;
-    right: 62px;
-}
-
-html.retro header [data-retro='music-toggle'][aria-pressed='true'] {
-    background: #000080;
-    border-style: inset;
-    color: #0ff;
-}
-
-html.retro .retro-mast {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    padding-top: 12px;
-    text-align: center;
-}
-
-html.retro [data-retro='wordmark'] {
-    font:
-        bold clamp(1.4rem, 5vw, 2.1rem) / 1.1 'Comic Sans MS',
-        'Comic Neue',
-        'Chalkboard SE',
-        cursive;
-    color: #ff0;
-    text-shadow: 3px 3px 0 #c000c0;
-}
-
-html.retro [data-retro='marquee'] {
-    max-width: 720px;
-    margin: 12px auto 0;
-    overflow: hidden;
-    white-space: nowrap;
-    background: #000080;
-    color: #0ff;
-    font:
-        19px / 1.3 'VT323',
-        'Courier New',
-        monospace;
-    border: 2px inset #808080;
-    text-shadow: none;
-}
-
-html.retro [data-retro='marquee'] span {
-    display: inline-block;
-    padding-left: 8px;
-}
-
-@keyframes retro-marquee-scroll {
-    to {
-        transform: translateX(-100%);
-    }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    html.retro [data-retro='marquee'] span {
-        padding-left: 100%;
-        animation: retro-marquee-scroll 16s linear infinite;
-    }
-}
-
-html.retro header picture img,
-html.retro footer picture img {
-    max-width: 100%;
-    height: auto;
-}
-
-html.retro [data-retro-header] + nav {
-    justify-content: center;
-}
-
-html.retro .retro-foot {
-    justify-items: center;
-    gap: 12px;
-    margin-top: 16px;
-}
-
-html.retro .retro-counter {
-    display: inline-flex;
-    gap: 2px;
-    background: #000;
-    padding: 3px;
-    border: 2px inset #888;
-    vertical-align: middle;
-}
-
-html.retro .retro-counter i {
-    font:
-        normal 22px / 1 'VT323',
-        'Courier New',
-        monospace;
-    color: #33ff33;
-    background: #111;
-    padding: 1px 4px;
-    font-variant-numeric: tabular-nums;
-    text-shadow: none;
-}
-
-html.retro .retro-ring {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-html.retro .retro-badges {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 4px;
-}
-
-html.retro .retro-b88 {
-    display: inline-grid;
-    place-items: center;
-    width: 88px;
-    height: 31px;
-    overflow: hidden;
-    border: 1px solid #000;
-    font:
-        10px / 1.05 'Silkscreen',
-        'Courier New',
-        monospace;
-    text-align: center;
-    text-transform: uppercase;
-    text-shadow: none;
-}
-
-html.retro .retro-b88-viewed {
-    background: #000033;
-    color: #0f0;
-}
-
-html.retro .retro-b88-guestbook {
-    background: #fff;
-    color: #0000ee;
-}
-
-html.retro .retro-b88-astro {
-    background: #000;
-    color: #0ff;
-}
-
-/* hero image: square, no soft shadow */
-html.retro .hero-image > div {
-    border-radius: 0;
-    box-shadow: none;
-}
-
-/* ---------- easter eggs: buddies + GrainCoin popup ---------- */
-html.retro .retro-buddies {
-    justify-content: space-between;
-    align-items: flex-end;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin-top: 16px;
-}
-
-html.retro .retro-bud {
-    display: flex;
-    align-items: flex-end;
-    gap: 8px;
-    min-width: 0;
-}
-
-html.retro .retro-bud-right {
-    margin-left: auto;
-    flex-direction: row-reverse;
-}
-
-/* Wide screens: buddies float in the side gutters, clear of the 720px reading window */
-@media (min-width: 1200px) {
-    html.retro .retro-buddies {
-        position: fixed;
-        inset: auto 0 0;
-        z-index: 40;
-        flex-wrap: nowrap;
-        margin: 0;
-        padding: 0 16px 12px;
-        pointer-events: none;
+    & body {
+        font-family: var(--font-retro-body);
+        font-size: 16px;
+        line-height: 1.7;
+        letter-spacing: normal;
+        background-color: #000018;
+        color: #e0e0e0;
+        text-shadow: 0 1px 2px #000018;
+        cursor: default;
     }
 
-    html.retro .retro-bud,
-    html.retro .retro-bud-right {
-        flex-direction: column-reverse;
-        align-items: flex-start;
-        max-width: 210px;
-        pointer-events: auto;
+    & a:visited {
+        color: #551a8b;
     }
 
-    html.retro .retro-bud-right {
+    & a,
+    & button {
+        cursor: pointer;
+    }
+
+    & img,
+    & video,
+    & pre,
+    & code,
+    & blockquote,
+    & button {
+        border-radius: 0;
+    }
+
+    /* ---------- Win95 window + reading surface ---------- */
+    & [data-retro-window] {
+        max-width: 720px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 3px;
+        background: #c0c0c0;
+        color: #000;
+        text-shadow: none;
+        box-shadow:
+            inset -1px -1px #0a0a0a,
+            inset 1px 1px #dfdfdf,
+            inset -2px -2px #808080,
+            inset 2px 2px #fff;
+    }
+
+    & [data-retro-titlebar] {
+        background: linear-gradient(90deg, #000080, #0a3d8f);
+        color: #fff;
+        font: 700 13px/1.4 var(--font-retro-chrome);
+        padding: 3px 4px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    & [data-retro-statusbar] {
+        margin-top: 2px;
+        gap: 3px;
+        font: 12px var(--font-retro-body);
+        color: #000;
+    }
+
+    & [data-retro-statusbar] span {
+        flex: 1;
+        padding: 1px 6px;
+        box-shadow:
+            inset -1px -1px #fff,
+            inset 1px 1px #808080;
+    }
+
+    & [data-retro-surface] {
+        --color-text-primary: #1a1a1a;
+        --color-text-secondary: #595959;
+        --color-text-tertiary: #595959;
+        --color-border-default: #808080;
+        background-color: #fffff0;
+        color: #1a1a1a;
+        text-shadow: none;
+        margin: 3px;
+        padding: 20px clamp(14px, 4vw, 32px) 24px;
+        font: 16px/1.7 var(--font-retro-body);
+        overflow-wrap: anywhere;
+        box-shadow:
+            inset -1px -1px #fff,
+            inset 1px 1px #808080,
+            inset -2px -2px #dfdfdf,
+            inset 2px 2px #0a0a0a;
+    }
+
+    & [data-retro-surface] :is(h1, h2, h3, h4) {
+        font-family: var(--font-retro-heading);
+        font-weight: 700;
+        color: #000080;
+    }
+
+    & [data-retro-surface] a,
+    & [data-retro-surface] a:visited {
+        color: #0000ee;
+    }
+
+    & [data-retro-surface] a :is(h1, h2, h3, h4) {
+        color: inherit;
+    }
+
+    & [data-retro-surface] a:hover {
+        color: #551a8b;
+    }
+
+    & [data-retro-surface] :is(.date, .last-updated-on) {
+        color: #595959;
+    }
+
+    & [data-retro-surface] img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    & [data-retro-surface] pre {
+        background: #000;
+        color: #33ff33;
+        font:
+            15px/1.5 'Courier New',
+            monospace;
+        padding: 12px 14px;
+        max-width: 100%;
+        overflow-x: auto;
+        border: 0;
+        box-shadow:
+            inset 2px 2px #808080,
+            inset -2px -2px #fff;
+    }
+
+    & [data-retro-surface] pre code {
+        background: transparent;
+        color: inherit;
+        padding: 0;
+    }
+
+    & [data-retro-surface] :not(pre) > code {
+        background: #e0e0e0;
+        color: #000080;
+        padding: 1px 4px;
+    }
+
+    & [data-retro-surface] blockquote {
+        margin-left: 0;
+        padding: 4px 14px;
+        color: #1a1a1a;
+        background: transparent;
+        border-left: 4px solid #808080;
+    }
+
+    /* ---------- chrome: header / footer set pieces ---------- */
+    & :is(header, footer) {
+        background-color: #000018;
+        background-image:
+            radial-gradient(1px 1px at 10px 14px, #fff 99%, transparent),
+            radial-gradient(1px 1px at 47px 60px, #fff 99%, transparent),
+            radial-gradient(1.5px 1.5px at 80px 30px, #ffd 99%, transparent),
+            radial-gradient(1px 1px at 120px 90px, #fff 99%, transparent),
+            radial-gradient(1px 1px at 30px 110px, #aaf 99%, transparent),
+            radial-gradient(2px 2px at 140px 20px, #fff 99%, transparent);
+        background-size: 160px 130px;
+        color: #e0e0e0;
+        text-shadow:
+            0 0 3px #000,
+            0 0 3px #000,
+            1px 1px 0 #000;
+    }
+
+    & :is(header, footer) a,
+    & :is(header, footer) a:visited {
+        color: #7fffd4;
+    }
+
+    /* Keep the theme toggle in the top-right corner while the retro nav is centred */
+    & header {
+        position: relative;
+    }
+
+    & header #theme-toggle {
+        position: absolute;
+        top: 12px;
+        right: 16px;
+    }
+
+    & header [data-retro='music-toggle'] {
+        position: absolute;
+        top: 12px;
+        right: 62px;
+    }
+
+    & header [data-retro='music-toggle'][aria-pressed='true'] {
+        background: #000080;
+        border-style: inset;
+        color: #0ff;
+    }
+
+    & .retro-mast {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding-top: 12px;
+        text-align: center;
+    }
+
+    & [data-retro='wordmark'] {
+        font:
+            bold clamp(1.4rem, 5vw, 2.1rem) / 1.1 'Comic Sans MS',
+            'Comic Neue',
+            'Chalkboard SE',
+            cursive;
+        color: #ff0;
+        text-shadow: 3px 3px 0 #c000c0;
+    }
+
+    & [data-retro='marquee'] {
+        max-width: 720px;
+        margin: 12px auto 0;
+        overflow: hidden;
+        white-space: nowrap;
+        background: #000080;
+        color: #0ff;
+        font:
+            19px / 1.3 'VT323',
+            'Courier New',
+            monospace;
+        border: 2px inset #808080;
+        text-shadow: none;
+    }
+
+    & [data-retro='marquee'] span {
+        display: inline-block;
+        padding-left: 8px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        & [data-retro='marquee'] span {
+            padding-left: 100%;
+            animation: retro-marquee-scroll 16s linear infinite;
+        }
+    }
+
+    & header picture img,
+    & footer picture img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    & [data-retro-header] + nav {
+        justify-content: center;
+    }
+
+    & .retro-foot {
+        justify-items: center;
+        gap: 12px;
+        margin-top: 16px;
+    }
+
+    & .retro-counter {
+        display: inline-flex;
+        gap: 2px;
+        background: #000;
+        padding: 3px;
+        border: 2px inset #888;
+        vertical-align: middle;
+    }
+
+    & .retro-counter i {
+        font:
+            normal 22px / 1 'VT323',
+            'Courier New',
+            monospace;
+        color: #33ff33;
+        background: #111;
+        padding: 1px 4px;
+        font-variant-numeric: tabular-nums;
+        text-shadow: none;
+    }
+
+    & .retro-ring {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    & .retro-badges {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 4px;
+    }
+
+    & .retro-b88 {
+        display: inline-grid;
+        place-items: center;
+        width: 88px;
+        height: 31px;
+        overflow: hidden;
+        border: 1px solid #000;
+        font:
+            10px / 1.05 'Silkscreen',
+            'Courier New',
+            monospace;
+        text-align: center;
+        text-transform: uppercase;
+        text-shadow: none;
+    }
+
+    & .retro-b88-viewed {
+        background: #000033;
+        color: #0f0;
+    }
+
+    & .retro-b88-guestbook {
+        background: #fff;
+        color: #0000ee;
+    }
+
+    & .retro-b88-astro {
+        background: #000;
+        color: #0ff;
+    }
+
+    /* hero image: square, no soft shadow */
+    & .hero-image > div {
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    /* ---------- easter eggs: buddies + GrainCoin popup ---------- */
+    & .retro-buddies {
+        justify-content: space-between;
         align-items: flex-end;
-    }
-}
-
-@keyframes retro-buddy-rise {
-    from {
-        transform: translateY(calc(100% + 24px));
-    }
-}
-
-@keyframes retro-buddy-float {
-    50% {
-        transform: translateY(-6px);
-    }
-}
-
-/* The whole buddy rises; only the character bobs, so the tip's button stays still */
-@media (min-width: 1200px) and (prefers-reduced-motion: no-preference) {
-    html.retro .retro-bud {
-        animation: retro-buddy-rise 1.2s cubic-bezier(0.2, 0.8, 0.3, 1) 0.3s
-            both;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-top: 16px;
     }
 
-    html.retro .retro-bud-right {
-        animation-delay: 0.9s;
+    & .retro-bud {
+        display: flex;
+        align-items: flex-end;
+        gap: 8px;
+        min-width: 0;
     }
 
-    html.retro .retro-bud > :not(.retro-tip) {
-        animation: retro-buddy-float 4s ease-in-out 1.5s infinite;
+    & .retro-bud-right {
+        margin-left: auto;
+        flex-direction: row-reverse;
     }
 
-    html.retro .retro-bud-right > :not(.retro-tip) {
-        animation-delay: 2.1s;
+    /* Wide screens: buddies float in the side gutters, clear of the 720px reading window */
+    @media (min-width: 1200px) {
+        & .retro-buddies {
+            position: fixed;
+            inset: auto 0 0;
+            z-index: 40;
+            flex-wrap: nowrap;
+            margin: 0;
+            padding: 0 16px 12px;
+            pointer-events: none;
+        }
+
+        & .retro-bud,
+        & .retro-bud-right {
+            flex-direction: column-reverse;
+            align-items: flex-start;
+            max-width: 210px;
+            pointer-events: auto;
+        }
+
+        & .retro-bud-right {
+            align-items: flex-end;
+        }
     }
-}
 
-html.retro .retro-tip {
-    position: relative;
-    max-width: 210px;
-    padding: 8px 10px;
-    background: #ffffe1;
-    color: #000;
-    border: 1px solid #000;
-    border-radius: 10px;
-    font: 12px/1.35 var(--font-retro-body);
-    text-align: left;
-    text-shadow: none;
-}
+    /* The whole buddy rises; only the character bobs, so the tip's button stays still */
+    @media (min-width: 1200px) and (prefers-reduced-motion: no-preference) {
+        & .retro-bud {
+            animation: retro-buddy-rise 1.2s cubic-bezier(0.2, 0.8, 0.3, 1) 0.3s
+                both;
+        }
 
-html.retro .retro-tip b {
-    display: block;
-    margin-bottom: 2px;
-}
+        & .retro-bud-right {
+            animation-delay: 0.9s;
+        }
 
-html.retro .retro-assist {
-    padding: 3px;
-    background: #c0c0c0;
-    text-shadow: none;
-    box-shadow:
-        inset -1px -1px #0a0a0a,
-        inset 1px 1px #dfdfdf,
-        inset -2px -2px #808080,
-        inset 2px 2px #fff;
-}
+        & .retro-bud > :not(.retro-tip) {
+            animation: retro-buddy-float 4s ease-in-out 1.5s infinite;
+        }
 
-html.retro .retro-well {
-    margin-top: 2px;
-    background: #fff;
-    line-height: 0;
-}
+        & .retro-bud-right > :not(.retro-tip) {
+            animation-delay: 2.1s;
+        }
+    }
 
-html.retro .retro-tipbtns {
-    margin-top: 6px;
-}
+    & .retro-tip {
+        position: relative;
+        max-width: 210px;
+        padding: 8px 10px;
+        background: #ffffe1;
+        color: #000;
+        border: 1px solid #000;
+        border-radius: 10px;
+        font: 12px/1.35 var(--font-retro-body);
+        text-align: left;
+        text-shadow: none;
+    }
 
-html.retro .retro-tipbtns button,
-html.retro [data-retro='graincoin-dialog'] button {
-    padding: 2px 8px;
-    background: #c0c0c0;
-    color: #000;
-    border: 0;
-    font: 12px var(--font-retro-body);
-    text-shadow: none;
-    box-shadow:
-        inset -1px -1px #0a0a0a,
-        inset 1px 1px #fff,
-        inset -2px -2px #808080,
-        inset 2px 2px #dfdfdf;
-}
+    & .retro-tip b {
+        display: block;
+        margin-bottom: 2px;
+    }
 
-html.retro .retro-graincoin-link {
-    display: block;
-    margin: 8px auto 0;
-    background: transparent;
-    color: #7fffd4;
-    border: 0;
-    font: 11px var(--font-retro-body);
-    text-decoration: underline;
-}
+    & .retro-assist {
+        padding: 3px;
+        background: #c0c0c0;
+        text-shadow: none;
+        box-shadow:
+            inset -1px -1px #0a0a0a,
+            inset 1px 1px #dfdfdf,
+            inset -2px -2px #808080,
+            inset 2px 2px #fff;
+    }
 
-html.retro [data-retro='graincoin-dialog'] {
-    max-width: min(420px, calc(100vw - 32px));
-    margin: auto;
-    padding: 3px;
-    background: #c0c0c0;
-    color: #000;
-    border: 0;
-    text-shadow: none;
-    box-shadow:
-        inset -1px -1px #0a0a0a,
-        inset 1px 1px #dfdfdf,
-        inset -2px -2px #808080,
-        inset 2px 2px #fff;
-}
+    & .retro-well {
+        margin-top: 2px;
+        background: #fff;
+        line-height: 0;
+    }
 
-html.retro [data-retro='graincoin-dialog'] .retro-dialog-body {
-    padding: 12px;
-    font: 14px/1.5 var(--font-retro-body);
-}
+    & .retro-tipbtns {
+        margin-top: 6px;
+    }
 
-html.retro [data-retro='graincoin-dialog'] h2 {
-    margin: 0 0 8px;
-    font: 700 1.1rem/1.3 var(--font-retro-heading);
-    color: #000080;
-}
+    & .retro-tipbtns button,
+    & [data-retro='graincoin-dialog'] button {
+        padding: 2px 8px;
+        background: #c0c0c0;
+        color: #000;
+        border: 0;
+        font: 12px var(--font-retro-body);
+        text-shadow: none;
+        box-shadow:
+            inset -1px -1px #0a0a0a,
+            inset 1px 1px #fff,
+            inset -2px -2px #808080,
+            inset 2px 2px #dfdfdf;
+    }
 
-html.retro [data-retro='graincoin-dialog'] p {
-    margin: 0 0 12px;
-}
+    & .retro-graincoin-link {
+        display: block;
+        margin: 8px auto 0;
+        background: transparent;
+        color: #7fffd4;
+        border: 0;
+        font: 11px var(--font-retro-body);
+        text-decoration: underline;
+    }
 
-html.retro [data-retro='graincoin-dialog'] button {
-    padding: 4px 16px;
+    & [data-retro='graincoin-dialog'] {
+        max-width: min(420px, calc(100vw - 32px));
+        margin: auto;
+        padding: 3px;
+        background: #c0c0c0;
+        color: #000;
+        border: 0;
+        text-shadow: none;
+        box-shadow:
+            inset -1px -1px #0a0a0a,
+            inset 1px 1px #dfdfdf,
+            inset -2px -2px #808080,
+            inset 2px 2px #fff;
+    }
+
+    & [data-retro='graincoin-dialog'] .retro-dialog-body {
+        padding: 12px;
+        font: 14px/1.5 var(--font-retro-body);
+    }
+
+    & [data-retro='graincoin-dialog'] h2 {
+        margin: 0 0 8px;
+        font: 700 1.1rem/1.3 var(--font-retro-heading);
+        color: #000080;
+    }
+
+    & [data-retro='graincoin-dialog'] p {
+        margin: 0 0 12px;
+    }
+
+    & [data-retro='graincoin-dialog'] button {
+        padding: 4px 16px;
+    }
 }

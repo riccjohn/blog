@@ -7,12 +7,18 @@ import {
     observeSystemThemeChanges,
     parseStoredTheme,
     resolveTheme,
+    themeToggleLabel,
     type Theme,
 } from '@/utils/theme'
 import fc from 'fast-check'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-const THEMES: Theme[] = ['light', 'dark', 'retro']
+// Literal values on purpose: these are the public contract (saved value, ?theme=)
+const THEMES: Theme[] = ['light', 'dark', 'early-web']
+// Saved by the theme's first release; must keep working
+const LEGACY_EARLY_WEB = 'retro'
+const isKnown = (s: string) =>
+    THEMES.some((t) => t === s) || s === LEGACY_EARLY_WEB
 
 const expectedClasses = (theme: Theme): string[] =>
     theme === 'light' ? [] : [theme]
@@ -83,12 +89,12 @@ afterEach(() => {
 })
 
 const classArb = fc.array(
-    fc.constantFrom('dark', 'retro', 'foo', 'bar', 'light', 'x-y')
+    fc.constantFrom('dark', 'early-web', 'retro', 'foo', 'bar', 'light', 'x-y')
 )
 const themeArb = fc.constantFrom(...THEMES)
 const storedArb = fc.oneof(
     fc.constant<string | null>(null),
-    fc.constantFrom<string | null>(...THEMES),
+    fc.constantFrom<string | null>(...THEMES, LEGACY_EARLY_WEB),
     fc.string()
 )
 
@@ -100,13 +106,19 @@ describe('parseStoredTheme', () => {
     it('returns null for any other string or null', () => {
         fc.assert(
             fc.property(
-                fc.string().filter((s) => !THEMES.some((t) => t === s)),
+                fc.string().filter((s) => !isKnown(s)),
                 (s) => parseStoredTheme(s) === null
             )
         )
         expect(parseStoredTheme(null)).toBeNull()
-        expect(parseStoredTheme('Retro')).toBeNull()
+        expect(parseStoredTheme('Early-web')).toBeNull()
         expect(parseStoredTheme(' dark')).toBeNull()
+        expect(parseStoredTheme('toString')).toBeNull()
+        expect(parseStoredTheme('__proto__')).toBeNull()
+    })
+
+    it('maps the legacy retro value to early-web', () => {
+        expect(parseStoredTheme(LEGACY_EARLY_WEB)).toBe('early-web')
     })
 })
 
@@ -119,11 +131,11 @@ describe('resolveTheme', () => {
         )
     })
 
-    it('returns retro iff stored is retro', () => {
+    it('returns early-web iff stored is early-web or legacy retro', () => {
         fc.assert(
             fc.property(storedArb, fc.boolean(), (stored, dark) => {
-                expect(resolveTheme(stored, dark) === 'retro').toBe(
-                    stored === 'retro'
+                expect(resolveTheme(stored, dark) === 'early-web').toBe(
+                    stored === 'early-web' || stored === LEGACY_EARLY_WEB
                 )
             })
         )
@@ -144,7 +156,7 @@ describe('resolveTheme', () => {
             fc.property(
                 fc.oneof(
                     fc.constant<string | null>(null),
-                    fc.string().filter((s) => !THEMES.some((t) => t === s))
+                    fc.string().filter((s) => !isKnown(s))
                 ),
                 fc.boolean(),
                 (stored, dark) =>
@@ -172,7 +184,7 @@ describe('resolveTheme with a requested theme', () => {
             fc.property(
                 fc.oneof(
                     fc.constant<string | null>(null),
-                    fc.string().filter((s) => !THEMES.some((t) => t === s))
+                    fc.string().filter((s) => !isKnown(s))
                 ),
                 storedArb,
                 fc.boolean(),
@@ -184,11 +196,19 @@ describe('resolveTheme with a requested theme', () => {
     })
 })
 
+describe('themeToggleLabel', () => {
+    it('names the theme a click switches to, in words', () => {
+        expect(themeToggleLabel('light')).toBe('Switch to dark theme')
+        expect(themeToggleLabel('dark')).toBe('Switch to early web theme')
+        expect(themeToggleLabel('early-web')).toBe('Switch to light theme')
+    })
+})
+
 describe('nextTheme', () => {
-    it('cycles light -> dark -> retro -> light', () => {
+    it('cycles light -> dark -> early-web -> light', () => {
         expect(nextTheme('light')).toBe('dark')
-        expect(nextTheme('dark')).toBe('retro')
-        expect(nextTheme('retro')).toBe('light')
+        expect(nextTheme('dark')).toBe('early-web')
+        expect(nextTheme('early-web')).toBe('light')
     })
 
     it('returns the input after three applications', () => {
@@ -213,11 +233,11 @@ describe('applyThemeClass', () => {
                 applyThemeClass(theme)
                 const result = classList
                     .snapshot()
-                    .filter((c) => c === 'dark' || c === 'retro')
+                    .filter((c) => c === 'dark' || c === 'early-web')
                 expect(result).toEqual(expectedClasses(theme))
                 // unrelated classes are preserved
                 for (const c of classes.filter(
-                    (c) => c !== 'dark' && c !== 'retro'
+                    (c) => c !== 'dark' && c !== 'early-web'
                 )) {
                     expect(classList.contains(c)).toBe(true)
                 }
@@ -271,14 +291,28 @@ describe('THEME_INIT_SCRIPT parity with resolveTheme + applyThemeClass', () => {
         )
     })
 
-    it('adds retro for stored retro', () => {
+    it('adds early-web for stored early-web and for the legacy retro value', () => {
+        for (const stored of ['early-web', LEGACY_EARLY_WEB]) {
+            const a = stubBrowser({
+                classes: ['dark'],
+                stored,
+                prefersDark: true,
+            })
+            new Function(THEME_INIT_SCRIPT)()
+            expect(a.classList.snapshot()).toEqual(['early-web'])
+        }
+    })
+
+    it('ignores prototype keys in storage and the URL', () => {
         const a = stubBrowser({
-            classes: ['dark'],
-            stored: 'retro',
-            prefersDark: true,
+            classes: [],
+            stored: 'toString',
+            prefersDark: false,
+            search: '?theme=constructor',
         })
         new Function(THEME_INIT_SCRIPT)()
-        expect(a.classList.snapshot()).toEqual(['retro'])
+        expect(a.classList.snapshot()).toEqual([])
+        expect(a.replaced).toEqual([])
     })
 })
 
@@ -303,7 +337,7 @@ describe('THEME_INIT_SCRIPT with ?theme=', () => {
             classes: [],
             stored: null,
             prefersDark: false,
-            search: '?utm_source=bsky&theme=retro&page=2',
+            search: '?utm_source=bsky&theme=early-web&page=2',
             hash: '#comments',
         })
         new Function(THEME_INIT_SCRIPT)()
@@ -317,7 +351,7 @@ describe('THEME_INIT_SCRIPT with ?theme=', () => {
             classes: [],
             stored: null,
             prefersDark: false,
-            search: '?theme=retro',
+            search: '?theme=early-web',
         })
         new Function(THEME_INIT_SCRIPT)()
         expect(env.replaced).toEqual(['/blog/post/'])
@@ -326,7 +360,7 @@ describe('THEME_INIT_SCRIPT with ?theme=', () => {
     it('ignores an invalid value: nothing saved, URL untouched', () => {
         fc.assert(
             fc.property(
-                fc.string().filter((s) => !THEMES.some((t) => t === s)),
+                fc.string().filter((s) => !isKnown(s)),
                 storedArb,
                 (requested, stored) => {
                     const env = stubBrowser({

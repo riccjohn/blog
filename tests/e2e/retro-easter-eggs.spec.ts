@@ -64,7 +64,9 @@ const konami = async (page: Page) => {
 }
 
 const isRetro = (page: Page) =>
-    page.evaluate(() => document.documentElement.classList.contains('retro'))
+    page.evaluate(() =>
+        document.documentElement.classList.contains('early-web')
+    )
 
 const scrollBottom = async (page: Page) => {
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
@@ -75,7 +77,7 @@ const dialog = (page: Page) => page.getByRole('dialog', { name: /graincoin/i })
 
 test.use({ colorScheme: 'light' })
 
-for (const theme of ['light', 'retro'] as const) {
+for (const theme of ['light', 'early-web'] as const) {
     test.describe(`konami popup from ${theme}`, () => {
         test('opens GrainCoin dialog, forces retro, closes with Escape and returns focus', async ({
             page,
@@ -144,7 +146,7 @@ test.describe('hidden footer link', () => {
     test('retro-only GrainCoin link opens the same dialog', async ({
         page,
     }) => {
-        await open(page, 'retro')
+        await open(page, 'early-web')
         await scrollBottom(page)
         const link = page.locator(`footer ${GRAINCOIN_LINK}`)
         await expect(link).toBeAttached(SHORT)
@@ -169,7 +171,7 @@ test.describe('buddies', () => {
     test('Bonzi with speech bubble and Clippy Office Assistant visible in footer area', async ({
         page,
     }) => {
-        await open(page, 'retro')
+        await open(page, 'early-web')
         await scrollBottom(page)
         const bonzi = page.locator(BONZI)
         const clippy = page.locator(CLIPPY)
@@ -186,7 +188,7 @@ test.describe('buddies', () => {
         page,
     }) => {
         await page.setViewportSize({ width: 375, height: 800 })
-        await open(page, 'retro', POST)
+        await open(page, 'early-web', POST)
         await scrollBottom(page)
         await expect(page.locator(BONZI)).toBeVisible(SHORT)
         await expect(page.locator(CLIPPY)).toBeVisible(SHORT)
@@ -216,7 +218,7 @@ test.describe('buddies', () => {
     })
 
     test("Don't show again swaps Clippy to the stomp GIF", async ({ page }) => {
-        await open(page, 'retro')
+        await open(page, 'early-web')
         await scrollBottom(page)
         await page.locator(CLIPPY_DISMISS).click(SHORT)
         await expect(page.locator(`${CLIPPY} img`)).toHaveAttribute(
@@ -227,7 +229,7 @@ test.describe('buddies', () => {
     })
 
     test('after dismissal and reload Clippy comes back', async ({ page }) => {
-        await open(page, 'retro')
+        await open(page, 'early-web')
         await scrollBottom(page)
         await page.locator(CLIPPY_DISMISS).click(SHORT)
         await expect(page.locator(`${CLIPPY} img`)).toHaveAttribute(
@@ -250,7 +252,7 @@ test.describe('buddies', () => {
     test('a dismissal remembered by an older version is ignored', async ({
         page,
     }) => {
-        await open(page, 'retro')
+        await open(page, 'early-web')
         await page.evaluate(() =>
             localStorage.setItem('retro-clippy-dismissed', 'true')
         )
@@ -316,7 +318,7 @@ test.describe('floating buddies', () => {
     test('float at the bottom of the viewport without scrolling, clear of the reading window', async ({
         page,
     }) => {
-        await open(page, 'retro', POST)
+        await open(page, 'early-web', POST)
         await expect(page.locator(BONZI)).toBeInViewport(SHORT)
         await expect(page.locator(CLIPPY)).toBeInViewport(SHORT)
         await expect
@@ -338,7 +340,7 @@ test.describe('floating buddies', () => {
     })
 
     test('stay put while the page scrolls', async ({ page }) => {
-        await open(page, 'retro', POST)
+        await open(page, 'early-web', POST)
         await page.waitForTimeout(4000)
         const before = await buddyBoxes(page)
         await page.evaluate(() => window.scrollBy(0, 600))
@@ -353,14 +355,14 @@ test.describe('floating buddies', () => {
     })
 
     test('slide in from the bottom of the screen', async ({ page }) => {
-        await open(page, 'retro')
+        await open(page, 'early-web')
         expect(await riseAnimations(page, BONZI)).toHaveLength(1)
         expect(await riseAnimations(page, CLIPPY)).toHaveLength(1)
     })
 
     test('reduced motion: no slide-in', async ({ page }) => {
         await page.emulateMedia({ reducedMotion: 'reduce' })
-        await open(page, 'retro')
+        await open(page, 'early-web')
         await expect(page.locator(BONZI)).toBeInViewport(SHORT)
         expect(await riseAnimations(page, BONZI)).toHaveLength(0)
         expect(await riseAnimations(page, CLIPPY)).toHaveLength(0)
@@ -373,7 +375,7 @@ test.describe('reduced motion buddies', () => {
     test('buddies use static PNGs, stomp uses clippy-stomp.static.png', async ({
         page,
     }) => {
-        await open(page, 'retro')
+        await open(page, 'early-web')
         await scrollBottom(page)
         const src = (sel: string) =>
             page
@@ -462,7 +464,7 @@ test.describe('dial-up sound', () => {
         page,
     }) => {
         await spyAudio(page)
-        await open(page, 'retro')
+        await open(page, 'early-web')
         await page.waitForTimeout(500)
         expect((await audio(page)).count).toBe(0)
     })

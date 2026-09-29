@@ -7,7 +7,7 @@ const htmlClasses = (page: Page) =>
 
 const currentTheme = async (page: Page) => {
     const classes = await htmlClasses(page)
-    if (classes.includes('retro')) return 'retro'
+    if (classes.includes('early-web')) return 'early-web'
     if (classes.includes('dark')) return 'dark'
     return 'light'
 }
@@ -18,20 +18,20 @@ const stored = (page: Page) =>
 test.describe('theme toggle cycle', () => {
     test.use({ colorScheme: 'light' })
 
-    test('cycles light -> dark -> retro -> light and persists across reload', async ({
+    test('cycles light -> dark -> early-web -> light and persists across reload', async ({
         page,
     }) => {
         await page.goto('/')
         const toggle = page.locator('#theme-toggle')
         expect(await currentTheme(page)).toBe('light')
 
-        for (const expected of ['dark', 'retro', 'light'] as const) {
+        for (const expected of ['dark', 'early-web', 'light'] as const) {
             await toggle.click()
             expect(await currentTheme(page)).toBe(expected)
             const classes = await htmlClasses(page)
-            expect(classes.includes('dark') && classes.includes('retro')).toBe(
-                false
-            )
+            expect(
+                classes.includes('dark') && classes.includes('early-web')
+            ).toBe(false)
             expect(await stored(page)).toBe(expected)
 
             await page.reload()
@@ -45,13 +45,13 @@ test.describe('theme resolution', () => {
     test.describe('system dark', () => {
         test.use({ colorScheme: 'dark' })
 
-        test('loads dark and never retro with nothing stored', async ({
+        test('loads dark and never early-web with nothing stored', async ({
             page,
         }) => {
             await page.goto('/')
             const classes = await htmlClasses(page)
             expect(classes).toContain('dark')
-            expect(classes).not.toContain('retro')
+            expect(classes).not.toContain('early-web')
         })
     })
 
@@ -89,14 +89,14 @@ test.describe('theme resolution', () => {
     })
 })
 
-test('no first-paint flash: html.retro present at DOMContentLoaded', async ({
+test('no first-paint flash: html.early-web present at DOMContentLoaded', async ({
     page,
 }) => {
     await page.addInitScript((k) => {
-        localStorage.setItem(k, 'retro')
+        localStorage.setItem(k, 'early-web')
         document.addEventListener('DOMContentLoaded', () => {
             ;(window as unknown as { __retroAtDCL: boolean }).__retroAtDCL =
-                document.documentElement.classList.contains('retro')
+                document.documentElement.classList.contains('early-web')
         })
     }, KEY)
     await page.goto('/')
@@ -112,7 +112,11 @@ test.describe('toggle accessibility', () => {
     test('aria-label names the theme it will switch to', async ({ page }) => {
         await page.goto('/')
         const toggle = page.locator('#theme-toggle')
-        const next = { light: 'dark', dark: 'retro', retro: 'light' } as const
+        const next = {
+            light: 'dark',
+            dark: 'early web',
+            'early-web': 'light',
+        } as const
 
         for (let i = 0; i < 3; i++) {
             const theme = await currentTheme(page)
@@ -130,14 +134,14 @@ test.describe('toggle accessibility', () => {
         await page.keyboard.press('Enter')
         expect(await currentTheme(page)).toBe('dark')
         await page.keyboard.press('Space')
-        expect(await currentTheme(page)).toBe('retro')
+        expect(await currentTheme(page)).toBe('early-web')
     })
 })
 
 test.describe('retro base styling', () => {
     test.beforeEach(async ({ page }) => {
         await page.addInitScript((k) => {
-            localStorage.setItem(k, 'retro')
+            localStorage.setItem(k, 'early-web')
         }, KEY)
         await page.goto('/')
     })
@@ -166,7 +170,7 @@ test.describe('retro toggle placement', () => {
             page,
         }) => {
             await page.addInitScript(() =>
-                localStorage.setItem('theme-preference', 'retro')
+                localStorage.setItem('theme-preference', 'early-web')
             )
             await page.route('**/counter/**', (r) => r.abort())
             await page.setViewportSize({ width, height: 900 })
@@ -183,12 +187,12 @@ test.describe('retro toggle placement', () => {
 test.describe('?theme= link', () => {
     test.use({ colorScheme: 'light' })
 
-    test('?theme=retro switches to retro, saves it and cleans the address bar', async ({
+    test('?theme=early-web switches to early-web, saves it and cleans the address bar', async ({
         page,
     }) => {
-        await page.goto('/?theme=retro')
-        expect(await currentTheme(page)).toBe('retro')
-        expect(await stored(page)).toBe('retro')
+        await page.goto('/?theme=early-web')
+        expect(await currentTheme(page)).toBe('early-web')
+        expect(await stored(page)).toBe('early-web')
         expect(new URL(page.url()).search).toBe('')
         await expect(page.locator('#theme-toggle')).toHaveAttribute(
             'aria-label',
@@ -197,7 +201,7 @@ test.describe('?theme= link', () => {
 
         await page.getByRole('link', { name: 'Blog', exact: true }).click()
         await page.waitForURL(/\/blog\/?$/)
-        expect(await currentTheme(page)).toBe('retro')
+        expect(await currentTheme(page)).toBe('early-web')
     })
 
     test('keeps other params and the hash', async ({ page }) => {
@@ -222,5 +226,23 @@ test.describe('?theme= link', () => {
         expect(await currentTheme(page)).toBe('light')
         expect(await stored(page)).toBeNull()
         expect(new URL(page.url()).search).toBe('?theme=neon')
+    })
+})
+
+test.describe('rename from retro', () => {
+    test.use({ colorScheme: 'light' })
+
+    test('a theme saved as retro before the rename still loads early-web', async ({
+        page,
+    }) => {
+        await page.goto('/')
+        await page.evaluate((k) => localStorage.setItem(k, 'retro'), KEY)
+        await page.reload()
+        expect(await htmlClasses(page)).toContain('early-web')
+        expect(await htmlClasses(page)).not.toContain('retro')
+        await expect(page.locator('[data-retro-window]').first()).toHaveCSS(
+            'background-color',
+            'rgb(192, 192, 192)'
+        )
     })
 })
