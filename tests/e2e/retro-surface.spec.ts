@@ -4,7 +4,7 @@ import { expect, test, type Page } from '@playwright/test'
 /**
  * Phase 4a: Retro reading surface (Win95 window).
  *
- * SELECTOR CONTRACT for the implementer (all inside html.retro):
+ * SELECTOR CONTRACT for the implementer (all inside html.early-web):
  *   [data-retro-window]     outer window element wrapping page/post content
  *   [data-retro-titlebar]   title bar; its text content === the page's <title>
  *                           (post: the post title; home: SITE_TITLE, same as <title>)
@@ -35,7 +35,7 @@ const SHORT = { timeout: 2000 }
 
 const goRetro = async (page: Page, path: string) => {
     await page.addInitScript(() => {
-        localStorage.setItem('theme-preference', 'retro')
+        localStorage.setItem('theme-preference', 'early-web')
     })
     await page.goto(path)
     await page.waitForLoadState('networkidle')

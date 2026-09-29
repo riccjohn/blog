@@ -9,13 +9,15 @@
     aria-pressed="false"
     aria-label="Background music"
     title="Play background music"
-    class="bg-bg-tertiary border-border-default text-text-secondary hover:border-accent-primary hover:text-accent-primary hidden h-[38px] w-[38px] cursor-pointer items-center justify-center rounded border text-xl leading-none retro:flex"
+    class="bg-bg-tertiary border-border-default text-text-secondary hover:border-accent-primary hover:text-accent-primary hidden h-[38px] w-[38px] cursor-pointer items-center justify-center rounded border text-xl leading-none early-web:flex"
 >
     <span aria-hidden="true">♪</span>
 </button>
 <audio data-retro-audio preload="none" loop></audio>
 
 <script>
+    import { getTheme, THEMES } from '@/utils/theme'
+
     const KEY = 'retro-music'
     const TRACK = '/retro/music/background.mp3'
 
@@ -40,8 +42,7 @@
         }
     }
 
-    const isRetro = (): boolean =>
-        document.documentElement.classList.contains('retro')
+    const isRetro = (): boolean => getTheme() === THEMES.earlyWeb
 
     if (button && audio) {
         const setPressed = (on: boolean): void => {

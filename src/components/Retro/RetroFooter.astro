@@ -2,7 +2,7 @@
 import RetroGif from '@/components/Retro/RetroGif.astro'
 ---
 
-<div class="retro-foot hidden retro:grid" data-retro-footer>
+<div class="retro-foot hidden early-web:grid" data-retro-footer>
     <RetroGif
         name="construction-tape"
         alt="Under construction tape"
@@ -64,6 +64,7 @@ import RetroGif from '@/components/Retro/RetroGif.astro'
         toCounterDigits,
     } from '@/utils/retro'
     import { GOATCOUNTER_PUBLIC_COUNTER } from '@/consts'
+    import { getTheme, THEMES } from '@/utils/theme'
 
     const render = (count: number) => {
         const counter = document.querySelector('[data-retro="hit-counter"]')
@@ -98,11 +99,12 @@ import RetroGif from '@/components/Retro/RetroGif.astro'
     }
 
     const root = document.documentElement
-    if (root.classList.contains('retro')) {
+    const isRetro = () => getTheme() === THEMES.earlyWeb
+    if (isRetro()) {
         loadCount()
     } else {
         const observer = new MutationObserver(() => {
-            if (!root.classList.contains('retro')) return
+            if (!isRetro()) return
             observer.disconnect()
             loadCount()
         })

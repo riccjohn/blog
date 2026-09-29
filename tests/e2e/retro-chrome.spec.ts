@@ -46,7 +46,7 @@ const setTheme = (page: Page, value: string) =>
 const goRetro = async (page: Page, path = '/') => {
     // Counter must fail: never depend on real network.
     await page.route('**/counter/**', (r) => r.abort())
-    await setTheme(page, 'retro')
+    await setTheme(page, 'early-web')
     await page.goto(path)
     await page.waitForLoadState('networkidle')
 }

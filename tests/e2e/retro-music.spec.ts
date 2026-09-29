@@ -45,7 +45,7 @@ test.describe('retro background music', () => {
     test('off by default in retro: button visible, not pressed, no fetch', async ({
         page,
     }) => {
-        const requests = await open(page, 'retro')
+        const requests = await open(page, 'early-web')
         await expect(toggle(page)).toBeVisible({ timeout: 2000 })
         await expect(toggle(page)).toHaveAttribute('aria-pressed', 'false')
         await expect(toggle(page)).toHaveAccessibleName(/music/i)
@@ -56,7 +56,7 @@ test.describe('retro background music', () => {
     test('clicking opts in: pressed, remembered, track requested', async ({
         page,
     }) => {
-        const requests = await open(page, 'retro')
+        const requests = await open(page, 'early-web')
         await toggle(page).click()
         await expect(toggle(page)).toHaveAttribute('aria-pressed', 'true')
         expect(
@@ -66,7 +66,7 @@ test.describe('retro background music', () => {
     })
 
     test('clicking again opts out and remembers off', async ({ page }) => {
-        await open(page, 'retro')
+        await open(page, 'early-web')
         await toggle(page).click()
         await toggle(page).click()
         await expect(toggle(page)).toHaveAttribute('aria-pressed', 'false')
@@ -78,7 +78,7 @@ test.describe('retro background music', () => {
     test('remembered "on" resumes on the first interaction after a page load', async ({
         page,
     }) => {
-        const requests = await open(page, 'retro', 'on')
+        const requests = await open(page, 'early-web', 'on')
         await expect(toggle(page)).toHaveAttribute('aria-pressed', 'true')
         expect(requests).toHaveLength(0)
         await page.mouse.click(5, 400)
@@ -86,7 +86,7 @@ test.describe('retro background music', () => {
     })
 
     test('keyboard operable', async ({ page }) => {
-        await open(page, 'retro')
+        await open(page, 'early-web')
         await toggle(page).focus()
         await page.keyboard.press('Enter')
         await expect(toggle(page)).toHaveAttribute('aria-pressed', 'true')
@@ -98,7 +98,7 @@ test.describe('retro background music', () => {
         page.on('console', (m) => {
             if (m.type() === 'error') errors.push(m.text())
         })
-        await open(page, 'retro')
+        await open(page, 'early-web')
         await toggle(page).click()
         await page.waitForTimeout(300)
         expect(
