@@ -1,0 +1,91 @@
+---
+// Opt-in background music for the retro theme. The track is only fetched
+// once the visitor turns it on (browsers block audio before a user gesture).
+---
+
+<button
+    type="button"
+    data-retro="music-toggle"
+    aria-pressed="false"
+    aria-label="Background music"
+    title="Play background music"
+    class="bg-bg-tertiary border-border-default text-text-secondary hover:border-accent-primary hover:text-accent-primary hidden h-[38px] w-[38px] cursor-pointer items-center justify-center rounded border text-xl leading-none retro:flex"
+>
+    <span aria-hidden="true">♪</span>
+</button>
+<audio data-retro-audio preload="none" loop></audio>
+
+<script>
+    const KEY = 'retro-music'
+    const TRACK = '/retro/music/background.mp3'
+
+    const button = document.querySelector<HTMLButtonElement>(
+        '[data-retro="music-toggle"]'
+    )
+    const audio = document.querySelector<HTMLAudioElement>('[data-retro-audio]')
+
+    const readOn = (): boolean => {
+        try {
+            return localStorage.getItem(KEY) === 'on'
+        } catch {
+            return false
+        }
+    }
+
+    const writeOn = (on: boolean): void => {
+        try {
+            localStorage.setItem(KEY, on ? 'on' : 'off')
+        } catch {
+            // Storage unavailable: the choice just isn't remembered
+        }
+    }
+
+    const isRetro = (): boolean =>
+        document.documentElement.classList.contains('retro')
+
+    if (button && audio) {
+        const setPressed = (on: boolean): void => {
+            button.setAttribute('aria-pressed', String(on))
+            button.title = on
+                ? 'Pause background music'
+                : 'Play background music'
+        }
+
+        const play = (): void => {
+            if (!audio.src) audio.src = TRACK
+            audio.volume = 0.4
+            audio.play().catch(() => undefined)
+        }
+
+        setPressed(readOn())
+
+        button.addEventListener('click', () => {
+            const on = button.getAttribute('aria-pressed') !== 'true'
+            setPressed(on)
+            writeOn(on)
+            if (on) play()
+            else audio.pause()
+        })
+
+        // A remembered "on" can't autoplay, so resume on the first interaction
+        const resume = (event: Event): void => {
+            if (event.target instanceof Node && button.contains(event.target))
+                return
+            document.removeEventListener('pointerdown', resume)
+            document.removeEventListener('keydown', resume)
+            if (readOn() && isRetro()) play()
+        }
+        if (readOn()) {
+            document.addEventListener('pointerdown', resume)
+            document.addEventListener('keydown', resume)
+        }
+
+        // Stop the music when the visitor leaves the retro theme
+        new MutationObserver(() => {
+            if (!isRetro()) audio.pause()
+        }).observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class'],
+        })
+    }
+</script>

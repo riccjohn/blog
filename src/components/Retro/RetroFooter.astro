@@ -1,0 +1,111 @@
+---
+import RetroGif from '@/components/Retro/RetroGif.astro'
+---
+
+<div class="retro-foot hidden retro:grid" data-retro-footer>
+    <RetroGif
+        name="construction-tape"
+        alt="Under construction tape"
+        width={574}
+        height={51}
+        decorative
+    />
+    <RetroGif
+        name="under-construction"
+        alt="Under construction sign with flashing lights"
+        width={323}
+        height={118}
+    />
+    <div data-retro="hit-counter" aria-label="visitors">
+        You are visitor #
+        <span class="retro-counter">
+            {[0, 0, 0, 0, 0, 0].map(() => (
+                <i data-digit>0</i>
+            ))}
+        </span>
+    </div>
+    <div data-retro="webring" class="retro-ring">
+        <RetroGif
+            name="walking-computer"
+            alt="Walking computer"
+            width={84}
+            height={68}
+        />
+        <span>
+            [ <a href="/blog">&lt;&lt; Prev</a> |<a href="/blog">Random</a> |{' '}
+            <a href="/blog">Next &gt;&gt;</a> ]
+        </span>
+    </div>
+    <div data-retro="badges" class="retro-badges">
+        <span data-badge class="retro-b88 retro-b88-viewed">
+            Best viewed in 800x600
+        </span>
+        <span data-badge class="retro-b88 retro-b88-guestbook">
+            Sign my guestbook
+        </span>
+        <span data-badge class="retro-b88 retro-b88-astro">
+            Astro powered
+        </span>
+    </div>
+    <a href="mailto:john@arcanegrain.dev" class="retro-mailme">
+        <RetroGif
+            name="email-me"
+            alt="E-Mail Me sign with pencil"
+            width={86}
+            height={90}
+        />
+    </a>
+</div>
+
+<script>
+    import {
+        fallbackVisitorCount,
+        parseGoatCounterCount,
+        toCounterDigits,
+    } from '@/utils/retro'
+    import { GOATCOUNTER_PUBLIC_COUNTER } from '@/consts'
+
+    const render = (count: number) => {
+        const counter = document.querySelector('[data-retro="hit-counter"]')
+        if (!counter) return
+        counter.setAttribute(
+            'aria-label',
+            `${count.toLocaleString('en-US')} visitors`
+        )
+        const cells = counter.querySelectorAll('[data-digit]')
+        const digits = toCounterDigits(count, cells.length)
+        cells.forEach((cell, i) => {
+            cell.textContent = String(digits[i])
+        })
+    }
+
+    const loadCount = async () => {
+        if (!GOATCOUNTER_PUBLIC_COUNTER) {
+            render(fallbackVisitorCount(Math.random()))
+            return
+        }
+        try {
+            const res = await fetch(
+                `https://arcanegrain.goatcounter.com/counter/${encodeURIComponent(location.pathname)}.json`
+            )
+            const count = res.ok
+                ? parseGoatCounterCount(await res.json())
+                : null
+            render(count ?? fallbackVisitorCount(Math.random()))
+        } catch {
+            render(fallbackVisitorCount(Math.random()))
+        }
+    }
+
+    const root = document.documentElement
+    if (root.classList.contains('retro')) {
+        loadCount()
+    } else {
+        const observer = new MutationObserver(() => {
+            if (!root.classList.contains('retro')) return
+            observer.disconnect()
+            loadCount()
+        })
+        observer.observe(root, { attributes: true, attributeFilter: ['class'] })
+    }
+</script>

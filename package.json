@@ -8,7 +8,9 @@
         "preview": "astro preview",
         "astro": "astro",
         "prettier:write": "prettier . --write",
-        "new-post": "node scripts/new-post.js"
+        "new-post": "node scripts/new-post.js",
+        "test": "vitest run",
+        "test:e2e": "playwright test"
     },
     "dependencies": {
         "@astrojs/check": "^0.9.10",
@@ -23,12 +25,16 @@
         "zod": "^4.5.4"
     },
     "devDependencies": {
+        "@axe-core/playwright": "^4.13.0",
+        "@playwright/test": "^1.63.0",
+        "fast-check": "^4.10.2",
         "prettier": "3.9.6",
         "prettier-plugin-astro": "1.0.0",
         "prettier-plugin-organize-imports": "^4.3.0",
         "prettier-plugin-tailwindcss": "^0.8.1",
         "pretty-quick": "^4.2.2",
-        "simple-git-hooks": "^2.14.0"
+        "simple-git-hooks": "^2.14.0",
+        "vitest": "^5.0.2"
     },
     "packageManager": "pnpm@10.33.0+sha512.10568bb4a6afb58c9eb3630da90cc9516417abebd3fabbe6739f0ae795728da1491e9db5a544c76ad8eb7570f5c4bb3d6c637b2cb41bfdcdb47fa823c8649319"
 }

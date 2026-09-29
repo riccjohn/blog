@@ -28,3 +28,9 @@ pnpm-debug.log*
 
 # playwright mcp
 .playwright-mcp
+# praxis research/plan artifacts
+.light/
+
+.yaks
+test-results/
+playwright-report/

@@ -1,0 +1,64 @@
+---
+---
+
+<dialog data-retro="graincoin-dialog" aria-labelledby="graincoin-title">
+    <div data-retro-titlebar>GrainCoin.exe</div>
+    <div class="retro-dialog-body">
+        <h2 id="graincoin-title">Congratulations! You found GrainCoin!</h2>
+        <p>
+            You have discovered the secret of the Arcane Grain. Your wallet now
+            holds 0.0001 GrainCoin, redeemable for absolutely nothing. Please do
+            not tell the webmaster.
+        </p>
+        <button type="button" data-retro="graincoin-close">
+            Close
+        </button>
+    </div>
+</dialog>
+
+<script>
+    import { createKonamiMatcher } from '@/utils/retro'
+    import { getTheme, nextTheme, setTheme } from '@/utils/theme'
+
+    const dialog = document.querySelector<HTMLDialogElement>(
+        '[data-retro="graincoin-dialog"]'
+    )
+    let opener: Element | null = null
+
+    const openDialog = () => {
+        if (!dialog || dialog.open) return
+        opener = document.activeElement
+        dialog.showModal()
+    }
+
+    dialog?.addEventListener('close', () => {
+        if (opener instanceof HTMLElement) opener.focus()
+    })
+    dialog
+        ?.querySelector('[data-retro="graincoin-close"]')
+        ?.addEventListener('click', () => dialog.close())
+
+    document
+        .querySelectorAll('[data-retro="graincoin-link"]')
+        .forEach((link) => link.addEventListener('click', openDialog))
+
+    const matches = createKonamiMatcher()
+    document.addEventListener('keydown', (e) => {
+        const target = e.target
+        if (
+            target instanceof HTMLElement &&
+            (target.matches('input, textarea') || target.isContentEditable)
+        ) {
+            return
+        }
+        if (!matches(e.key)) return
+        if (getTheme() !== 'retro') {
+            setTheme('retro')
+            const label = `Switch to ${nextTheme('retro')} theme`
+            const toggle = document.getElementById('theme-toggle')
+            toggle?.setAttribute('aria-label', label)
+            toggle?.setAttribute('title', label)
+        }
+        openDialog()
+    })
+</script>
