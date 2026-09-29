@@ -179,3 +179,48 @@ test.describe('retro toggle placement', () => {
         })
     }
 })
+
+test.describe('?theme= link', () => {
+    test.use({ colorScheme: 'light' })
+
+    test('?theme=retro switches to retro, saves it and cleans the address bar', async ({
+        page,
+    }) => {
+        await page.goto('/?theme=retro')
+        expect(await currentTheme(page)).toBe('retro')
+        expect(await stored(page)).toBe('retro')
+        expect(new URL(page.url()).search).toBe('')
+        await expect(page.locator('#theme-toggle')).toHaveAttribute(
+            'aria-label',
+            'Switch to light theme'
+        )
+
+        await page.getByRole('link', { name: 'Blog', exact: true }).click()
+        await page.waitForURL(/\/blog\/?$/)
+        expect(await currentTheme(page)).toBe('retro')
+    })
+
+    test('keeps other params and the hash', async ({ page }) => {
+        await page.goto('/blog/?utm_source=bsky&theme=dark#top')
+        expect(await currentTheme(page)).toBe('dark')
+        const url = new URL(page.url())
+        expect(url.pathname + url.search + url.hash).toBe(
+            '/blog/?utm_source=bsky#top'
+        )
+    })
+
+    test('overrides a previously saved theme', async ({ page }) => {
+        await page.goto('/')
+        await page.evaluate((k) => localStorage.setItem(k, 'dark'), KEY)
+        await page.goto('/?theme=light')
+        expect(await currentTheme(page)).toBe('light')
+        expect(await stored(page)).toBe('light')
+    })
+
+    test('an unknown value is ignored', async ({ page }) => {
+        await page.goto('/?theme=neon')
+        expect(await currentTheme(page)).toBe('light')
+        expect(await stored(page)).toBeNull()
+        expect(new URL(page.url()).search).toBe('?theme=neon')
+    })
+})

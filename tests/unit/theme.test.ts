@@ -1,5 +1,6 @@
 import {
     THEME_INIT_SCRIPT,
+    THEME_QUERY_PARAM,
     THEME_STORAGE_KEY,
     applyThemeClass,
     nextTheme,
@@ -47,9 +48,21 @@ const stubBrowser = (opts: {
     classes: string[]
     stored: string | null
     prefersDark: boolean
+    search?: string
+    hash?: string
 }) => {
     const classList = makeClassList(opts.classes)
     const storage = makeStorage(opts.stored)
+    const location = {
+        pathname: '/blog/post/',
+        search: opts.search ?? '',
+        hash: opts.hash ?? '',
+    }
+    const replaced: string[] = []
+    const history = {
+        replaceState: (_: unknown, __: string, url: string) =>
+            void replaced.push(url),
+    }
     const listeners: Listener[] = []
     const matchMedia = () => ({
         matches: opts.prefersDark,
@@ -60,7 +73,9 @@ const stubBrowser = (opts: {
     vi.stubGlobal('document', document)
     vi.stubGlobal('localStorage', storage)
     vi.stubGlobal('window', window)
-    return { classList, storage, matchMedia, document, listeners }
+    vi.stubGlobal('location', location)
+    vi.stubGlobal('history', history)
+    return { classList, storage, matchMedia, document, listeners, replaced }
 }
 
 afterEach(() => {
@@ -139,6 +154,36 @@ describe('resolveTheme', () => {
     })
 })
 
+describe('resolveTheme with a requested theme', () => {
+    it('a valid requested theme wins over stored value and system preference', () => {
+        fc.assert(
+            fc.property(
+                themeArb,
+                storedArb,
+                fc.boolean(),
+                (requested, stored, dark) =>
+                    resolveTheme(stored, dark, requested) === requested
+            )
+        )
+    })
+
+    it('an invalid or missing requested theme changes nothing', () => {
+        fc.assert(
+            fc.property(
+                fc.oneof(
+                    fc.constant<string | null>(null),
+                    fc.string().filter((s) => !THEMES.some((t) => t === s))
+                ),
+                storedArb,
+                fc.boolean(),
+                (requested, stored, dark) =>
+                    resolveTheme(stored, dark, requested) ===
+                    resolveTheme(stored, dark)
+            )
+        )
+    })
+})
+
 describe('nextTheme', () => {
     it('cycles light -> dark -> retro -> light', () => {
         expect(nextTheme('light')).toBe('dark')
@@ -181,20 +226,45 @@ describe('applyThemeClass', () => {
     })
 })
 
+const requestedArb = fc.oneof(
+    fc.constant<string | null>(null),
+    fc.constantFrom<string | null>(...THEMES),
+    fc.string()
+)
+
+const searchFor = (requested: string | null): string =>
+    requested === null
+        ? ''
+        : `?${new URLSearchParams({ [THEME_QUERY_PARAM]: requested })}`
+
 describe('THEME_INIT_SCRIPT parity with resolveTheme + applyThemeClass', () => {
-    it('leaves the same classes for arbitrary stored value and system preference', () => {
+    it('leaves the same classes for arbitrary stored value, system preference and ?theme=', () => {
         fc.assert(
             fc.property(
                 storedArb,
                 fc.boolean(),
                 classArb,
-                (stored, prefersDark, classes) => {
-                    const a = stubBrowser({ classes, stored, prefersDark })
+                requestedArb,
+                (stored, prefersDark, classes, requested) => {
+                    const search = searchFor(requested)
+                    const a = stubBrowser({
+                        classes,
+                        stored,
+                        prefersDark,
+                        search,
+                    })
                     new Function(THEME_INIT_SCRIPT)()
                     const fromScript = a.classList.snapshot()
 
-                    const b = stubBrowser({ classes, stored, prefersDark })
-                    applyThemeClass(resolveTheme(stored, prefersDark))
+                    const b = stubBrowser({
+                        classes,
+                        stored,
+                        prefersDark,
+                        search,
+                    })
+                    applyThemeClass(
+                        resolveTheme(stored, prefersDark, requested)
+                    )
                     expect(fromScript).toEqual(b.classList.snapshot())
                 }
             )
@@ -209,6 +279,68 @@ describe('THEME_INIT_SCRIPT parity with resolveTheme + applyThemeClass', () => {
         })
         new Function(THEME_INIT_SCRIPT)()
         expect(a.classList.snapshot()).toEqual(['retro'])
+    })
+})
+
+describe('THEME_INIT_SCRIPT with ?theme=', () => {
+    it('saves a valid requested theme like a toggle click would', () => {
+        fc.assert(
+            fc.property(themeArb, storedArb, (requested, stored) => {
+                const env = stubBrowser({
+                    classes: [],
+                    stored,
+                    prefersDark: false,
+                    search: searchFor(requested),
+                })
+                new Function(THEME_INIT_SCRIPT)()
+                expect(env.storage.getItem(THEME_STORAGE_KEY)).toBe(requested)
+            })
+        )
+    })
+
+    it('removes only the theme param from the address bar, keeping other params and the hash', () => {
+        const env = stubBrowser({
+            classes: [],
+            stored: null,
+            prefersDark: false,
+            search: '?utm_source=bsky&theme=retro&page=2',
+            hash: '#comments',
+        })
+        new Function(THEME_INIT_SCRIPT)()
+        expect(env.replaced).toEqual([
+            '/blog/post/?utm_source=bsky&page=2#comments',
+        ])
+    })
+
+    it('leaves a bare path when theme was the only param', () => {
+        const env = stubBrowser({
+            classes: [],
+            stored: null,
+            prefersDark: false,
+            search: '?theme=retro',
+        })
+        new Function(THEME_INIT_SCRIPT)()
+        expect(env.replaced).toEqual(['/blog/post/'])
+    })
+
+    it('ignores an invalid value: nothing saved, URL untouched', () => {
+        fc.assert(
+            fc.property(
+                fc.string().filter((s) => !THEMES.some((t) => t === s)),
+                storedArb,
+                (requested, stored) => {
+                    const env = stubBrowser({
+                        classes: [],
+                        stored,
+                        prefersDark: false,
+                        search: searchFor(requested),
+                    })
+                    new Function(THEME_INIT_SCRIPT)()
+                    expect(env.storage.getItem(THEME_STORAGE_KEY)).toBe(stored)
+                    expect(env.replaced).toEqual([])
+                }
+            )
+        )
     })
 })
 
