@@ -1,0 +1,65 @@
+---
+import RetroGif from '@/components/Retro/RetroGif.astro'
+---
+
+<div class="retro-buddies hidden retro:flex">
+    <div class="retro-bud" data-retro="bonzi">
+        <RetroGif
+            name="bonzi"
+            retro="bonzi-gif"
+            alt="BonziBuddy spinning a globe and holding a trombone"
+            width={156}
+            height={127}
+        />
+        <div class="retro-tip">
+            <b>Hiya, friend!</b>
+            Want me to read this post out loud? I promise I'm not spyware.
+        </div>
+    </div>
+    <div class="retro-bud retro-bud-right" data-retro="clippy">
+        <div class="retro-assist">
+            <div data-retro-titlebar>Office Assistant</div>
+            <div class="retro-well">
+                <RetroGif
+                    name="clippy"
+                    retro="clippy-gif"
+                    alt="Clippy the paperclip assistant, blinking"
+                    width={100}
+                    height={139}
+                />
+            </div>
+        </div>
+        <div class="retro-tip">
+            <b>It looks like you're reading a blog post.</b>
+            Would you like help?
+            <div class="retro-tipbtns">
+                <button type="button" data-retro="clippy-dismiss">
+                    Don't show again
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const CLIPPY_KEY = 'retro-clippy-dismissed'
+
+    const clippy = document.querySelector('[data-retro="clippy"]')
+    const dismiss = clippy?.querySelector('[data-retro="clippy-dismiss"]')
+
+    if (localStorage.getItem(CLIPPY_KEY) === 'true') {
+        clippy?.remove()
+    } else {
+        dismiss?.addEventListener('click', () => {
+            const source = clippy?.querySelector('source')
+            const img = clippy?.querySelector('img')
+            const tip = clippy?.querySelector('.retro-tip')
+            if (!source || !img || !tip) return
+            source.srcset = '/retro/clippy-stomp.static.png'
+            img.src = '/retro/clippy-stomp.gif'
+            img.alt = 'A giant foot stomps Clippy flat'
+            tip.textContent = 'Clippy has been dismissed. Permanently.'
+            localStorage.setItem(CLIPPY_KEY, 'true')
+        })
+    }
+</script>

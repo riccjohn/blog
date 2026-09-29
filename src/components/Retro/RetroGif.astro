@@ -1,0 +1,40 @@
+---
+interface Props {
+    name: string
+    alt: string
+    width: number
+    height: number
+    retro?: string
+    scale?: number
+    decorative?: boolean
+}
+
+const {
+    name,
+    alt,
+    width,
+    height,
+    retro = name,
+    scale = 1,
+    decorative = false,
+} = Astro.props
+---
+
+<picture
+    data-retro={retro}
+    aria-hidden={decorative ? 'true' : undefined}
+    class="hidden shrink-0 leading-[0] retro:inline-block"
+>
+    <source
+        media="(prefers-reduced-motion: reduce)"
+        srcset={`/retro/${name}.static.png`}
+    />
+    <img
+        src={`/retro/${name}.gif`}
+        alt={decorative ? '' : alt}
+        width={width * scale}
+        height={height * scale}
+        loading="lazy"
+        style={scale > 1 ? 'image-rendering: pixelated' : undefined}
+    />
+</picture>

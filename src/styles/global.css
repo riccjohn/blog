@@ -5,6 +5,8 @@
   License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
  */
 
+@import './retro.css';
+
 @variant dark (.dark &);
 
 @theme {

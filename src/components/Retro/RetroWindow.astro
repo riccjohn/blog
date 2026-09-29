@@ -1,0 +1,19 @@
+---
+interface Props {
+    title: string
+}
+
+const { title } = Astro.props
+---
+
+<div data-retro-window class="contents retro:block">
+    <div data-retro-titlebar class="hidden retro:block">
+        {title}
+    </div>
+    <div data-retro-surface class="contents retro:block">
+        <slot />
+    </div>
+    <div data-retro-statusbar class="hidden retro:flex">
+        <span>Done</span>
+    </div>
+</div>

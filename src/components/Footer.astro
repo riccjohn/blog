@@ -3,6 +3,9 @@ import Bluesky from '@/components/Social/Bluesky.astro'
 import GitHub from '@/components/Social/GitHub.astro'
 import LinkedIn from '@/components/Social/LinkedIn.astro'
 import Email from '@/components/Social/Email.astro'
+import RetroFooter from '@/components/Retro/RetroFooter.astro'
+import RetroBuddies from '@/components/Retro/RetroBuddies.astro'
+import GrainCoinPopup from '@/components/Retro/GrainCoinPopup.astro'
 const today = new Date()
 ---
 
@@ -14,7 +17,17 @@ const today = new Date()
         <GitHub hoverable />
         <Email hoverable />
     </div>
+    <RetroFooter />
+    <RetroBuddies />
+    <button
+        type="button"
+        data-retro="graincoin-link"
+        class="retro-graincoin-link hidden retro:inline"
+    >
+        GrainCoin
+    </button>
     <a rel="me" href="https://techhub.social/@riccjohn" class="hidden">
         Mastodon
     </a>
 </footer>
+<GrainCoinPopup />

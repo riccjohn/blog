@@ -1,0 +1,29 @@
+---
+import RetroGif from '@/components/Retro/RetroGif.astro'
+import { SITE_TITLE } from '@/consts'
+---
+
+<div class="hidden retro:block" data-retro-header>
+    <div class="retro-mast">
+        <RetroGif
+            name="globe"
+            alt="Spinning globe"
+            width={50}
+            height={50}
+            scale={2}
+        />
+        <span data-retro="wordmark">~*~ {SITE_TITLE} ~*~</span>
+        <RetroGif
+            name="mailbox"
+            alt="Mailbox with flag going up"
+            width={62}
+            height={55}
+        />
+    </div>
+    <div data-retro="marquee" class="retro-marquee">
+        <span>
+            Welcome to my homepage!!! Thanks for visiting - please sign the
+            guestbook, and come back soon!!!
+        </span>
+    </div>
+</div>

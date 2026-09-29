@@ -17,3 +17,8 @@
 ## Quality Gates
 
 Before completing any task: no TypeScript errors (`pnpm astro check`), no formatting issues (`pnpm run prettier:write`).
+
+- `pnpm test` (Vitest unit tests)
+- `pnpm test:e2e` (Playwright, headless Chromium)
+
+e2e uses port 4329 with a fresh build; visual baselines live in `tests/e2e/visual-baseline.spec.ts-snapshots/`.

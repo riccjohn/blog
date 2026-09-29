@@ -5,9 +5,12 @@ import Bluesky from '@/components/Social/Bluesky.astro'
 import GitHub from '@/components/Social/GitHub.astro'
 import LinkedIn from '@/components/Social/LinkedIn.astro'
 import ThemeToggle from '@/components/ThemeToggle.astro'
+import RetroHeader from '@/components/Retro/RetroHeader.astro'
+import RetroGif from '@/components/Retro/RetroGif.astro'
 ---
 
 <header class="bg-bg-secondary border-border-default m-0 border-b px-4">
+    <RetroHeader />
     <nav class="flex items-center justify-between">
         <a
             class="text-text-secondary hover:text-text-primary border-b-4 border-transparent px-2 py-4 font-bold no-underline"
@@ -27,4 +30,12 @@ import ThemeToggle from '@/components/ThemeToggle.astro'
         </div>
         <ThemeToggle />
     </nav>
+    <div class="hidden text-center retro:block">
+        <RetroGif
+            name="message-alert"
+            alt="You have new messages"
+            width={468}
+            height={60}
+        />
+    </div>
 </header>

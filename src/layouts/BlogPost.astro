@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content'
 import { Image } from 'astro:assets'
 import BaseHead from '@/components/BaseHead.astro'
+import RetroWindow from '@/components/Retro/RetroWindow.astro'
 import Header from '@/components/Header.astro'
 import Footer from '@/components/Footer.astro'
 import FormattedDate from '@/components/FormattedDate.astro'
@@ -30,46 +31,48 @@ const { title, description, pubDate, updatedDate, heroImage, readingTime } =
     <body>
         <Header />
         <main class="m-0 w-full max-w-none">
-            <article>
-                <div class="hero-image w-full">
-                    {heroImage && (
-                        <div class="border-border-default mx-auto aspect-video max-w-255 overflow-hidden rounded-xl border shadow-[0_4px_12px_var(--color-shadow-default)]">
-                            <Image
-                                src={heroImage}
-                                alt=""
-                                class="h-full w-full object-cover"
-                                width={1020}
-                                height={574}
-                            />
-                        </div>
-                    )}
-                </div>
-                <div class="prose prose-width text-text-primary">
-                    <div class="title mb-4 py-4 text-center leading-none">
-                        <div class="date text-text-secondary mb-2">
-                            <FormattedDate date={pubDate} />
-                            {readingTime && (
-                                <>
-                                    <span class="mx-2">&middot;</span>
-                                    <span>
-                                        {formatReadingTime(readingTime)}
-                                    </span>
-                                </>
-                            )}
-                            {updatedDate && (
-                                <div class="last-updated-on italic">
-                                    Last updated on{' '}
-                                    <FormattedDate date={updatedDate} />
-                                </div>
-                            )}
-                        </div>
-                        <h1 class="m-0 mb-2">{title}</h1>
-                        <hr />
+            <RetroWindow title={title}>
+                <article>
+                    <div class="hero-image w-full">
+                        {heroImage && (
+                            <div class="border-border-default mx-auto aspect-video max-w-255 overflow-hidden rounded-xl border shadow-[0_4px_12px_var(--color-shadow-default)]">
+                                <Image
+                                    src={heroImage}
+                                    alt=""
+                                    class="h-full w-full object-cover"
+                                    width={1020}
+                                    height={574}
+                                />
+                            </div>
+                        )}
                     </div>
-                    <slot />
-                    <ShareButtons title={title} pageUrl={Astro.url.href} />
-                </div>
-            </article>
+                    <div class="prose prose-width text-text-primary">
+                        <div class="title mb-4 py-4 text-center leading-none">
+                            <div class="date text-text-secondary mb-2">
+                                <FormattedDate date={pubDate} />
+                                {readingTime && (
+                                    <>
+                                        <span class="mx-2">&middot;</span>
+                                        <span>
+                                            {formatReadingTime(readingTime)}
+                                        </span>
+                                    </>
+                                )}
+                                {updatedDate && (
+                                    <div class="last-updated-on italic">
+                                        Last updated on{' '}
+                                        <FormattedDate date={updatedDate} />
+                                    </div>
+                                )}
+                            </div>
+                            <h1 class="m-0 mb-2">{title}</h1>
+                            <hr />
+                        </div>
+                        <slot />
+                        <ShareButtons title={title} pageUrl={Astro.url.href} />
+                    </div>
+                </article>
+            </RetroWindow>
         </main>
         <Footer />
     </body>

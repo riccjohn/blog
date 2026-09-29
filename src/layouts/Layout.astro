@@ -1,6 +1,7 @@
 ---
 import BaseHead from '@/components/BaseHead.astro'
 import Footer from '@/components/Footer.astro'
+import RetroWindow from '@/components/Retro/RetroWindow.astro'
 import Header from '@/components/Header.astro'
 import '@/styles/global.css'
 import { THEME_INIT_SCRIPT } from '@/utils/theme'
@@ -20,7 +21,9 @@ const { title, description } = Astro.props
     <body>
         <Header />
         <main class="prose-width flex h-full flex-grow flex-col px-4 py-12 max-md:p-4">
-            <slot />
+            <RetroWindow title={title}>
+                <slot />
+            </RetroWindow>
         </main>
         <Footer />
     </body>
