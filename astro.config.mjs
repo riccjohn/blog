@@ -29,6 +29,9 @@ export default defineConfig({
         },
     },
     integrations: [mdx(), sitemap()],
+    experimental: {
+        contentIntellisense: true,
+    },
     vite: {
         plugins: [tailwindcss()],
     },
