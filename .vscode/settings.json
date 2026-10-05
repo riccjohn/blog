@@ -2,6 +2,7 @@
     "[astro]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
+    "astro.content-intellisense": true,
     "editor.formatOnSave": true,
     "prettier.documentSelectors": ["**/*.astro"],
     "workbench.colorCustomizations": {
