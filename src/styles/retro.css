@@ -189,6 +189,25 @@ html.early-web {
         box-shadow: none;
     }
 
+    & [data-retro-surface] figure .image-frame {
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    /* The window is a fixed 720px, so wide content stays inside it. */
+    & [data-retro-surface] :is(.breakout-width, table) {
+        left: auto;
+        translate: none;
+    }
+
+    & [data-retro-surface] .breakout-width {
+        width: auto;
+    }
+
+    & [data-retro-surface] table {
+        width: 100%;
+    }
+
     & [data-retro-surface] pre {
         background: #000;
         color: #33ff33;
