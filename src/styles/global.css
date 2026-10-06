@@ -17,6 +17,8 @@
 
     /* Custom Spacing */
     --spacing-prose: 720px;
+    --spacing-post: 768px;
+    --spacing-wide: 1020px;
     --spacing-blog-grid: 960px;
 
     /* Light Mode Colors (default) */
@@ -80,6 +82,26 @@ html.dark {
     margin-left: auto;
     margin-right: auto;
 }
+
+/* Lets an element inside a post grow to the wide measure (hero, figures,
+   tables), centered on the text column. Positioned with left/translate rather
+   than margins because the unlayered `figure` margin reset would override a
+   layered margin utility. Below md the column is already nearly full width, so
+   nothing changes. */
+@utility breakout-width {
+    @media (min-width: 768px) {
+        position: relative;
+        left: 50%;
+        width: min(var(--spacing-wide), 100vw - 2em);
+        translate: -50%;
+    }
+}
+
+/* Border, radius and shadow shared by the hero and captioned images */
+@utility image-frame {
+    @apply border-border-default overflow-hidden rounded-xl border;
+    box-shadow: 0 4px 12px var(--color-shadow-default);
+}
 body {
     font-family: var(--font-mono);
     @apply bg-bg-primary text-text-primary m-0 flex min-h-screen flex-col justify-between p-0 text-left text-base leading-relaxed wrap-break-word;
@@ -131,6 +153,16 @@ input {
 }
 table {
     width: 100%;
+}
+.prose table {
+    @apply breakout-width;
+}
+/* Below md there is no room to break out, so wide tables scroll instead */
+@media (max-width: 767px) {
+    .prose table {
+        display: block;
+        overflow-x: auto;
+    }
 }
 img {
     max-width: 100%;

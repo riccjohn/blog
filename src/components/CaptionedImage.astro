@@ -9,19 +9,16 @@ interface Props {
     class?: string
 }
 
-const {
-    src,
-    alt,
-    caption,
-    class: className = 'mx-auto block rounded-lg shadow-lg',
-} = Astro.props
+const { src, alt, caption, class: className = 'block' } = Astro.props
 ---
 
-<figure>
-    {typeof src === 'string' ? (
-        <img src={src} alt={alt} class={className} />
-    ) : (
-        <Image {src} {alt} class={className} />
-    )}
+<figure class="breakout-width">
+    <div class="image-frame mx-auto w-fit">
+        {typeof src === 'string' ? (
+            <img src={src} alt={alt} class={className} />
+        ) : (
+            <Image {src} {alt} class={className} />
+        )}
+    </div>
     <figcaption>{caption}</figcaption>
 </figure>

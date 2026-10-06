@@ -30,12 +30,12 @@ const { title, description, pubDate, updatedDate, heroImage, readingTime } =
 
     <body>
         <Header />
-        <main class="m-0 w-full max-w-none">
+        <main>
             <RetroWindow title={title}>
                 <article>
                     <div class="hero-image w-full">
                         {heroImage && (
-                            <div class="border-border-default mx-auto aspect-video max-w-255 overflow-hidden rounded-xl border shadow-[0_4px_12px_var(--color-shadow-default)]">
+                            <div class="breakout-width image-frame aspect-video">
                                 <Image
                                     src={heroImage}
                                     alt=""
@@ -46,7 +46,7 @@ const { title, description, pubDate, updatedDate, heroImage, readingTime } =
                             </div>
                         )}
                     </div>
-                    <div class="prose prose-width text-text-primary">
+                    <div class="prose text-text-primary">
                         <div class="title mb-4 py-4 text-center leading-none">
                             <div class="date text-text-secondary mb-2">
                                 <FormattedDate date={pubDate} />
@@ -77,3 +77,11 @@ const { title, description, pubDate, updatedDate, heroImage, readingTime } =
         <Footer />
     </body>
 </html>
+
+<style>
+    /* Wider than the global 720px `main`; unlayered, so Tailwind width
+       utilities on the element cannot override it. */
+    main {
+        width: var(--spacing-post);
+    }
+</style>
