@@ -1,0 +1,81 @@
+---
+import type { MarkdownHeading } from 'astro'
+
+interface Props {
+    headings: MarkdownHeading[]
+}
+
+// Sections and their subsections; deeper levels would crowd the rail
+const entries = Astro.props.headings.filter(
+    ({ depth }) => depth === 2 || depth === 3
+)
+---
+
+{entries.length >= 3 && (
+    <>
+        <nav aria-label="Contents" class="toc-inline-nav">
+            <details class="toc-inline">
+                <summary>Contents</summary>
+                <ol class="toc-list">
+                    {entries.map(({ depth, slug, text }) => (
+                        <li data-depth={depth}>
+                            <a href={`#${slug}`}>{text}</a>
+                        </li>
+                    ))}
+                </ol>
+            </details>
+        </nav>
+        <nav class="toc-rail" aria-labelledby="toc-rail-heading">
+            <div class="toc-rail-inner">
+                <p id="toc-rail-heading" class="toc-rail-heading">
+                    Contents
+                </p>
+                <ol class="toc-list">
+                    {entries.map(({ depth, slug, text }) => (
+                        <li data-depth={depth}>
+                            <a href={`#${slug}`}>{text}</a>
+                        </li>
+                    ))}
+                </ol>
+            </div>
+        </nav>
+    </>
+)}
+
+<script>
+    // Marks the section being read in both lists: the last heading that has
+    // scrolled past the top fifth of the viewport
+    const links = Array.from(
+        document.querySelectorAll<HTMLAnchorElement>('.toc-list a')
+    )
+    const headings = Array.from(
+        new Set(links.map((link) => link.hash.slice(1)))
+    ).flatMap((id) => document.getElementById(id) ?? [])
+
+    let frame = 0
+    const update = () => {
+        frame = 0
+        const threshold = window.innerHeight / 5
+        const current = headings.findLast(
+            (heading) => heading.getBoundingClientRect().top <= threshold
+        )
+        links.forEach((link) => {
+            if (current && link.hash === `#${current.id}`) {
+                link.setAttribute('aria-current', 'location')
+            } else {
+                link.removeAttribute('aria-current')
+            }
+        })
+    }
+
+    if (headings.length > 0) {
+        update()
+        window.addEventListener(
+            'scroll',
+            () => {
+                frame ||= requestAnimationFrame(update)
+            },
+            { passive: true }
+        )
+    }
+</script>

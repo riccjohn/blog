@@ -1,13 +1,16 @@
 // @ts-check
+import { satteri } from '@astrojs/markdown-satteri'
 import mdx from '@astrojs/mdx'
 import sitemap from '@astrojs/sitemap'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'astro/config'
+import { demoteHeadings } from './src/utils/demoteHeadings'
 
 // https://astro.build/config
 export default defineConfig({
     site: 'https://arcanegrain.dev',
     markdown: {
+        processor: satteri({ mdastPlugins: [demoteHeadings] }),
         shikiConfig: {
             transformers: [
                 {

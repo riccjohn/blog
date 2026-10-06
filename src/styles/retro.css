@@ -194,6 +194,15 @@ html.early-web {
         box-shadow: none;
     }
 
+    /* Buddies own the gutters, so contents stay inline in the window */
+    & .toc-rail {
+        display: none;
+    }
+
+    & .toc-inline {
+        display: block;
+    }
+
     /* The window is a fixed 720px, so wide content stays inside it. */
     & [data-retro-surface] :is(.breakout-width, table) {
         left: auto;
