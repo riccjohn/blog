@@ -136,10 +136,14 @@ h4 {
 h5 {
     font-size: 1.125em;
 }
+/* Bold is emphasis, not a link: green is reserved for things you can click */
 strong,
 b {
     font-weight: 700;
-    @apply text-accent-primary;
+    @apply text-text-heading;
+}
+a :is(strong, b) {
+    color: inherit;
 }
 p {
     margin-bottom: 1em;
@@ -169,6 +173,12 @@ table {
 }
 .prose td {
     @apply border-border-muted border-t;
+}
+/* Label columns stay readable instead of wrapping a word per line */
+@media (min-width: 768px) {
+    .prose :is(th, td):first-child {
+        min-width: 20ch;
+    }
 }
 .prose tbody tr:first-child td {
     border-top: none;
@@ -299,6 +309,285 @@ quote {
 .prose li::marker {
     @apply text-accent-primary;
 }
+.prose li > :is(ul, ol) {
+    margin: 0.5em 0 0;
+}
+
+/* Post title block: title, then the description as a standfirst, then meta */
+.prose .title h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 700;
+    line-height: 1.15;
+    text-wrap: balance;
+}
+.prose .standfirst {
+    max-width: 58ch;
+    margin: 1rem auto 1.25rem;
+    @apply text-text-secondary;
+    font-size: 1.125em;
+    line-height: 1.55;
+    text-wrap: balance;
+}
+.prose .title hr {
+    margin-top: 1.5rem;
+}
+
+/* Section headings: a step scale with weight, and more space above than below
+   so each heading groups with the section it introduces */
+.prose :is(h2, h3, h4) {
+    font-weight: 700;
+    line-height: 1.25;
+    text-wrap: balance;
+    scroll-margin-top: 1.5rem;
+}
+.prose h2 {
+    margin: 3.5rem 0 1rem;
+    font-size: 1.625em;
+}
+.prose h3 {
+    margin: 2.5rem 0 0.75rem;
+    font-size: 1.25em;
+}
+.prose h4 {
+    margin: 2rem 0 0.5rem;
+    font-size: 1.0625em;
+}
+.prose :is(h2, h3) + :is(h3, h4) {
+    margin-top: 1rem;
+}
+.prose > .title + * {
+    margin-top: 2rem;
+}
+.prose p {
+    text-wrap: pretty;
+}
+
+/* Disclosure, used for long templates and the inline table of contents */
+.prose details {
+    margin: 0 0 2em;
+    @apply border-border-default bg-bg-secondary border;
+    border-radius: 6px;
+}
+.prose summary {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.625rem 1rem;
+    cursor: pointer;
+    list-style: none;
+}
+.prose summary::-webkit-details-marker {
+    display: none;
+}
+.prose summary::before {
+    content: '▸';
+    @apply text-accent-primary;
+    transition: rotate 150ms ease-out;
+}
+.prose details[open] > summary::before {
+    rotate: 90deg;
+}
+.prose details[open] > summary {
+    @apply border-border-default border-b;
+}
+.prose details > pre {
+    margin: 0;
+    border: none;
+    border-radius: 0 0 6px 6px;
+}
+
+/* Table of contents: a collapsed list under the title, or a sticky rail in
+   the left gutter once the gutter clears the wide figures */
+.toc-inline {
+    text-align: left;
+    font-size: 0.875em;
+}
+.prose .toc-inline {
+    margin: 1.5rem 0 0;
+}
+.toc-inline .toc-list {
+    padding: 0.5rem 1rem 0.75rem 0.5rem;
+}
+.toc-rail {
+    display: none;
+}
+.prose .toc-list {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+}
+.prose .toc-list li {
+    margin: 0;
+}
+.toc-list li[data-depth='3'] {
+    padding-left: 1rem;
+}
+.toc-list a {
+    display: block;
+    padding: 0.25rem 0 0.25rem 0.75rem;
+    @apply text-text-secondary border-l-2 border-transparent no-underline;
+    line-height: 1.4;
+    transition: border-color 150ms;
+}
+.toc-list a:hover {
+    @apply text-text-primary border-border-default no-underline;
+}
+.toc-list a[aria-current] {
+    @apply text-text-heading border-accent-primary;
+}
+@media (min-width: 1440px) {
+    .toc-inline {
+        display: none;
+    }
+    .toc-rail {
+        display: block;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: calc(100% + (var(--spacing-wide) - 100%) / 2 + 1.25rem);
+        width: min(15rem, (100vw - var(--spacing-wide)) / 2 - 2.25rem);
+        text-align: left;
+        font-size: 0.8125rem;
+    }
+    .toc-rail-inner {
+        position: sticky;
+        top: 2rem;
+        max-height: calc(100vh - 4rem);
+        overflow-y: auto;
+    }
+    .prose .toc-rail-heading {
+        margin: 0 0 0.5rem 0.875rem;
+        @apply text-text-secondary;
+    }
+}
+
+/* Stages of a process, colored to match the post's diagrams. The rule sits
+   in the gutter so the text column, and wide figures centered on it, stay put. */
+:root {
+    --stage-pink: #b8409a;
+    --stage-yellow: #9a6f00;
+    --stage-green: #2a8540;
+    --stage-blue: #2b6db5;
+}
+html.dark {
+    --stage-pink: #ec8fd3;
+    --stage-yellow: #f0c75e;
+    --stage-green: #7fd38c;
+    --stage-blue: #7cb3f0;
+}
+.stage-section {
+    margin: 3.5rem 0;
+    padding-left: 0.75rem;
+    border-left: 3px solid var(--stage-color);
+}
+.stage-section[data-tone='pink'] {
+    --stage-color: var(--stage-pink);
+}
+.stage-section[data-tone='yellow'] {
+    --stage-color: var(--stage-yellow);
+}
+.stage-section[data-tone='green'] {
+    --stage-color: var(--stage-green);
+}
+.stage-section[data-tone='blue'] {
+    --stage-color: var(--stage-blue);
+}
+.prose .stage-section > :first-child {
+    margin-top: 0;
+}
+.stage-section > :last-child {
+    margin-bottom: 0;
+}
+@media (min-width: 768px) {
+    .stage-section {
+        margin-left: -1.5rem;
+        padding-left: calc(1.5rem - 3px);
+    }
+}
+
+/* Decision gate: the diagram's diamond beside the checks that must hold */
+.gate {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: 0 1rem;
+    margin: 2rem 0;
+    padding: 1.25rem 1.5rem 0.5rem 1rem;
+    @apply border-border-default bg-bg-secondary border;
+    border-radius: 6px;
+}
+.gate-diamond {
+    width: 2.5rem;
+    height: 2.5rem;
+    @apply text-text-heading;
+}
+a :is(strong, b) {
+    color: inherit;
+}
+.gate-diamond text {
+    font: 700 11px var(--font-mono);
+    fill: currentColor;
+}
+.prose .gate-body > h4:first-child {
+    margin-top: 0.5rem;
+}
+.prose .gate-body > h4:not(:first-child) {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    @apply border-border-default border-t;
+}
+.prose .gate-body > ul:first-of-type {
+    padding-left: 0;
+    list-style: none;
+}
+.gate-body > ul:first-of-type > li {
+    position: relative;
+    padding-left: 1.5rem;
+}
+.gate-body > ul:first-of-type > li::before {
+    content: '';
+    position: absolute;
+    top: 0.45em;
+    left: 0;
+    width: 0.75em;
+    height: 0.75em;
+    border: 2px solid var(--stage-color, var(--color-accent-primary));
+    border-radius: 2px;
+}
+/* Narrow screens: the diamond sits beside the gate's heading and the
+   checks take the full width */
+@media (max-width: 767px) {
+    .gate {
+        display: block;
+        padding: 1rem 1rem 0.25rem;
+    }
+    .gate-diamond {
+        float: left;
+        width: 2rem;
+        height: 2rem;
+        margin: 0 0.5rem 0.25rem 0;
+    }
+    .prose .gate-body > h4:first-child {
+        margin-top: 0.25rem;
+    }
+    .gate-body > h4:first-child + * {
+        clear: left;
+    }
+    .prose .gate-body ul ul {
+        padding-left: 1.25em;
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .prose summary::before {
+        transition: none;
+    }
+}
 hr {
     border: none;
     @apply border-border-muted border-t;
@@ -306,6 +595,9 @@ hr {
 @media (max-width: 720px) {
     body {
         font-size: 14px;
+    }
+    .prose .title h1 {
+        font-size: 2em;
     }
     main {
         padding: 1em;

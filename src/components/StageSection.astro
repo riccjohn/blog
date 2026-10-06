@@ -1,0 +1,14 @@
+---
+// Groups one stage of a multi-stage process under a colored rule, so long
+// stretches of text stay visibly tied to the stage they describe. Tones match
+// the stage colors in the post's diagrams; nested <Gate>s pick the tone up.
+interface Props {
+    tone: 'pink' | 'yellow' | 'green' | 'blue'
+}
+
+const { tone } = Astro.props
+---
+
+<section class="stage-section" data-tone={tone}>
+    <slot />
+</section>

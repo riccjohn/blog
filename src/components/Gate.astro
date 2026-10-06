@@ -1,0 +1,31 @@
+---
+// A decision gate: the checks that must hold before moving on, marked with
+// the same diamond the post's diagrams use. The heading and lists come from
+// the post's Markdown, so they stay in the table of contents and outline.
+interface Props {
+    label: string
+}
+
+const { label } = Astro.props
+---
+
+<div class="gate">
+    <svg class="gate-diamond" viewBox="0 0 40 40" aria-hidden="true">
+        <rect
+            x="8"
+            y="8"
+            width="24"
+            height="24"
+            transform="rotate(45 20 20)"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+        ></rect>
+        <text x="20" y="24.5" text-anchor="middle">
+            {label}
+        </text>
+    </svg>
+    <div class="gate-body">
+        <slot />
+    </div>
+</div>

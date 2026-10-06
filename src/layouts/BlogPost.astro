@@ -1,4 +1,5 @@
 ---
+import type { MarkdownHeading } from 'astro'
 import type { CollectionEntry } from 'astro:content'
 import { Image } from 'astro:assets'
 import BaseHead from '@/components/BaseHead.astro'
@@ -9,13 +10,28 @@ import FormattedDate from '@/components/FormattedDate.astro'
 import { THEME_INIT_SCRIPT } from '@/utils/theme'
 import { formatReadingTime } from '@/utils/readingTime'
 import ShareButtons from '@/components/ShareButtons.astro'
+import TableOfContents from '@/components/TableOfContents.astro'
 
 type Props = CollectionEntry<'blog'>['data'] & {
     readingTime?: number
+    headings?: MarkdownHeading[]
 }
 
-const { title, description, pubDate, updatedDate, heroImage, readingTime } =
-    Astro.props
+const {
+    title,
+    description,
+    pubDate,
+    updatedDate,
+    heroImage,
+    readingTime,
+    headings = [],
+} = Astro.props
+
+const calendarDay = (date: Date) => date.toISOString().slice(0, 10)
+// An update on the publish day is just the post going out
+const showUpdated =
+    updatedDate !== undefined &&
+    calendarDay(updatedDate) !== calendarDay(pubDate)
 ---
 
 <html lang="en">
@@ -46,9 +62,11 @@ const { title, description, pubDate, updatedDate, heroImage, readingTime } =
                             </div>
                         )}
                     </div>
-                    <div class="prose text-text-primary">
-                        <div class="title mb-4 py-4 text-center leading-none">
-                            <div class="date text-text-secondary mb-2">
+                    <div class="prose text-text-primary relative">
+                        <header class="title mb-4 py-4 text-center">
+                            <h1>{title}</h1>
+                            <p class="standfirst">{description}</p>
+                            <div class="date text-text-secondary">
                                 <FormattedDate date={pubDate} />
                                 {readingTime && (
                                     <>
@@ -58,16 +76,16 @@ const { title, description, pubDate, updatedDate, heroImage, readingTime } =
                                         </span>
                                     </>
                                 )}
-                                {updatedDate && (
+                                {showUpdated && updatedDate && (
                                     <div class="last-updated-on italic">
                                         Last updated on{' '}
                                         <FormattedDate date={updatedDate} />
                                     </div>
                                 )}
                             </div>
-                            <h1 class="m-0 mb-2">{title}</h1>
+                            <TableOfContents headings={headings} />
                             <hr />
-                        </div>
+                        </header>
                         <slot />
                         <ShareButtons title={title} pageUrl={Astro.url.href} />
                     </div>
