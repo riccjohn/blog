@@ -313,12 +313,20 @@ quote {
     margin: 0.5em 0 0;
 }
 
-/* Post title block: title, then the description as a standfirst, then meta */
+/* Post title block: title, optional subtitle, then the description as a standfirst, then meta */
 .prose .title h1 {
     margin: 0;
     font-size: 2.5em;
     font-weight: 700;
     line-height: 1.15;
+    text-wrap: balance;
+}
+.prose .title .subtitle {
+    margin: 0.5rem 0 0;
+    @apply text-text-secondary;
+    font-size: 1.5em;
+    font-weight: 600;
+    line-height: 1.25;
     text-wrap: balance;
 }
 .prose .standfirst {

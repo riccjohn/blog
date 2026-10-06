@@ -1,5 +1,6 @@
 ---
 title: 'Example Blog Post'
+subtitle: 'A template for new posts'
 description: 'This is an example post showing required and optional frontmatter fields. See src/content.config.ts for the schema.'
 pubDate: '2025-01-15'
 updatedDate: '2025-01-16'
@@ -20,6 +21,7 @@ All posts **must** include:
 
 Optional fields:
 
+- `subtitle` (string): A short line shown under the title, on its own line. Use it so the title stays short and doesn't get crammed with a tagline
 - `updatedDate` (string, coerced to Date): Last update date if different from `pubDate`
 - `heroImage` (image): Relative path to a cover image in `src/assets/images/` (sized 1020×510 in `BlogPost.astro`). Use relative path like `../../assets/images/your-image.jpg`
 

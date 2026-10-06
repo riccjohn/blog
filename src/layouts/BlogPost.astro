@@ -19,6 +19,7 @@ type Props = CollectionEntry<'blog'>['data'] & {
 
 const {
     title,
+    subtitle,
     description,
     pubDate,
     updatedDate,
@@ -66,6 +67,7 @@ const showUpdated =
                     <div class="prose text-text-primary relative">
                         <header class="title mb-4 py-4 text-center">
                             <h1>{title}</h1>
+                            {subtitle && <p class="subtitle">{subtitle}</p>}
                             <p class="standfirst">{description}</p>
                             <div class="date text-text-secondary">
                                 <FormattedDate date={pubDate} />
