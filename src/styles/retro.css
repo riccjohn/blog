@@ -208,6 +208,13 @@ html.early-web {
         width: 100%;
     }
 
+    /* Narrow window: tighter cells, and break between words, not inside them */
+    & [data-retro-surface] :is(th, td) {
+        border-color: #808080;
+        padding-inline: 0.5rem;
+        overflow-wrap: normal;
+    }
+
     & [data-retro-surface] pre {
         background: #000;
         color: #33ff33;
