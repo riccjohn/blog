@@ -521,9 +521,6 @@ html.dark {
     height: 2.5rem;
     @apply text-text-heading;
 }
-a :is(strong, b) {
-    color: inherit;
-}
 .gate-diamond text {
     font: 700 11px var(--font-mono);
     fill: currentColor;

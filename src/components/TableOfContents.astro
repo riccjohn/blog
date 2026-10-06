@@ -13,16 +13,18 @@ const entries = Astro.props.headings.filter(
 
 {entries.length >= 3 && (
     <>
-        <details class="toc-inline">
-            <summary>Contents</summary>
-            <ol class="toc-list">
-                {entries.map(({ depth, slug, text }) => (
-                    <li data-depth={depth}>
-                        <a href={`#${slug}`}>{text}</a>
-                    </li>
-                ))}
-            </ol>
-        </details>
+        <nav aria-label="Contents" class="toc-inline-nav">
+            <details class="toc-inline">
+                <summary>Contents</summary>
+                <ol class="toc-list">
+                    {entries.map(({ depth, slug, text }) => (
+                        <li data-depth={depth}>
+                            <a href={`#${slug}`}>{text}</a>
+                        </li>
+                    ))}
+                </ol>
+            </details>
+        </nav>
         <nav class="toc-rail" aria-labelledby="toc-rail-heading">
             <div class="toc-rail-inner">
                 <p id="toc-rail-heading" class="toc-rail-heading">

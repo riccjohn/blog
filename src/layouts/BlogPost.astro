@@ -27,7 +27,8 @@ const {
     headings = [],
 } = Astro.props
 
-const calendarDay = (date: Date) => date.toISOString().slice(0, 10)
+// Same local-time day FormattedDate prints, so the check matches what readers see
+const calendarDay = (date: Date) => date.toDateString()
 // An update on the publish day is just the post going out
 const showUpdated =
     updatedDate !== undefined &&
