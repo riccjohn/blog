@@ -156,12 +156,32 @@ table {
 }
 .prose table {
     @apply breakout-width;
+    border-collapse: collapse;
+    margin-bottom: 2em;
 }
-/* Below md there is no room to break out, so wide tables scroll instead */
+.prose :is(th, td) {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    vertical-align: top;
+}
+.prose th {
+    @apply text-text-secondary border-border-default border-b;
+}
+.prose td {
+    @apply border-border-muted border-t;
+}
+.prose tbody tr:first-child td {
+    border-top: none;
+}
+/* Below md there is no room to break out, so wide tables scroll instead of
+   squeezing their columns */
 @media (max-width: 767px) {
     .prose table {
         display: block;
         overflow-x: auto;
+    }
+    .prose :is(th, td) {
+        min-width: 16ch;
     }
 }
 img {
