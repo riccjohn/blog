@@ -7,7 +7,7 @@
 
 @import './retro.css';
 
-@variant dark (.dark &);
+@custom-variant dark (.dark &);
 
 @theme {
     /* Font Family */

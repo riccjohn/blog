@@ -3,7 +3,7 @@
 ## Non-Obvious Conventions
 
 - **Date formatting**: Always use `src/components/FormattedDate.astro` — never custom formatting
-- **Hero images**: Must be 1020×510px
+- **Hero images**: 16:9, shown in a 1020×574 `object-cover` frame (`BlogPost.astro`). Export at 2× (2040×1148 or similar) so it stays sharp; any other ratio leaves a gap or crops
 - **Draft posts**: Prefix filename with `.` (e.g., `.draft-post.md`) to exclude from builds
 - **Images**: `src/assets/` gets WebP optimization + responsive variants; `public/` is served as-is
 - **Social components**: Follow `src/components/Social/` pattern with `hoverable` prop and SVG icons
