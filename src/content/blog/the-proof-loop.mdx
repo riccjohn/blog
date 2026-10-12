@@ -1,10 +1,10 @@
 ---
 title: 'The Proof Loop'
 subtitle: 'Understand → Prove → Decide'
-description: "AI lets us prototype in days, but speed hides what we haven't learned. The Proof Loop is a lightweight framework for understanding the problem, proving the idea, and deciding what earns a real build."
+description: 'A lightweight framework for taking a vague ask to a clear build decision: understand the problem, prove the idea, and decide what earns a real build.'
 heroImage: '../../assets/blog_posts/the-proof-loop/vectorelements-FZp8ntsW128-unsplash.jpg'
-pubDate: '2026-10-07'
-updatedDate: '2026-10-07'
+pubDate: '2026-10-12'
+updatedDate: '2026-10-12'
 ---
 
 import CaptionedImage from '@/components/CaptionedImage.astro'
@@ -15,64 +15,28 @@ import proofLoopStage1 from '../../assets/blog_posts/the-proof-loop/the-proof-lo
 
 _<a href="https://unsplash.com/illustrations/scientists-conducting-research-with-microscope-and-dna-helix-FZp8ntsW128?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Illustration</a> by <a href="https://unsplash.com/@vectorelements/illustrations?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">VectorElements</a> on <a href="https://unsplash.com/illustrations?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>_
 
-# Why Do We Need a Framework?
-
-AI tools like Claude Code give us the ability to build prototypes in the "hours-to-days" timeframe rather than "days-to-weeks". This speed in time spent coding helps us get from idea to build faster, but also creates two problems:
-
-- We start to build before we know what we're trying to learn and before we truly understand the problem we're trying to solve
-- A polished demo is easily mistaken for a finished product by stakeholders
-
-## Understanding the Problem
-
-[DORA 2025 State of AI Assisted Software Development Report](https://research.google/pubs/dora-2025-state-of-ai-assisted-software-development-report/) detailed that AI "magnifies the strengths of high-performing organizations and the dysfunctions of struggling ones." One way that manifests itself is when a team rushes to build before fully understanding the problem first. _AI allows us to sprint in the wrong direction faster than we ever could have before._
-
-Before AI-assisted coding made writing code "cheap", we had to justify that expense. We had to ensure we understood _what_ we were building and _why_. Building was slow, and that slowness taught us things about the problem itself and our potential solution.
-
-With AI tooling, it's too tempting to jump straight into solving the problem before understanding it. While it's helpful to have something to point to and reference while talking to a stakeholder, the first step should ultimately be a listening exercise - "Here's what I'm hearing the problem is and what we need to solve. Is that right?". This framework builds that step in as an integral first step before any true design or technical docs are written.
-
-## Roadblocks as Feedback Loops
-
-That up-front confirmation of the problem space addresses learning what the initial problem is, but a lot of our learning happens while we're building out a plan or while writing the code itself. When building software without AI tooling, part of what takes longer isn't the actual coding. It's the minor roadblocks and decision points we hit that cause us to learn more about the system and re-evaluate our plan. _Those roadblocks are good._ They create nested feedback loops that prompt us to re-evaluate our approach and ultimately discuss options, propose solutions, and land on one.
-
-We lose all of that when we let agents loose on a problem. They make those decisions for us - they fill in the gaps in our instructions with their best probabilistic guess. Those learnings often stay with the AI agents, which are then thrown away at the end of the session or diluted in a sea of less important info in your 1M context window.
-
-## Fewer Demos, Less Feedback
-
-There's also the issue of how often we get feedback. The industry moved away from waterfall towards agile development for a big reason: frequent feedback loops are much more helpful than a big plan up front. When it takes you 4 weeks to create a prototype and you demo it weekly, that's 4 chances you have to get feedback, see if you're on the right track, talk about tradeoffs, potential issues, and more.
-
-When you create a prototype with AI in a single week, you get one demo - and that demo is based off of only the final prototype. You're not discussing tradeoffs unless the agent surfaced them to you, and it likely just made its own decisions for things that may or may not have been important.
-
-We still learn things, but at a lower resolution, and those learnings arrive all at once without allowing people a way to build up an understanding over time and truly weigh decisions. It's easy to gloss over decisions after they've been made, but those decisions hold more meaning when you're the one weighing the options.
-
-That demo you have after 1 week of AI-assisted prototyping will also likely be more polished looking than if you'd coded it by hand - making it easily mistakable for working software by a stakeholder under pressure who wants you to just deploy what you have. Once that decision is made, it's hard to slow down and ask for more time.
-
-## What We Need Instead
-
-To truly understand the problem we're trying to solve and be clear about what a prototype is delivering, we need to have a framework or method in place with clear decision points. Like the scientific method, we need to treat things like an experiment where any and all learnings are valuable, even if our hypothesis is wrong.
+> This post details The Proof Loop framework itself. If you're looking for more details on the reasoning behind this, read my post on [Running Experiments in the Age of AI Software Dev](/blog/the-proof-loop-why-we-need-a-framework).
 
 # Overview
 
-As AI tools are used more and more in software development, we increasingly hear how "taste" is now more important than ever, but how do we actually apply taste and decision-making in a system that seemingly values speed above all else? How do we know we're solving the right problems? How do we differentiate a well-polished prototype from production-grade software?
+**The Proof Loop** is a framework for taking a vague ask from a stakeholder to a clear build decision without building the wrong thing. Every idea goes through clear stages: **Stage 1: Understand** the problem, **Stage 2: Prove** the concept is thought through and that we can build it, and **Stage 3: Decide** whether to build, extend, pivot, or shelve.
 
-**The Proof Loop** attempts to solve these issues. Every idea goes through clear stages: **Understand** the problem, **Prove** the concept is thought through (**Proof of Thought**) and that we can build it (**Proof of Concept**), gaining the learnings that come with that process, and then **Decide** whether to continue or take our learnings to the next idea.
+The framework exists because when AI makes coding "cheap", it's too easy to offload the thinking as well, and a few things tend to go wrong:
 
-In **Understand** and **Proof of Thought**, we ensure full understanding across the team and the stakeholder and apply "taste" by mandating human judgment and decision-making in the process. In **Proof of Concept** and **Decide**, we clearly communicate the limits of our experiment, and what can and cannot be used in a full build (if we reach that stage). Together, these stages condense the original ask into a succinct problem, explore that problem and possible solutions, filter out dead ends, apply learnings, and let evidence drive the final decision.
+- We build before we truly understand the problem.
+    - **Solution:** In **Stage 1: Understand**, the stakeholder confirms a _What We Heard_ summary before anyone writes a plan.
+- Agents make decisions for us, and then those decisions stay in a narrow context window and end up lost.
+    - **Solution:** In the **Stage 2a: Proof of Thought**, humans do the thinking (investigating the problem, possible solutions, and blockers) and log decisions in the **Experiment Card** so they outlive the session.
+- We get fewer chances for feedback. A prototype built in a week gets one demo instead of several.
+    - **Solution:** Every gate is a check-in, so feedback comes at each stage instead of only at the end.
+- A polished demo gets mistaken for deployable software.
+    - **Solution:** In **Stage 2b: Proof of Concept** and **Stage 3: Decide**, we clearly label a demo a throwaway prototype or a tracer and state its limitations and tradeoffs up front.
 
 Each stage needs to be earned, especially the final build. You'll treat your stakeholder as an investor who needs to explicitly fund the next stage of the process, and you earn that next stage through proving the experiment is still viable.
 
-If you're familiar with [Hypothesis-Driven Development](https://www.thoughtworks.com/insights/articles/how-implement-hypothesis-driven-development), this may feel familiar. However, this approach adds explicit stakeholder confirmation of the problem up front and decision gates after each stage.
+If you're familiar with [Hypothesis-Driven Development](https://www.thoughtworks.com/insights/articles/how-implement-hypothesis-driven-development), this may feel familiar. However, this approach adds explicit stakeholder confirmation of the problem up front and decision gates after each stage that give clear indications of when each stage is complete.
 
 # The Loop At a Glance
-
-In **Stage 1 (Understand)**, we start by ensuring everyone is on the same page by clearly restating the problem we're hearing that needs to be solved. Once confirmed, we document everything in our [**Experiment Card**](#experiment-card), which we'll continue to log decisions to as we move through the framework.
-
-Next comes the **Proof of Thought** (2a): we begin investigating the problem and possible solutions further by gathering information and thinking through the options. What are the pros and cons? What other questions do we have? Do we see any blockers that would make this ask a moot point? What's your hypothesis? What do you think a solution would measurably achieve? Present this back to the stakeholder and log decisions in the **Experiment Card**.
-
-If you're still moving forward (not all experiments do - they can always be pivoted or shelved at any point), you'll build out a **Proof of Concept** (2b) and test out the riskiest integrations. Demo the Proof of Concept back to your stakeholder. Update the **Experiment Card** and document decisions as Architectural Decision Records (ADRs) as you go.
-
-The final decision: build it, extend it, pivot, or shelve it.
-
-You'll run this loop for each experiment you have. Within the larger loop, you'll find that you can loop within a single stage (e.g. you may need to have a few conversations at Stage 1 to really understand the problem), and you can short-circuit the loop if you decide to pivot or shelve an idea before getting to the Proof of Concept stage. Many ideas will only make it to Stage 1 or 2a, and that's ok. You're weeding out ideas that aren't worth executing on and saving time. Each stage needs to be earned by the evidence / output of the previous stage.
 
 <CaptionedImage
     src={proofLoopDiagram}
@@ -81,11 +45,31 @@ You'll run this loop for each experiment you have. Within the larger loop, you'l
 />
 
 <style>{`
-    .stage-table tbody tr td:first-child { box-shadow: inset 3px 0 0 var(--row-color, transparent); }
+    .stage-table tbody td:first-child { position: relative; }
+    .stage-table tbody td:first-child::before,
+    .stage-table tbody td:first-child::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+    }
+    .stage-table tbody td:first-child::before {
+        left: var(--row-offset, 0);
+        width: 5px;
+        background: var(--row-color, transparent);
+    }
     .stage-table tbody tr:nth-child(1) { --row-color: var(--stage-pink); }
-    .stage-table tbody tr:nth-child(3) { --row-color: var(--stage-yellow); }
-    .stage-table tbody tr:nth-child(4) { --row-color: var(--stage-green); }
+    .stage-table tbody tr:nth-child(3) { --row-color: var(--stage-yellow); --row-offset: 4px; }
+    .stage-table tbody tr:nth-child(4) { --row-color: var(--stage-green); --row-offset: 4px; }
     .stage-table tbody tr:nth-child(5) { --row-color: var(--stage-blue); }
+    /* Stage 2 brackets its two checks: a thin neutral rule runs from Prove down
+       through 2a and 2b, bridging the row borders, with each check's color inside it */
+    .stage-table tbody tr:is(:nth-child(2), :nth-child(3), :nth-child(4)) td:first-child::after {
+        left: 0;
+        width: 2px;
+        background: var(--color-text-secondary);
+    }
+    .stage-table tbody tr:is(:nth-child(3), :nth-child(4)) td:first-child::after { top: -1px; }
 `}</style>
 
 <div className="stage-table">
@@ -171,7 +155,7 @@ Once the stakeholder confirms your understanding is correct, start the [**Experi
 
 ### Outcomes
 
-- **Go** to **2a. Proof of Thought,** **Pivot** (update the **Experiment Card** with a new hypothesis and why you're pivoting / what your learnings were), or **Shelve** (log a reason and what we learned in the **Experiment Card**)
+- **Go** to **2a. Proof of Thought,** **Extend** (another time-boxed round of Stage 1, with the sponsor's agreement), **Pivot** (update the **Experiment Card** with the revised problem and what you learned), or **Shelve** (log a reason and what we learned in the **Experiment Card**)
 - Docs created:
     - **What We Heard**, confirmed by the stakeholder
     - **Experiment Card,** with the Stage 1 sections filled in (problem, success signal, kill signal, out of scope)
@@ -200,7 +184,7 @@ Lay out 2-3 possible ways to solve the problems with the tradeoffs of each. Use 
 
 The true output of this stage isn't a document or a demo, it's proof that the team (humans) have thought through the idea. The artifact you made (notes, sketch, diagram, etc) will likely be outdated the second you save it. That's ok.
 
-**Human Only.** The only rule here is that the Proof of Thought document _must be created by a human_. Even if it's not read by anyone else directly, it's important that someone has thought through all of this. As you dive into the initial questions you had at the start, you'll find more questions that need answers that you didn't anticipate. You may not have found these if you had handed the original idea off to an AI agent.
+**Human Only.** The only rule here is that the Proof of Thought notes _must be created by a human_. Even if it's not read by anyone else directly, it's important that someone has thought through all of this. As you dive into the initial questions you had at the start, you'll find more questions that need answers that you didn't anticipate. You may not have found these if you had handed the original idea off to an AI agent.
 
 Reviewing a document you had AI generate for you does not count. When you review an existing document, code, etc, the solution in front of you clouds your judgment and seems more solid than any potential alternatives you can think of. You'll be able to more fairly balance competing ideas as you encounter them than when you have a proposed solution given to you.
 
@@ -221,7 +205,7 @@ See [Proof of Thought by Erik Wiffin](https://erik.wiffin.com/posts/proof-of-tho
 
 ### Outcomes
 
-- **Go** to PoC, **Pivot** (update the **Experiment Card** with a new hypothesis and why you're pivoting / what your learnings were), or **Shelve** (log a reason and what we learned in the **Experiment Card**)
+- **Go** to PoC, **Extend** (another time-boxed round of Proof of Thought, with the sponsor's agreement), **Pivot** (update the **Experiment Card** with a new hypothesis and why you're pivoting / what your learnings were), or **Shelve** (log a reason and what we learned in the **Experiment Card**)
 - Docs created:
     - Proof of Thought notes: human-written ONLY, any format (notes, sketch, diagram) - they don't need to be polished
     - **Experiment Card**, updated with the chosen approach, hypothesis, and riskiest assumptions laid out
@@ -243,7 +227,7 @@ See [Proof of Thought by Erik Wiffin](https://erik.wiffin.com/posts/proof-of-tho
 
 - [Tackle the Monkey First](https://x.company/blog/posts/tackle-the-monkey-first/) - test the riskiest parts and see if your hypothesis holds.
 - **Decide prototype vs. [tracer](https://www.aihero.dev/tracer-bullets).** Decide up front whether the code is _throwaway_ (this is ok, but make this a clear part of the plan) or _keepable_. AI tools make it easy to blur the two.
-    - **Tracer:** If you want to keep it, it's probably best to use a tracer - a slim, e2e feature (usually the one you have the most questions or concerns about. Pick the "monkey" feature that if you couldn't solve, would kill the project.)
+    - **Tracer:** If you want to keep it, it's probably best to use a tracer: a slim, end-to-end slice. Build it around the monkey, the feature that would kill the project if you couldn't solve it.
     - **Prototype:**
         - Throwaway code that's built to learn, not to keep
         - **Try to get real users (2-5):** measure whether they _act on_ the output, not just whether they like it
@@ -280,7 +264,7 @@ See [Proof of Thought by Erik Wiffin](https://erik.wiffin.com/posts/proof-of-tho
 
 **Purpose:** Make a final call. Given what you've learned so far, does everyone think it should be built, extended, pivoted, or shelved?
 
-### Outcomes
+## Outcomes
 
 - Build - the experiment proved the hypothesis and you can move on to a larger build
 - Extend - buy more time for another short, clear stage. Make sure this is time-boxed
@@ -304,7 +288,7 @@ The prior stages are all in what Kent Beck describes as an "**Explore**" phase. 
 5. **A cheap kill is a win.** Every idea you stop early is time, money, and tokens you didn't spend on the wrong build.
 6. **Always leave a record.** Every gate gets a dated entry in the Experiment Card's decision log, no matter the outcome. "Failed" experiments and dead ideas still teach us something.
 7. **Every stage is time-boxed.**
-    1. You choose the timing within the given range (i.e. Stage 1 is hours-days, Stage 2a is days, etc.)
+    1. You choose the timing within the given range (e.g. Stage 1 is hours-days, Stage 2a is days, etc.)
     2. You can extend, but more time must be earned
 8. **Building with AI Tools is fine/encouraged**, but:
     1. a human must be able to explain every gate artifact and the code paths _that matter_ without notes (the same bar as the Proof of Thought)
@@ -421,89 +405,9 @@ Data access looks like the real risk, not hosting. PoC on option A, two weeks.
 
 ## Technical ADR (as needed)
 
-`docs/adr/ADR-001-*.md` - [More ADR formats](https://github.com/architecture-decision-record/architecture-decision-record)
+`docs/adr/ADR-001-*.md`
 
-This [template is from the architectural decision record github](https://github.com/architecture-decision-record/architecture-decision-record/tree/main/locales/en/templates/decision-record-template-of-the-madr-project)
-
-<details>
-<summary>Show the template</summary>
-
-```markdown
-# [short title of solved problem and solution]
-
-- Status: [proposed | rejected | accepted | deprecated | … | superseded by [ADR-0005](0005-example.md)] <!-- optional -->
-- Deciders: [list everyone involved in the decision] <!-- optional -->
-- Date: [YYYY-MM-DD when the decision was last updated] <!-- optional -->
-
-Technical Story: [description | ticket/issue URL] <!-- optional -->
-
-## Context and Problem Statement
-
-[Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.]
-
-## Decision Drivers <!-- optional -->
-
-- [driver 1, e.g., a force, facing concern, …]
-- [driver 2, e.g., a force, facing concern, …]
-- … <!-- numbers of drivers can vary -->
-
-## Considered Options
-
-- [option 1]
-- [option 2]
-- [option 3]
-- … <!-- numbers of options can vary -->
-
-## Decision Outcome
-
-Chosen option: "[option 1]", because [justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force force | … | comes out best (see below)].
-
-### Positive Consequences <!-- optional -->
-
-- [e.g., improvement of quality attribute satisfaction, follow-up decisions required, …]
-- …
-
-### Negative Consequences <!-- optional -->
-
-- [e.g., compromising quality attribute, follow-up decisions required, …]
-- …
-
-## Pros and Cons of the Options <!-- optional -->
-
-### [option 1]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-- Good, because [argument a]
-- Good, because [argument b]
-- Bad, because [argument c]
-- … <!-- numbers of pros and cons can vary -->
-
-### [option 2]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-- Good, because [argument a]
-- Good, because [argument b]
-- Bad, because [argument c]
-- … <!-- numbers of pros and cons can vary -->
-
-### [option 3]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-- Good, because [argument a]
-- Good, because [argument b]
-- Bad, because [argument c]
-- … <!-- numbers of pros and cons can vary -->
-
-## Links <!-- optional -->
-
-- [Link type] [Link to ADR] <!-- example: Refined by [ADR-0005](0005-example.md) -->
-- … <!-- numbers of links can vary -->
-```
-
-</details>
+I like this [MADR template from the architectural decision record github](https://github.com/architecture-decision-record/architecture-decision-record/blob/main/locales/en-001/templates/decision-record-template-of-the-madr-project/index.md), but choose whichever [ADR format](https://architecture-decision-record.github.io/en-us/#adr-example-templates) you like as long as it captures the reasoning behind decisions.
 
 # Sources
 

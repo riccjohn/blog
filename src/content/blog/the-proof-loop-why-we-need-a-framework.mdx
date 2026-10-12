@@ -1,0 +1,78 @@
+---
+title: 'Running Experiments in the Age of AI Software Dev'
+subtitle: 'Introducing The Proof Loop'
+description: "AI lets us prototype in days, but the speed skips the learning that slow builds used to force. Here's what goes wrong, and why we need a framework."
+heroImage: '../../assets/blog_posts/the-proof-loop/ryan-snaadt-TsRnxEVecbs-unsplash.jpg'
+pubDate: '2026-10-12'
+updatedDate: '2026-10-12'
+---
+
+import CaptionedImage from '@/components/CaptionedImage.astro'
+import proofLoopDiagram from '../../assets/blog_posts/the-proof-loop/the-proof-loop-diagram.svg'
+
+_Photo by <a href="https://unsplash.com/@ryansnaadt?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Ryan Snaadt</a> on <a href="https://unsplash.com/photos/person-in-black-shirt-holding-white-paper-TsRnxEVecbs?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>_
+
+# Why I Built The Proof Loop Framework
+
+As AI tools are used more and more in software development, we increasingly hear that "taste" matters more than ever. But how do we actually apply taste and judgment in a process that seemingly values speed above all else?
+
+Tools like Claude Code let us build prototypes in "hours-to-days" rather than "days-to-weeks". That speed gets us from idea to build faster, but it also comes with real costs:
+
+- We start to build before we know what we're trying to learn and before we truly understand the problem we're trying to solve
+- We miss out on deep insights that come from thinking through the problem space ourselves and hitting roadblocks during initial build stages
+- We have fewer chances to get feedback, both from writing the code itself and from demos to stakeholders or users
+- A polished demo is easily mistaken for a finished product by stakeholders
+
+Each of these is a place where taste and judgment used to happen naturally, because the actual building was hands-on. AI lets us skip right past them, and The Proof Loop puts them back. AI can still do much of the building, but only after we've made the important decisions and genuinely understood the problem space and possible solutions.
+
+## Understanding the Problem
+
+[DORA 2025 State of AI Assisted Software Development Report](https://research.google/pubs/dora-2025-state-of-ai-assisted-software-development-report/) detailed that AI "magnifies the strengths of high-performing organizations and the dysfunctions of struggling ones." One way that manifests itself is when a team rushes to build before fully understanding the problem first. _AI allows us to sprint in the wrong direction faster than we ever could have before._
+
+Before AI-assisted coding made writing code "cheap", we had to justify that expense. We had to ensure we understood _what_ we were building and _why_. Building was slow, and that slowness taught us things about the problem itself and our potential solution.
+
+With AI tooling, it's too tempting to jump straight into solving the problem before understanding it. While it's helpful to have something to point to and reference while talking to a stakeholder, the first step should ultimately be a listening exercise - "Here's what I'm hearing the problem is and what we need to solve. Is that right?". This framework builds that in as the first step, before any true design or technical docs are written.
+
+## Roadblocks as Feedback Loops
+
+That up-front confirmation of the problem space addresses learning what the initial problem is, but a lot of our learning happens while we're building out a plan or while writing the code itself. When building software without AI tooling, part of what takes longer isn't the actual coding. It's the minor roadblocks and decision points we hit that cause us to learn more about the system and re-evaluate our plan. _Those roadblocks are good._ They create nested feedback loops that prompt us to re-evaluate our approach and ultimately discuss options, propose solutions, and land on one.
+
+We lose all of that when we let agents loose on a problem. They make those decisions for us - they fill in the gaps in our instructions with their best probabilistic guess. Those learnings often stay with the AI agents, which are then thrown away at the end of the session or diluted in a sea of less important info in your 1M context window. That's why The Proof Loop explicitly requires human decisions at the gates between each stage and for a human to write the Proof of Thought document. Ensuring human understanding at each decision point is integral to truly being able to learn from each experiment, no matter the outcome.
+
+## Fewer Demos, Less Feedback
+
+There's also the issue of how often we get feedback. The industry moved away from waterfall towards agile development for a big reason: frequent feedback loops are much more helpful than a big plan up front. When it takes you 4 weeks to create a prototype and you demo it weekly, that's 4 chances you have to get feedback, see if you're on the right track, talk about tradeoffs, potential issues, and more.
+
+When you create a prototype with AI in a single week, you get one demo - and that demo is based off of only the final prototype. You're not discussing tradeoffs unless the agent surfaced them to you, and it likely just made its own decisions for things that may or may not have been important.
+
+We still learn things, but at a lower resolution, and those learnings arrive all at once without allowing people a way to build up an understanding over time and truly weigh decisions. It's easy to gloss over decisions after they've been made, but those decisions hold more meaning when you're the one weighing the options.
+
+## Highly Polished Demos Give False Trust
+
+When you task AI with producing a prototype, it'll often give the visible exterior of the app (the UI, API shape, etc) more polish than a dev would in that "proof of concept" phase. Despite the shiny exterior, the implementation may be filled with tiny decisions it made on its own because the original prompt or acceptance criteria weren't specific enough. This causes two problems: you didn't actually make those decisions, and those decisions may be wrong or buggy, but _look_ production-grade.
+
+That means not only did you _not_ get a chance to learn from those issues or make those decisions, but the high-polish makes it easy for a stakeholder to assume it's further along than it actually is.
+
+Under pressure to deliver, they may say the app should just be deployed, and you'll tackle the technical debt later on. That's a decision that's hard to push back on once it's made. At that point, not only are you asking for more time than the stakeholder thinks it should take, but you'll need to be clear on what the prototype is lacking, and you may not have a complete list of things to fix before production because the agent made choices that you haven't discovered yet.
+
+# What We Need Instead
+
+To truly understand the problem we're trying to solve and be clear about what a prototype is delivering, we need to have a framework or method in place with clear decision points. Like the scientific method, we need to treat things like an experiment where any and all learnings are valuable, even if our hypothesis is wrong.
+
+That's where The Proof Loop comes in.
+
+## The Loop At a Glance
+
+Here's the high-level view. Each stage helps guide the team's process and has clear gates that need to be passed to move to the next stage.
+
+<CaptionedImage
+    src={proofLoopDiagram}
+    alt="Cycle diagram of the Proof Loop. Understand leads through Gate 1 to Proof of Thought, then through Gate 2 to Proof of Concept, then through Gate 3 to Decide. Learnings from Decide feed the next idea, a pivot returns to Understand, and an idea can be shelved at any gate."
+    caption="The Proof Loop at a glance"
+/>
+
+The point of this loop is to be able to run experiments and test whether a full build is worth it. Deciding not to build something at any point is a win, because you're making that decision early before you've committed to a larger build, and with the framework, you'll still have documentation and insights from each stage that you can bring to new projects and ideas.
+
+## The Framework
+
+The full framework, including suggested templates for each stage's documents, is in [The Proof Loop](/blog/the-proof-loop).
