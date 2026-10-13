@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1800 1300" width="1800" height="1300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The Proof Loop" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif">
+  <defs>
+    <marker id="arMain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#4b5563"/></marker>
+    <marker id="arShelve" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/></marker>
+    <marker id="arPivot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7c3aed"/></marker>
+    <polygon id="gate" points="0,-38 38,0 0,38 -38,0" fill="#ffffff" stroke="#111827" stroke-width="4"/>
+  </defs>
+  <rect x="0" y="0" width="1800" height="1300" fill="#ffffff"/>
+
+  <!-- Paths -->
+  <path d="M1077,240 H1460 V455" fill="none" stroke="#4b5563" stroke-width="4" marker-end="url(#arMain)"/>
+  <path d="M1460,817 V1040 H1090" fill="none" stroke="#4b5563" stroke-width="4" marker-end="url(#arMain)"/>
+  <path d="M723,1040 H340 V830" fill="none" stroke="#4b5563" stroke-width="4" marker-end="url(#arMain)"/>
+  <path d="M340,463 V240 H712" fill="none" stroke="#4b5563" stroke-width="4" stroke-dasharray="12 8" marker-end="url(#arMain)"/>
+  <path d="M1283,640 H525" fill="none" stroke="#dc2626" stroke-width="4" stroke-dasharray="12 8" marker-end="url(#arShelve)"/>
+  <path d="M1335,515 L1048,378" fill="none" stroke="#7c3aed" stroke-width="4" stroke-dasharray="12 8" marker-end="url(#arPivot)"/>
+
+  <!-- Stages -->
+  <circle cx="900" cy="240" r="177" fill="#f9c6e3" stroke="#d35fb7" stroke-width="4"/>
+  <g text-anchor="middle">
+    <text x="900" y="163" font-size="22" letter-spacing="3" fill="#6d28d9">1 · UNDERSTAND</text>
+    <text x="900" y="208" font-size="34" font-weight="700" fill="#000000">Listen &amp; Reflect</text>
+    <text x="900" y="252" font-size="24" fill="#111827">Listen, reflect back,</text>
+    <text x="900" y="284" font-size="24" fill="#111827">agree on the problem</text>
+    <text x="900" y="328" font-size="24" font-style="italic" fill="#4b5563">hours – days</text>
+  </g>
+
+  <circle cx="1460" cy="640" r="177" fill="#fde8a8" stroke="#d6a52a" stroke-width="4"/>
+  <g text-anchor="middle">
+    <text x="1460" y="563" font-size="22" letter-spacing="3" fill="#92400e">2a · PROVE</text>
+    <text x="1460" y="608" font-size="34" font-weight="700" fill="#000000">Proof of Thought</text>
+    <text x="1460" y="652" font-size="24" fill="#111827">Think it through,</text>
+    <text x="1460" y="684" font-size="24" fill="#111827">find the hardest part</text>
+    <text x="1460" y="728" font-size="24" font-style="italic" fill="#4b5563">days</text>
+  </g>
+
+  <circle cx="900" cy="1040" r="177" fill="#cfeed3" stroke="#4fae63" stroke-width="4"/>
+  <g text-anchor="middle">
+    <text x="900" y="963" font-size="22" letter-spacing="3" fill="#166534">2b · PROVE</text>
+    <text x="900" y="1008" font-size="34" font-weight="700" fill="#000000">Proof of Concept</text>
+    <text x="900" y="1052" font-size="24" fill="#111827">Test the riskiest parts,</text>
+    <text x="900" y="1084" font-size="24" fill="#111827">demo the findings</text>
+    <text x="900" y="1128" font-size="24" font-style="italic" fill="#4b5563">days – weeks</text>
+  </g>
+
+  <circle cx="340" cy="640" r="177" fill="#c8e2fa" stroke="#4a90d9" stroke-width="4"/>
+  <g text-anchor="middle">
+    <text x="340" y="563" font-size="22" letter-spacing="3" fill="#1e3a8a">3 · DECIDE</text>
+    <text x="340" y="608" font-size="34" font-weight="700" fill="#000000">Make the Call</text>
+    <text x="340" y="652" font-size="24" fill="#111827">Build, extend,</text>
+    <text x="340" y="684" font-size="24" fill="#111827">pivot, or shelve</text>
+    <text x="340" y="728" font-size="24" font-style="italic" fill="#4b5563">days</text>
+  </g>
+
+  <!-- Gates -->
+  <g text-anchor="middle" font-weight="700" font-size="22" fill="#111827">
+    <use href="#gate" x="1280" y="240"/>
+    <text x="1280" y="248">G1</text>
+    <use href="#gate" x="1460" y="928"/>
+    <text x="1460" y="936">G2</text>
+    <use href="#gate" x="524" y="1040"/>
+    <text x="524" y="1048">G3</text>
+  </g>
+
+  <!-- Labels -->
+  <g font-size="24" fill="#4b5563">
+    <text x="1280" y="316" text-anchor="middle">Gate 1 · worth exploring?</text>
+    <text x="1512" y="936">Gate 2 · worth a PoC?</text>
+    <text x="524" y="1120" text-anchor="middle">Gate 3 · demo</text>
+  </g>
+  <g font-size="26" font-weight="700" text-anchor="middle">
+    <text x="900" y="622" fill="#dc2626">Shelve at any gate</text>
+    <text x="1008" y="483" fill="#7c3aed">Pivot → new hypothesis</text>
+    <text x="524" y="190" fill="#374151">Learnings feed</text>
+    <text x="524" y="220" fill="#374151">the next idea</text>
+  </g>
+
+  <!-- Legend -->
+  <g font-size="24" fill="#4b5563">
+    <line x1="120" y1="1250" x2="200" y2="1250" stroke="#4b5563" stroke-width="4"/>
+    <text x="216" y="1258">Main path</text>
+    <polygon points="420,1228 442,1250 420,1272 398,1250" fill="#ffffff" stroke="#111827" stroke-width="4"/>
+    <text x="456" y="1258">Gate, logged in the Experiment Card</text>
+    <line x1="940" y1="1250" x2="1020" y2="1250" stroke="#dc2626" stroke-width="4" stroke-dasharray="12 8"/>
+    <text x="1036" y="1258">Shelve (early exit)</text>
+    <line x1="1280" y1="1250" x2="1360" y2="1250" stroke="#7c3aed" stroke-width="4" stroke-dasharray="12 8"/>
+    <text x="1376" y="1258">Pivot</text>
+  </g>
+</svg>

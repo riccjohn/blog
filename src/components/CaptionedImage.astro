@@ -10,15 +10,20 @@ interface Props {
 }
 
 const { src, alt, caption, class: className = 'block' } = Astro.props
+// Diagrams get small on phones, so tapping opens the full-size file for pinch-zoom
+const fullSize = typeof src === 'string' ? src : src.src
 ---
 
 <figure class="breakout-width">
     <div class="image-frame mx-auto w-fit">
-        {typeof src === 'string' ? (
-            <img src={src} alt={alt} class={className} />
-        ) : (
-            <Image {src} {alt} class={className} />
-        )}
+        <a href={fullSize} class="block cursor-zoom-in">
+            {typeof src === 'string' ? (
+                <img src={src} alt={alt} class={className} />
+            ) : (
+                <Image {src} {alt} class={className} />
+            )}
+            <span class="sr-only">(open full-size image)</span>
+        </a>
     </div>
     <figcaption>{caption}</figcaption>
 </figure>
