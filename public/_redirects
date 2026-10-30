@@ -1,0 +1,5 @@
+# Tarot Tutor (github.com/riccjohn/tarot-tutor) is built and hosted on
+# GitHub Pages under /tarot-tutor/. Proxy that path through so it reads
+# as arcanegrain.dev/tarot-tutor/; 200 rewrites rather than redirects.
+/tarot-tutor    /tarot-tutor/    301
+/tarot-tutor/*  https://riccjohn.github.io/tarot-tutor/:splat  200
